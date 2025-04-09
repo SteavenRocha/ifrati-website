@@ -1,0 +1,52 @@
+--- 
+interface Props {
+    text: string;
+    color?: string;
+    bgColor?: string;
+    hoverColor?: string;
+    icon?: any; 
+    destino: string;
+}
+
+const {
+    text,
+    bgColor = "var(--color-button)",
+    color = "var(--text-button-color)",
+    hoverColor = "var(--primary-color-hover)",
+    icon: Icon,
+    destino,
+} = Astro.props;
+---
+
+<a
+    href={destino}
+    class="button"
+    style={`color: ${color}; background-color: ${bgColor};`}
+    onmouseover={`this.style.backgroundColor='${hoverColor}'`}
+    onmouseout={`this.style.backgroundColor='${bgColor}'`}
+>
+    {text}
+    {Icon && <Icon class="icon" />}  {}
+</a>
+
+<style>
+    .button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        width: auto;
+        height: auto;
+        padding: 10px 20px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+        gap: 10px;
+    }
+
+    .icon {
+        width: 20px;
+        height: 20px;
+        stroke-width: 1; 
+    }
+</style>

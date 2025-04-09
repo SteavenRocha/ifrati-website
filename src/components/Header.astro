@@ -1,0 +1,106 @@
+---
+import Heart from "../assets/icons/heart.svg";
+import Button from "./ui/Button.astro";
+---
+
+<header>
+	<div class="content">
+		<!--- Logo --->
+		<a class="logo">IFRATI</a>
+
+		<!--- Lista del nav --->
+		<nav>
+			<ul class="nav__links">
+				<li><a href="/">Inicio</a></li>
+				<li><a href="#">Nosotros</a></li>
+				<li><a href="#">Programa</a></li>
+				<li><a href="#">Donar</a></li>
+			</ul>
+		</nav>
+
+		<div class="button__container">
+			<Button text="Donar" destino="/#" icon={Heart} />
+		</div>
+	</div>
+</header>
+
+<style>
+	header {
+		position: fixed;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		top: 0;
+		left: 0;
+		height: 70px;
+		box-shadow: 0 2px 4px var(--secondary-100);
+		background-color: var(--color-white);
+	}
+
+	.content {
+		width: 100%;
+		max-width: var(--max-width);
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.logo {
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		width: 15%;
+		padding: 0 16px;
+	}
+
+	nav {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 70%;
+	}
+
+	header ul {
+		padding: 0;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	header ul li {
+		list-style: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: auto;
+	}
+
+	header ul li a {
+		position: relative;
+		margin: 0 15px;
+		color: var(--text-black);
+		letter-spacing: 0.5px;
+		font-weight: 600;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		border-bottom: 3px solid transparent;
+		width: auto;
+		height: auto;
+		transition:
+			border-bottom 0.3s,
+			color 0.3s;
+	}
+
+	header ul li a:hover {
+		color: var(--primary-color);
+		border-bottom: 3px solid var(--primary-color);
+	}
+
+	.button__container {
+		display: flex;
+		align-items: center;
+		justify-content: end;
+		width: 15%;
+		padding: 5px 16px;
+	}
+</style>

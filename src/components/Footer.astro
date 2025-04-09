@@ -1,0 +1,269 @@
+---
+import Button from "./ui/Button.astro";
+import Heart from "../assets/icons/heart.svg";
+import Phone from "../assets/icons/phone.svg";
+import Email from "../assets/icons/email.svg";
+import Location from "../assets/icons/location.svg";
+import Facebook from "../assets/icons/facebook.svg";
+import Youtube from "../assets/icons/youtube.svg";
+import Instagram from "../assets/icons/instagram.svg";
+import Book from "../assets/icons/book.svg";
+---
+
+<section>
+    <div class="top">
+        <div class="item__1">
+            <h1 class="primary-titulo">IFRATI</h1>
+
+            <div class="textos__button">
+                <p>
+                    Panadería social que trabaja para crear oportunidades
+                    laborales y apoyar a nuestra comunidad a través de la
+                    formación en panadería artesanal.
+                </p>
+
+                <div class="icon__texto">
+                    <div class="icon">
+                        <Heart />
+                    </div>
+                    <p>Transformando vidas desde 2018</p>
+                </div>
+
+                <div class="container__button">
+                    <Button text="Donar ahora" destino="/#" icon={Heart} />
+                </div>
+            </div>
+        </div>
+        <div class="item__2">
+            <h2>Enlaces rápidos</h2>
+
+            <div class="enlaces">
+                <p>Inicio</p>
+                <p>Nosotros</p>
+                <p>Programa</p>
+                <p>Tienda</p>
+                <p>Donar</p>
+                <p>Contacto</p>
+            </div>
+        </div>
+        <div class="item__3">
+            <h2>Contacto</h2>
+
+            <div class="datos">
+                <div class="icon__texto">
+                    <div class="icon">
+                        <Phone />
+                    </div>
+                    <p>+52 (55) 1234-5678</p>
+                </div>
+                <div class="icon__texto">
+                    <div class="icon">
+                        <Email />
+                    </div>
+                    <p>info@ifrati.com.pe</p>
+                </div>
+                <div class="icon__texto">
+                    <div class="icon">
+                        <Location />
+                    </div>
+                    <p>Calle Esperanza, 24 28005 Madrid</p>
+                </div>
+            </div>
+        </div>
+        <div class="item__4">
+            <h2>Legal</h2>
+
+            <div class="enlaces">
+                <p>Política de privacidad</p>
+                <p>Política de cookies</p>
+                <p>Términos y condiciones</p>
+                <p>Política de devoluciones</p>
+                <p>Aviso Legal</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bottom__section">
+    <div class="bottom">
+        <div class="item__1">
+            <p>© Copyright 2025 - Todos los derechos reservados</p>
+            <p>Ifrati S.A.C.</p>
+            <p>Av. Carlos Villarán N° 140, La Victoria, Lima, Perú</p>
+            <p>RUC: 20100053455</p>
+        </div>
+        <div class="item__2">
+            <div class="icon">
+                <Facebook/>
+            </div>
+            <div class="icon">
+                <Instagram/>
+            </div>
+            <div class="icon">
+                <Youtube/>
+            </div>
+        </div>
+        <div class="item__3">
+            <img src="/public/img/libro_de_reclamaciones.jpg" alt="">
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: auto;
+        background-color: var(--secondary-color);
+    }
+
+    .top {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        padding: 50px 16px;
+        max-width: var(--max-width);
+        gap: 20px;
+        height: 100%;
+    }
+
+    .textos__button {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .icon {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+    }
+
+    .icon__texto {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .top .item__1 .icon__texto .icon {
+        width: 20px;
+        height: 20px;
+        stroke-width: 0;
+        color: var(--color-white);
+    }
+
+    .top .item__3 .icon__texto .icon {
+        width: 40px;
+        height: 40px;
+        stroke-width: 0;
+        color: var(--primary-color);
+    }
+
+    .top .item__2,
+    .top .item__3,
+    .top .item__4 {
+        width: calc(65% / 3);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .top .item__1 {
+        width: 35%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .enlaces,
+    .datos {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .enlaces p {
+        cursor: pointer;
+    }
+
+    .enlaces p:hover {
+        color: var(--gray-400);
+    }
+
+    .container__button {
+        display: flex;
+        width: auto;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--color-white);
+    }
+
+    p {
+        font-weight: 350;
+        color: var(--gray-200);
+    }
+
+    .bottom__section {
+        border-top: 1px solid var(--secondary-700);
+    }
+
+    .bottom {
+        display: flex;
+        gap: 30px;
+        width: 100%;
+        padding: 30px 16px;
+        max-width: var(--max-width);
+        gap: 20px;
+        height: 100%;
+    }
+
+    .bottom .item__2{
+        width: 50%;
+    }
+
+    .bottom .item__1{
+        width: 30%;
+    }
+
+    .bottom .item__3{
+        width: 20%;
+    }
+
+    .bottom .item__1 p {
+        font-size: 0.7rem;
+    }
+
+    .bottom .item__2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .bottom .item__2 .icon {
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        stroke-width: 0;
+        color: var(--primary-color);
+    }
+
+    .bottom .item__3 {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+    }
+
+    .bottom .item__3 img{
+        cursor: pointer;
+        width: 100px;
+        height: auto;
+    }
+</style>

@@ -1,0 +1,174 @@
+---
+import People from "../assets/icons/people.svg";
+import Clock from "../assets/icons/clock.svg";
+import Happy from "../assets/icons/happy.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="textos">
+            <h1>
+                Nuestro Impacto en <span class="primary-titulo">Números</span>
+            </h1>
+
+            <p>
+                Cada cifra representa historias de transformación y
+                oportunidades creadas a través de nuestro programa social.
+            </p>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <div class="icon">
+                    <People/>
+                </div>
+
+                <div class="titulo">
+                    <h1>1500+</h1>
+                    <h3>Jóvenes<br />Impactados</h3>
+                </div>
+
+                <p>
+                    Jóvenes que han participado en nuestros programas de
+                    formación y han mejorado sus perspectivas de futuro.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">
+                    <People/>
+                </div>
+
+                <div class="titulo">
+                    <h1>300+</h1>
+                    <h3>Proyectos<br />Comunitarios</h3>
+                </div>
+
+                <p>
+                    Iniciativas desarrolladas por nuestros estudiantes que han
+                    generado un impacto positivo en sus comunidades.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">
+                    <Clock/>
+                </div>
+
+                <div class="titulo">
+                    <h1>500+</h1>
+                    <h3>Horas de<br />Voluntariado</h3>
+                </div>
+
+                <p>
+                    Tiempo dedicado por nuestros voluntarios y mentores para
+                    apoyar el desarrollo de los jóvenes participantes.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="icon">
+                    <Happy/>
+                </div>
+
+                <div class="titulo">
+                    <h1>100%</h1>
+                    <h3>Compromiso<br />con el Futuro</h3>
+                </div>
+
+                <p>
+                    Tiempo dedicado por nuestros voluntarios y mentores para
+                    apoyar el desarrollo de los jóvenes participantes.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        padding: 50px 16px;
+        height: auto;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        height: 100%;
+        gap: 50px;
+    }
+
+    .textos {
+        display: flex;
+        width: 50%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .cards {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 20px;
+        gap: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon {
+        width: 80px;
+        height: 80px;
+        padding: 10px;
+        background-color: var(--primary-50);
+        border-radius: 10px;
+        color: var(--primary-color);
+    }
+
+    .titulo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .titulo h1 {
+        line-height: 1.25;
+        font-weight: 800;
+    }
+
+    .titulo h3 {
+        color: var(--secondary-color);
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-align: center;
+    }
+</style>

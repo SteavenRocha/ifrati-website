@@ -1,0 +1,138 @@
+---
+import Button from "./ui/Button.astro";
+import Right from "../assets/icons/right-arrow.svg";
+import Down from "../assets/icons/down-arrow.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="textos">
+            <h1>
+                Conoce Nuestro <span class="primary-titulo">Programa</span>
+            </h1>
+
+            <p>
+                En <span class="primary-parrafo">IFRATI</span> ayudamos a los jóvenes
+                a través de talleres de panadería y desarrollo personal. Nuestro
+                programa no solo enseña habilidades técnicas, sino que también fomenta
+                la confianza, el trabajo en equipo y el emprendimiento, ayudándolos
+                a construir un futuro mejor.
+            </p>
+        </div>
+
+        <div class="video">
+            <video src=""></video>
+            <p>
+                "Construyendo Juntos: Nuestra Historia" - Un documental sobre el
+                impacto de nuestro programa
+            </p>
+        </div>
+
+        <div class="cta">
+            <div class="textos">
+                <h1>
+                    ¿Quieres ser parte del <span class="primary-subtitulo"
+                        >Cambio?</span
+                    >
+                </h1>
+                <p>
+                    Nuestro programa está especialmente diseñado para jóvenes
+                    que buscan una oportunidad para desarrollar su potencial. No
+                    necesitas experiencia previa, solo motivación y compromiso.
+                </p>
+            </div>
+
+            <div class="botones">
+                <Button text="Conocer más" destino="/#" icon={Right} />
+                <Button
+                    text="Solicitar informacion"
+                    destino="#about"
+                    icon={Down}
+                    color="var(--secondary-color)"
+                    bgColor="var(--color-white)"
+                    hoverColor="var(--color-white)"
+                />
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        padding: 50px 16px;
+        height: auto;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        gap: 50px;
+    }
+
+    .textos {
+        display: flex;
+        width: 50%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .video {
+        display: flex;
+        gap: 2px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    video {
+        width: 80%;
+        height: 500px;
+        border-radius: 10px;
+        background-color: rgb(214, 213, 213);
+    }
+
+    .video p {
+        font-size: 0.8rem;
+        color: var(--gray-600);
+    }
+
+    .cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .cta h1 {
+        font-weight: 650;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .botones {
+        display: flex;
+        width: auto;
+    }
+</style>

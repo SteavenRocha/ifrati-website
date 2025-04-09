@@ -1,11 +1,54 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Program from '../components/Program.astro';
+import Statistics from '../components/Statistics.astro';
+import Cta from '../components/Cta.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Donate from '../components/Donate.astro';
+import Shop from '../components/Shop.astro';
+import Faq from '../components/Faq.astro';
+import Contact from '../components/Contact.astro';
+import Social from '../components/Social.astro';
+import Footer from '../components/Footer.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="IFRATI - Página web oficial" />
+	<main> 
+		<Hero/>
+
+		<About/>
+
+		<Program/>
+
+		<Statistics/>
+
+		<Cta/>
+
+		<Testimonials/>
+
+		<Donate/>
+
+		<Shop/>
+
+		<Faq/>
+
+		<Contact/>
+
+		<Social/>
+
+		<Footer/>
+	</main>
 </Layout>
+
+<style>
+	main {
+		margin-top: 70px;
+		display: flex;
+		flex-direction: column;
+        align-items: center;
+        justify-content: center;
+	}
+</style>

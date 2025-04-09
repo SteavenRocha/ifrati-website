@@ -1,0 +1,76 @@
+---
+import Button from "./ui/Button.astro";
+import Right from "../assets/icons/right-arrow.svg";
+---
+
+<section id="about">
+    <div class="container">
+        <div class="textos">
+            <h1>
+                ¿Quienes <span class="primary-titulo">Somos?</span>
+            </h1>
+
+            <p>
+                En <span class="primary-parrafo">IFRATI</span> no solo horneamos
+                pan, creamos oportunidades. Somos una panadería social dedicada a
+                empoderar a jóvenes en situación de vulnerabilidad, brindándoles
+                herramientas para construir un futuro mejor.
+            </p>
+        </div>
+
+        <Button text="Conoce más sobre nosotros" destino="/#" icon={Right} />
+    </div>
+
+    <div class="imagenes">
+        <img src="" alt="" />
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 80px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        height: 100%;
+    }
+
+    .textos {
+        display: flex;
+        width: 50%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        height: 100%;
+    }
+
+    h1 {
+        font-weight: 700;
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+    }
+
+    .imagenes {
+        width: 100%;
+        height: 300px;
+        border-radius: 10px;
+        background-color: rgb(214, 213, 213);
+    }
+</style>
