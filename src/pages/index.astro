@@ -12,43 +12,61 @@ import Faq from '../components/Faq.astro';
 import Contact from '../components/Contact.astro';
 import Social from '../components/Social.astro';
 import Footer from '../components/Footer.astro';
-
 ---
 
-<Layout title="IFRATI - Página web oficial" />
-	<main> 
-		<Hero/>
+<!-- Mensaje para móviles fuera del layout -->
+<div class="mobile-warning">
+  <p>La versión móvil se encuentra en desarrollo.<br>Te invitamos a visitar la página desde una laptop o computadora de escritorio.</p>
+</div>
 
-		<About/>
-
-		<Program/>
-
-		<Statistics/>
-
-		<Cta/>
-
-		<Testimonials/>
-
-		<Donate/>
-
-		<Shop/>
-
-		<Faq/>
-
-		<Contact/>
-
-		<Social/>
-
-		<Footer/>
-	</main>
-</Layout>
+<!-- Sitio completo dentro del layout -->
+<div class="desktop-site">
+  <Layout title="IFRATI - Página web oficial">
+    <main>
+      <Hero />
+      <About />
+      <Program />
+      <Statistics />
+      <Cta />
+      <Testimonials />
+      <Donate />
+      <Shop />
+      <Faq />
+      <Contact />
+      <Social />
+      <Footer />
+    </main>
+  </Layout>
+</div>
 
 <style>
-	main {
-		margin-top: 70px;
-		display: flex;
-		flex-direction: column;
-        align-items: center;
-        justify-content: center;
-	}
+  main {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-warning {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .mobile-warning {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+      background-color: #f8f8f8;
+      text-align: center;
+      color: #333;
+      font-size: 1.2rem;
+    }
+
+    .desktop-site {
+      display: none;
+    }
+  }
 </style>
