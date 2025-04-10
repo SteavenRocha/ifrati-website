@@ -1135,7 +1135,8 @@ import Button from "./ui/Button.astro";
             <div class="textos">
                 <h2>
                     ¿Todavía tienes <span class="primary-subtitulo"
-                        >preguntas?</span>
+                        >preguntas?</span
+                    >
                 </h2>
                 <p>
                     No dudes en contactarnos directamente. Nuestro equipo estará
@@ -1167,7 +1168,7 @@ import Button from "./ui/Button.astro";
                 preguntas.forEach((pregunta) => {
                     const respuesta = pregunta.querySelector(".respuesta");
                     if (respuesta) {
-                        respuesta.style.display = "none";
+                        respuesta.classList.remove("open");
                     }
                 });
 
@@ -1183,7 +1184,7 @@ import Button from "./ui/Button.astro";
                         const primeraRespuesta =
                             primeraPregunta.querySelector(".respuesta");
                         if (primeraRespuesta) {
-                            primeraRespuesta.style.display = "block";
+                            primeraRespuesta.classList.add("open");
                         }
                     }
                 }
@@ -1193,7 +1194,6 @@ import Button from "./ui/Button.astro";
         botones[0]?.classList.add("active");
         if (contenidos.length > 0) {
             contenidos[0].style.display = "flex";
-
             const primeraPregunta = contenidos[0].querySelector(
                 ".pregunta__container",
             );
@@ -1201,23 +1201,23 @@ import Button from "./ui/Button.astro";
                 const primeraRespuesta =
                     primeraPregunta.querySelector(".respuesta");
                 if (primeraRespuesta) {
-                    primeraRespuesta.style.display = "block";
+                    primeraRespuesta.classList.add("open");
                 }
             }
         }
-    });
 
-    document.querySelectorAll(".pregunta__container").forEach((item) => {
-        item.addEventListener("click", () => {
-            const respuesta = item.querySelector(".respuesta");
-            if (respuesta.style.display === "block") {
-                respuesta.style.display = "none";
-            } else {
-                document
-                    .querySelectorAll(".respuesta")
-                    .forEach((res) => (res.style.display = "none"));
-                respuesta.style.display = "block";
-            }
+        preguntas.forEach((item) => {
+            item.addEventListener("click", () => {
+                const respuesta = item.querySelector(".respuesta");
+                if (respuesta) {
+                    respuesta.classList.toggle("open");
+                    document.querySelectorAll(".respuesta").forEach((res) => {
+                        if (res !== respuesta) {
+                            res.classList.remove("open");
+                        }
+                    });
+                }
+            });
         });
     });
 </script>
@@ -1312,7 +1312,18 @@ import Button from "./ui/Button.astro";
     }
 
     .respuesta {
-        display: none;
+        display: block;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition:
+            opacity 0.3s ease,
+            max-height 0.3s ease;
+    }
+
+    .respuesta.open {
+        opacity: 1;
+        max-height: 500px;
     }
 
     .pregunta__container .respuesta:first-child {
