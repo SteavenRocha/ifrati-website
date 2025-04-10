@@ -1169,13 +1169,6 @@ import Button from "./ui/Button.astro";
                     const respuesta = pregunta.querySelector(".respuesta");
                     if (respuesta) {
                         respuesta.classList.remove("open");
-
-                        const preguntaRespuesta = pregunta.querySelector(
-                            ".pregunta__respuesta",
-                        );
-                        if (preguntaRespuesta) {
-                            preguntaRespuesta.style.gap = "0";
-                        }
                     }
                 });
 
@@ -1192,14 +1185,6 @@ import Button from "./ui/Button.astro";
                             primeraPregunta.querySelector(".respuesta");
                         if (primeraRespuesta) {
                             primeraRespuesta.classList.add("open");
-
-                            const preguntaRespuesta =
-                                primeraPregunta.querySelector(
-                                    ".pregunta__respuesta",
-                                );
-                            if (preguntaRespuesta) {
-                                preguntaRespuesta.style.gap = "10px";
-                            }
                         }
                     }
                 }
@@ -1217,13 +1202,6 @@ import Button from "./ui/Button.astro";
                     primeraPregunta.querySelector(".respuesta");
                 if (primeraRespuesta) {
                     primeraRespuesta.classList.add("open");
-
-                    const preguntaRespuesta = primeraPregunta.querySelector(
-                        ".pregunta__respuesta",
-                    );
-                    if (preguntaRespuesta) {
-                        preguntaRespuesta.style.gap = "10px";
-                    }
                 }
             }
         }
@@ -1231,33 +1209,13 @@ import Button from "./ui/Button.astro";
         preguntas.forEach((item) => {
             item.addEventListener("click", () => {
                 const respuesta = item.querySelector(".respuesta");
-                const preguntaRespuesta = item.querySelector(
-                    ".pregunta__respuesta",
-                );
 
                 if (respuesta) {
                     respuesta.classList.toggle("open");
 
-                    if (respuesta.classList.contains("open")) {
-                        if (preguntaRespuesta) {
-                            preguntaRespuesta.style.gap = "10px";
-                        }
-                    } else {
-                        if (preguntaRespuesta) {
-                            preguntaRespuesta.style.gap = "0";
-                        }
-                    }
-
                     document.querySelectorAll(".respuesta").forEach((res) => {
                         if (res !== respuesta) {
                             res.classList.remove("open");
-
-                            const preguntaRespuestaOtros = res
-                                .closest(".pregunta__container")
-                                .querySelector(".pregunta__respuesta");
-                            if (preguntaRespuestaOtros) {
-                                preguntaRespuestaOtros.style.gap = "0";
-                            }
                         }
                     });
                 }
@@ -1350,27 +1308,20 @@ import Button from "./ui/Button.astro";
     }
 
     .respuesta p {
+        padding-top: 10px;
         text-align: start;
         width: 95%;
     }
 
     .respuesta {
         display: block;
-        opacity: 0;
         max-height: 0;
         overflow: hidden;
-        transition:
-            opacity 0.3s ease,
-            max-height 0.3s ease;
+        transition: max-height 0.3s ease;
     }
 
     .respuesta.open {
-        opacity: 1;
-        max-height: 500px;
-    }
-
-    .pregunta__container .respuesta:first-child {
-        display: block;
+        max-height: 200px;
     }
 
     h3 {
