@@ -6,8 +6,6 @@ import Email from "../assets/icons/email.svg";
 import Location from "../assets/icons/location.svg";
 import Facebook from "../assets/icons/facebook.svg";
 import Youtube from "../assets/icons/youtube.svg";
-import Instagram from "../assets/icons/instagram.svg";
-import Book from "../assets/icons/book.svg";
 ---
 
 <section>
@@ -94,17 +92,17 @@ import Book from "../assets/icons/book.svg";
         </div>
         <div class="item__2">
             <div class="icon">
-                <Facebook/>
+                <Facebook />
             </div>
             <div class="icon">
-                <Instagram/>
+                <img src="/src/assets/icons/instagram.png" alt="instagram">
             </div>
             <div class="icon">
-                <Youtube/>
+                <Youtube />
             </div>
         </div>
         <div class="item__3">
-            <img src="/public/img/libro_de_reclamaciones.jpg" alt="">
+            <img src="img/libro_de_reclamaciones.jpg" alt="" />
         </div>
     </div>
 </section>
@@ -151,14 +149,14 @@ import Book from "../assets/icons/book.svg";
 
     .top .item__1 .icon__texto .icon {
         width: 20px;
-        height: 20px;
+        height: auto;
         stroke-width: 0;
         color: var(--color-white);
     }
 
     .top .item__3 .icon__texto .icon {
         width: 40px;
-        height: 40px;
+        height: auto;
         stroke-width: 0;
         color: var(--primary-color);
     }
@@ -199,14 +197,20 @@ import Book from "../assets/icons/book.svg";
         width: auto;
     }
 
+    h1 {
+        text-align: start;
+    }
+
     h2 {
         font-size: 1.25rem;
         font-weight: 600;
+        text-align: start;
         color: var(--color-white);
     }
 
     p {
         font-weight: 350;
+        text-align: start;
         color: var(--gray-200);
     }
 
@@ -224,15 +228,15 @@ import Book from "../assets/icons/book.svg";
         height: 100%;
     }
 
-    .bottom .item__2{
+    .bottom .item__2 {
         width: 50%;
     }
 
-    .bottom .item__1{
+    .bottom .item__1 {
         width: 30%;
     }
 
-    .bottom .item__3{
+    .bottom .item__3 {
         width: 20%;
     }
 
@@ -261,7 +265,7 @@ import Book from "../assets/icons/book.svg";
         justify-content: end;
     }
 
-    .bottom .item__3 img{
+    .bottom .item__3 img {
         cursor: pointer;
         width: 100px;
         height: auto;

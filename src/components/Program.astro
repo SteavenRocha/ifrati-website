@@ -30,11 +30,9 @@ import Down from "../assets/icons/down-arrow.svg";
 
         <div class="cta">
             <div class="textos">
-                <h1>
-                    ¿Quieres ser parte del <span class="primary-subtitulo"
-                        >Cambio?</span
-                    >
-                </h1>
+                <h2>
+                    ¿Quieres ser parte del <span class="primary-subtitulo">Cambio?</span>
+                </h2>
                 <p>
                     Nuestro programa está especialmente diseñado para jóvenes
                     que buscan una oportunidad para desarrollar su potencial. No
@@ -46,7 +44,7 @@ import Down from "../assets/icons/down-arrow.svg";
                 <Button text="Conocer más" destino="/#" icon={Right} />
                 <Button
                     text="Solicitar informacion"
-                    destino="#about"
+                    destino="#contact"
                     icon={Down}
                     color="var(--secondary-color)"
                     bgColor="var(--color-white)"
@@ -77,26 +75,6 @@ import Down from "../assets/icons/down-arrow.svg";
         gap: 50px;
     }
 
-    .textos {
-        display: flex;
-        width: 50%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-        height: 100%;
-    }
-
-    h1 {
-        font-weight: 700;
-        font-size: 2rem;
-        text-align: center;
-    }
-
-    p {
-        text-align: center;
-    }
-
     .video {
         display: flex;
         gap: 2px;
@@ -125,14 +103,8 @@ import Down from "../assets/icons/down-arrow.svg";
         gap: 20px;
     }
 
-    .cta h1 {
-        font-weight: 650;
-        font-size: 1.5rem;
-        text-align: center;
-    }
-
     .botones {
         display: flex;
-        width: auto;
+        justify-content: center;
     }
 </style>

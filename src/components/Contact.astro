@@ -1,0 +1,202 @@
+---
+import Button from "./ui/Button.astro";
+import Whatsapp from "../assets/icons/whatsapp.svg";
+import Email from "../assets/icons/email.svg";
+import Clock from "../assets/icons/clock.svg";
+---
+
+<section id="contact">
+    <div class="container">
+        <div class="textos">
+            <h1>
+                <span class="primary-titulo">Contáctanos</span>
+            </h1>
+
+            <p>
+                Estamos aquí para responder a todas tus preguntas. Ponte en
+                contacto con nosotros a través de cualquiera de estos canales y
+                te responderemos lo antes posible.
+            </p>
+        </div>
+
+        <div class="formas">
+            <div class="mensaje">
+                <h2>Envíanos un mensaje</h2>
+            </div>
+            <div class="contacto__directo">
+                <h2>Contacto directo</h2>
+
+                <div class="contacto__container">
+                    <div class="item__contacto">
+                        <div class="icono whatsapp">
+                            <Whatsapp />
+                        </div>
+                        <div class="content">
+                            <div class="descripcion">
+                                <h3>WhatsApp</h3>
+                                <p>
+                                    Respuesta rápida de lunes a viernes de 9:00
+                                    a 18:00h
+                                </p>
+                            </div>
+                            <div class="container__button">
+                                <Button
+                                    text="Chatear por WhatsApp"
+                                    destino="/#"
+                                    icon={Whatsapp}
+                                    bgColor="var(--green-550)"
+                                    hoverColor="var(--green-700)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item__contacto">
+                        <div class="icono email">
+                            <Email />
+                        </div>
+                        <div class="content">
+                            <div class="descripcion">
+                                <h3>Correo electrónico</h3>
+                                <p>
+                                    Información general <br /> info@ifrati.org.pe
+                                </p>
+                            </div>
+                            <div class="container__button">
+                                <Button
+                                    text="Enviar Correo"
+                                    destino="/#"
+                                    icon={Email}
+                                    bgColor="var(--color-button)"
+                                    hoverColor="var(--primary-color-hover)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item__contacto">
+                        <div class="icono clock">
+                            <Clock />
+                        </div>
+                        <div class="content">
+                            <div class="descripcion">
+                                <h3>Horarios de atención</h3>
+                                <p>
+                                    Respondemos consultas de lunes a viernes
+                                    9:00 - 18:00h <br> Tiempo de respuesta
+                                    aproximado: 24 - 48 horas
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 80px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        height: 100%;
+    }
+
+    .formas {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .mensaje {
+        width: 50%;
+    }
+
+    .contacto__directo {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        width: 50%;
+    }
+
+    .contacto__container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .textos p {
+        text-align: center;
+    }
+
+    h2 {
+        text-align: start;
+    }
+
+    p {
+        text-align: start;
+    }
+
+    .item__contacto {
+        display: flex;
+        gap: 10px;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .descripcion {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .container__button {
+        width: 50%;
+    }
+
+    .icono {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        padding: 8px;
+        border-radius: 8px;
+    }
+
+    .icono.whatsapp {
+        color: var(--green-550);
+        background-color: var(--green-100);
+    }
+
+    .icono.email {
+        color: var(--primary-color);
+        background-color: var(--primary-50);
+    }
+
+    .icono.clock {
+        color: var(--secondary-color);
+        background-color: var(--secondary-50);
+    }
+
+    h3 {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+</style>

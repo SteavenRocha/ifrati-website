@@ -1,0 +1,181 @@
+---
+import Location from "../assets/icons/location.svg";
+import Right from "../assets/icons/arrow-right-line.svg";
+import Clock from "../assets/icons/clock.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="content">
+            <div class="textos">
+                <h2>Ubicación</h2>
+
+                <p>
+                    Puedes ubicar nuestra tienda física en los siguientes
+                    lugares. Te invitamos a visitarnos para conocer nuestros
+                    productos y el impacto de nuestro trabajo social.
+                </p>
+            </div>
+
+            <div class="detalles">
+                <div class="item">
+                    <div class="icono">
+                        <Location />
+                    </div>
+                    <div class="contenido">
+                        <div class="descripcion">
+                            <h3>
+                                Panadería <span class="primary-h3">IFRATI</span>
+                            </h3>
+                            <p>
+                                Polígono Industrial Norte, Nave 8 28005 Trujillo
+                            </p>
+                        </div>
+
+                        <a href="" class="link"
+                            >Ver en Google Maps&nbsp;&nbsp;
+                            <Right class="icono__link" />
+                        </a>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="icono">
+                        <Clock />
+                    </div>
+                    <div class="contenido">
+                        <div class="titulo__horario">
+                            <h3>Horarios</h3>
+                            <p class="abierto">Abierto ahora</p>
+                        </div>
+
+                        <div class="horario__content">
+                            <div class="dia">
+                                <p>Lunes a viernes</p>
+                                <p>7:00 - 20:00h</p>
+                            </div>
+                            <div class="dia">
+                                <p>Sábados</p>
+                                <p>8:00 - 14:00h</p>
+                            </div>
+                            <div class="dia">
+                                <p>Domingo</p>
+                                <p class="cerrado">Cerrado</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mapa">mapa</div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 50px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        justify-content: center;
+        gap: 50px;
+        height: 100%;
+    }
+
+    .textos {
+        width: 100%;
+    }
+
+    .content {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .item {
+        display: flex;
+        gap: 15px;
+    }
+
+    .detalles {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .contenido {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .link {
+        display: flex;
+        align-items: center;
+        font-size: 0.9rem;
+        color: var(--primary-color);
+    }
+
+    .mapa {
+        width: 50%;
+        height: 400px;
+        border-radius: 10px;
+        background-color: rgb(214, 213, 213);
+    }
+
+    h2,
+    p {
+        text-align: start;
+    }
+
+    .icono {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        padding: 8px;
+        border-radius: 8px;
+        color: var(--primary-color);
+        background-color: var(--primary-50);
+    }
+
+    .icono__link {
+        width: 15px;
+        height: 15px;
+    }
+
+    .titulo__horario {
+        display: flex;
+    }
+
+    .horario__content {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .dia {
+        display: flex;
+    }
+
+    .abierto {
+        color: var(--green-550);
+    }
+
+    .cerrado {
+        color: var(--primary-900);
+    }
+</style>

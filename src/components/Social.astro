@@ -1,0 +1,108 @@
+---
+import Facebook from "../assets/icons/facebook.svg";
+import Youtube from "../assets/icons/youtube.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="textos">
+            <h2>
+                Siguenos en nuestras <span class="primary-subtitulo">
+                    Redes Sociales</span
+                >
+            </h2>
+
+            <p>
+                Mantente al día de nuestras novedades, eventos y convocatorias
+                siguiéndonos en nuestras redes sociales.
+            </p>
+        </div>
+
+        <div class="redes">
+            <div class="item">
+                <div class="logo">
+                    <Facebook/>
+                </div>
+                <div class="nombre__red">
+                    <h3>Facebook</h3>
+                    <p>/ifrati</p>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="logo">
+                    <img
+                        src="/src/assets/icons/instagram.png"
+                        alt="instagram"
+                    />
+                </div>
+                <div class="nombre__red">
+                    <h3>Instagram</h3>
+                    <p>@ifrati</p>
+                </div>
+            </div>
+
+            <div class="item">
+                <div class="logo">
+                    <Youtube/>
+                </div>
+                <div class="nombre__red">
+                    <h3>Youtube</h3>
+                    <p>IFRATI</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 50px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        height: 100%;
+    }
+
+    .logo {
+        width: 50px;
+        height: auto;
+    }
+
+    .redes {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .item h3,
+    .item p {
+        text-align: center;
+    }
+
+    .item {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    h3 {
+        font-weight: 600;
+    }
+</style>
