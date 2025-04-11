@@ -6,6 +6,7 @@ interface Props {
     hoverColor?: string;
     icon?: any; 
     destino: string;
+    border?: string;
 }
 
 const {
@@ -15,13 +16,14 @@ const {
     hoverColor = "var(--primary-color-hover)",
     icon: Icon,
     destino,
+    border,
 } = Astro.props;
 ---
 
 <a
     href={destino}
     class="button"
-    style={`color: ${color}; background-color: ${bgColor};`}
+    style={`color: ${color}; background-color: ${bgColor}; border: ${border};`}
     onmouseover={`this.style.backgroundColor='${hoverColor}'`}
     onmouseout={`this.style.backgroundColor='${bgColor}'`}
 >

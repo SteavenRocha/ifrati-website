@@ -1,5 +1,5 @@
 ---
-import Location from "../assets/icons/location.svg";
+import Map from "../assets/icons/location.svg";
 import Right from "../assets/icons/arrow-right-line.svg";
 import Clock from "../assets/icons/clock.svg";
 ---
@@ -20,7 +20,7 @@ import Clock from "../assets/icons/clock.svg";
             <div class="detalles">
                 <div class="item">
                     <div class="icono">
-                        <Location />
+                        <Map/>
                     </div>
                     <div class="contenido">
                         <div class="descripcion">
@@ -34,7 +34,7 @@ import Clock from "../assets/icons/clock.svg";
 
                         <a href="" class="link"
                             >Ver en Google Maps&nbsp;&nbsp;
-                            <Right class="icono__link" />
+                            <Right style={'width: 15px'} />
                         </a>
                     </div>
                 </div>
@@ -140,6 +140,10 @@ import Clock from "../assets/icons/clock.svg";
         text-align: start;
     }
 
+    h2 {
+        font-size: 1.25rem;
+    }
+
     .icono {
         display: flex;
         align-items: center;
@@ -150,11 +154,6 @@ import Clock from "../assets/icons/clock.svg";
         border-radius: 8px;
         color: var(--primary-color);
         background-color: var(--primary-50);
-    }
-
-    .icono__link {
-        width: 15px;
-        height: 15px;
     }
 
     .titulo__horario {

@@ -1,0 +1,173 @@
+---
+import Right from "/src/assets/icons/arrow-right-line.svg";
+import Left from "/src/assets/icons/arrow-left-line.svg";
+
+interface Props {
+    cant: number;
+}
+
+const { cant } = Astro.props;
+
+const cantidadCards = cant;
+const cardsToShow = 4;
+/* const cardsToScroll = 1; */
+const tamañoCard = `${(cantidadCards / cardsToShow) * 100}%`;
+---
+
+<div class="container" style={`--tamañoCard: ${tamañoCard};`}>
+    <div class="container__carousel">
+        <div class="carruseles" id="slider">
+            <slot />
+        </div>
+    </div>
+
+    <div class="paginacion">
+        <div class="direcciones">
+            <div class="btn-left"><Left /></div>
+            <p>Mostrando 1 de 5 paginas</p>
+            <div class="btn-right"><Right /></div>
+        </div>
+
+        <div class="posicion">
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const btnLeft = document.querySelector(".btn-left") as HTMLElement;
+    const btnRight = document.querySelector(".btn-right") as HTMLElement;
+    const slider = document.querySelector("#slider") as HTMLElement;
+    const cardSection = document.querySelectorAll(".card__section");
+
+    const cardsToShow = 4;
+    const cardsToScroll = 1;
+    const totalCards = cardSection.length;
+    const maxCounter = totalCards - cardsToShow;
+
+    let operacion = 0;
+    let counter = 0;
+
+    btnLeft?.addEventListener("click", () => {
+        if (!btnLeft.classList.contains("disabled")) moveToLeft();
+    });
+
+    btnRight?.addEventListener("click", () => {
+        if (!btnRight.classList.contains("disabled")) moveToRight();
+    });
+
+    updateButtons();
+
+    function moveToRight(): void {
+        if (counter < maxCounter) {
+            counter += cardsToScroll;
+            if (counter > maxCounter) counter = maxCounter;
+
+            operacion = (counter * 100) / totalCards;
+            slider.style.transform = `translate(-${operacion}%)`;
+            slider.style.transition = "all ease .3s";
+        }
+
+        updateButtons();
+    }
+
+    function moveToLeft(): void {
+        if (counter > 0) {
+            counter -= cardsToScroll;
+            if (counter < 0) counter = 0;
+
+            operacion = (counter * 100) / totalCards;
+            slider.style.transform = `translate(-${operacion}%)`;
+            slider.style.transition = "all ease .3s";
+        }
+
+        updateButtons();
+    }
+
+    function updateButtons(): void {
+        btnLeft.classList.toggle("disabled", counter <= 0);
+        btnRight.classList.toggle("disabled", counter >= maxCounter);
+    }
+</script>
+
+<style>
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        gap: 20px;
+    }
+
+    .container__carousel {
+        width: 100%;
+        height: auto;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .carruseles {
+        width: var(--tamañoCard); /* contenedor de todos los cards*/
+        height: 100%;
+        display: flex;
+        gap: 20px;
+        padding: 5px;
+    }
+
+    .direcciones {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .direcciones p {
+        width: auto;
+    }
+
+    .btn-left,
+    .btn-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        border-radius: 10px;
+        padding: 2px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.5s ease;
+        user-select: none;
+        color: var(--secondary-color);
+    }
+
+    .btn-left:hover,
+    .btn-right:hover {
+        background-color: var(--secondary-color);
+        color: #fff;
+    }
+
+    .posicion {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .item {
+        width: 5px;
+        height: 5px;
+        background-color: var(--primary-color);
+        border-radius: 50%;
+    }
+
+    .btn-left.disabled,
+    .btn-right.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+</style>

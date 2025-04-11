@@ -1,0 +1,779 @@
+---
+import Slider from "./ui/Slider.astro";
+import Button from "./ui/Button.astro";
+import Right from "../assets/icons/right-arrow.svg";
+import Person from "../assets/icons/person.svg";
+import Clock from "../assets/icons/clock.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="textos">
+            <h1>Tienda <span class="primary-titulo">Solidaria</span></h1>
+
+            <p>
+                También puedes comprar alguno de nuestros productos
+                desarrollados por nuestros estudiantes. Cada compra contribuye
+                directamente a la sostenibilidad de nuestro programa social.
+            </p>
+        </div>
+
+        <div class="slider__container">
+            <h2><span class="primary-subtitulo">Productos</span> destacados</h2>
+
+            <Slider cant={10}>
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-1.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Nuevo</p>
+                            <img
+                                src="/public/img/productos/producto-2.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Galletas Chocochip</h3>
+                                        <p>
+                                            Surtido de galletas elaboradas con
+                                            ingredientes naturales. Incluye
+                                            sabores de vainilla, chocolate,
+                                            avena y naranja. Opción de
+                                            personalizar la caja con mensaje.
+                                            Lorem ipsum dolor, sit amet.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-3.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pie de Limon</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-1.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-2.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-3.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-1.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-2.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-3.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__section">
+                    <div class="card">
+                        <div class="imagen">
+                            <p>Mas vendido</p>
+                            <img
+                                src="/public/img/productos/producto-1.jpg"
+                                alt="producto-1"
+                            />
+                        </div>
+                        <div class="card__container">
+                            <div class="detalles">
+                                <div class="content__detalles">
+                                    <div class="pildoras">
+                                        <p>Orgánico</p>
+                                        <p>Sin conservantes</p>
+                                    </div>
+                                    <div class="descripcion">
+                                        <h3>Pan Artesanal Rústico</h3>
+                                        <p>
+                                            Elaborado con masa madre natural y
+                                            harina orgánica de trigo integral.
+                                            Fermentación lenta de 24 horas que
+                                            aporta un sabor único y una corteza
+                                            crujiente.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mas__detalles">
+                                    <div class="elaborado">
+                                        <Person class="icon" />
+                                        <p>
+                                            <strong
+                                                >Elaborado por:
+                                            </strong>Estudiantes de pastelería.
+                                        </p>
+                                    </div>
+                                    <div class="entrega">
+                                        <Clock class="icon" />
+                                        <p>
+                                            <strong>Entrega:</strong> 1-2 días (horneado
+                                            bajo pedido)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Button
+                                text="Ver detalles"
+                                destino="/#"
+                                icon={Right}
+                                bgColor="var(--color-white)"
+                                color="var(--secondary-color)"
+                                border="1px solid var(--primary-color)"
+                                hoverColor="var(--gray-100)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Slider>
+        </div>
+
+        <div class="cta">
+            <div class="textos">
+                <h2>
+                    Descubre todos nuestro <span class="primary-subtitulo"
+                        >Productos</span
+                    >
+                </h2>
+                <p>
+                    Visita nuestra tienda online completa para descubrir toda
+                    nuestra gama de productos artesanales elaborados con pasión
+                    y propósito por nuestros estudiantes.
+                </p>
+            </div>
+
+            <Button text="Visitar tienda" destino="/#" icon={Right} />
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 50px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        height: 100%;
+    }
+
+    .slider__container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        overflow: hidden;
+    }
+
+    .card__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: calc(100% - 250px);
+        padding: 10px;
+        gap: 20px;
+        background-color: var(--color-white);
+    }
+
+    .imagen img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    .imagen p {
+        font-size: 0.8rem;
+        position: absolute;
+        top: 2%;
+        right: 2%;
+        width: auto;
+        padding: 5px;
+        border-radius: 10px;
+        background-color: var(--green-550);
+        color: var(--color-white);
+    }
+
+    .imagen {
+        position: relative;
+        height: 250px;
+    }
+
+    .detalles {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 15px;
+        height: 100%;
+    }
+
+    .content__detalles {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .pildoras {
+        display: flex;
+        gap: 10px;
+    }
+
+    .pildoras p {
+        font-size: 0.8rem;
+        background-color: var(--primary-50);
+        color: var(--primary-color);
+        width: auto;
+        padding: 5px;
+        border-radius: 10px;
+    }
+
+    .descripcion {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .descripcion h3,
+    .descripcion p {
+        text-align: start;
+    }
+
+    .descripcion h3 {
+        font-size: 1.25rem;
+    }
+
+    .mas__detalles p,
+    strong {
+        text-align: start;
+        font-size: 0.8rem;
+    }
+
+    .elaborado,
+    .entrega {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .icon {
+        width: 15px;
+        color: var(--secondary-color);
+    }
+
+    .cta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .botones {
+        display: flex;
+        justify-content: center;
+    }
+</style>
