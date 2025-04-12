@@ -1,0 +1,335 @@
+---
+import Button from "./ui/Button.astro";
+import Right from "../assets/icons/right-arrow.svg";
+import Heart from "../assets/icons/heart.svg";
+import Wallet from "../assets/icons/wallet.svg";
+import Graduation from "../assets/icons/graduation.svg";
+import People from "../assets/icons/people.svg";
+---
+
+<section>
+    <div class="container">
+        <div class="textos">
+            <h1>
+                ¿Estas listo para <span class="primary-titulo">DONAR?</span>
+            </h1>
+
+            <p>
+                En <span class="primary-parrafo">IFRATI</span> no solo horneamos
+                pan, creamos oportunidades. Somos una panadería social dedicada a
+                empoderar a jóvenes en situación de vulnerabilidad, brindándoles
+                herramientas para construir un futuro mejor.
+            </p>
+        </div>
+
+        <div class="content">
+            <div class="donantes">
+                <h2>
+                    <span class="primary-subtitulo">UNETE</span> a nuestros donantes
+                </h2>
+                <div class="donantes__content">
+                    <div class="cantidad__content">
+                        <div class="cantidad">
+                            <h1>1, 247</h1>
+                            <h4>Donantes</h4>
+                        </div>
+                        <div class="burbujas">
+                            <img
+                                src="img/donantes/person-1.jpg"
+                                class="avatar"
+                                style="top: 15%; left: 21%; width: 50px; height: 50px;"
+                            />
+                            <img
+                                src="img/donantes/person-2.jpg"
+                                class="avatar"
+                                style="top: 20%; left: 30%; width: 55px; height: 55px;"
+                            />
+                            <img
+                                src="img/donantes/person-3.jpg"
+                                class="avatar"
+                                style="top: 10%; left: 38%; width: 40px; height: 40px;"
+                            />
+                            <img
+                                src="img/donantes/person-4.jpg"
+                                class="avatar"
+                                style="top: 50%; left: 27%; width: 40px; height: 40px;"
+                            />
+                            <img
+                                src="img/donantes/person-5.jpg"
+                                class="avatar"
+                                style="top: 40%; left: 35%; width: 40px; height: 40px;"
+                            />
+                            <img
+                                src="img/donantes/person-6.jpg"
+                                class="avatar"
+                                style="top: 68%; left: 35%; width: 55px; height: 55px;"
+                            />
+                            <img
+                                src="img/donantes/person-7.jpg"
+                                class="avatar"
+                                style="top: 78%; left: 25%; width: 55px; height: 55px;"
+                            />
+                            <img
+                                src="img/donantes/person-1.jpg"
+                                class="avatar"
+                                style="top: 83%; left: 50%; width: 40px; height: 40px;"
+                            />
+                            <img
+                                src="img/donantes/person-2.jpg"
+                                class="avatar"
+                                style="top: 15%; left: 58%; width: 50px; height: 50px;"
+                            />
+                            <img
+                                src="img/donantes/person-3.jpg"
+                                class="avatar"
+                                style="top: 40%; left: 63%; width: 60px; height: 60px;"
+                            />
+                            <img
+                                src="img/donantes/person-4.jpg"
+                                class="avatar"
+                                style="top: 25%; left: 69%; width: 55px; height: 55px;"
+                            />
+                            <img
+                                src="img/donantes/person-5.jpg"
+                                class="avatar"
+                                style="top: 65%; left: 61%; width: 45px; height: 45px;"
+                            />
+                            <img
+                                src="img/donantes/person-6.jpg"
+                                class="avatar"
+                                style="top: 78%; left: 68%; width: 40px; height: 40px;"
+                            />
+                            <img
+                                src="img/donantes/person-7.jpg"
+                                class="avatar"
+                                style="top: 70%; left: 75%; width: 55px; height: 55px;"
+                            />
+                        </div>
+                    </div>
+
+                    <p>Ya están apoyando nuestro proyecto</p>
+                </div>
+            </div>
+            <div class="cards__container">
+                <h2>
+                    Elige tu forma de <span class="primary-subtitulo"
+                        >CONTRIBUIR</span
+                    >
+                </h2>
+
+                <div class="cards__section">
+                    <div class="card">
+                        <div class="card__descripcion">
+                            <div class="icon">
+                                <Wallet />
+                            </div>
+
+                            <div class="descripcion">
+                                <h3>Dona para alcanzar una meta especifica</h3>
+                                <p>
+                                    Contribuye a alcanzar metas específicas como
+                                    equipamiento, becas o mejoras en nuestras
+                                    instalaciones.
+                                </p>
+                            </div>
+                        </div>
+                        <Button
+                            text="Ver las metas"
+                            destino="/#"
+                            icon={Right}
+                        />
+                    </div>
+
+                    <div class="card">
+                        <div class="card__descripcion">
+                            <div class="icon">
+                                <Graduation />
+                            </div>
+
+                            <div class="descripcion">
+                                <h3>
+                                    Apoya económicamente en la formación de los
+                                    jóvenes
+                                </h3>
+                                <p>
+                                    Tu donación ayuda directamente a financiar
+                                    la formación profesional de jóvenes en
+                                    situación vulnerable.
+                                </p>
+                            </div>
+                        </div>
+                        <Button text="Donar ahora" destino="/#" icon={Heart} />
+                    </div>
+
+                    <div class="card">
+                        <div class="card__descripcion">
+                            <div class="icon">
+                                <People />
+                            </div>
+                            <div class="descripcion">
+                                <h3>Inscríbete como voluntario</h3>
+                                <p>
+                                    Dona tu tiempo y habilidades como mentor,
+                                    formador o colaborador en nuestros programas
+                                    sociales.
+                                </p>
+                            </div>
+                        </div>
+                        <Button text="Inscribirme" destino="/#" icon={Right} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        max-width: var(--max-width);
+        height: auto;
+        gap: 30px;
+        padding: 80px 16px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        height: 100%;
+    }
+
+    .cantidad {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 230px;
+        height: 230px;
+        border-radius: 50%;
+        border: 1px solid var(--gray-200);
+        background-color: var(--color-white);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .donantes__content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .donantes {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cantidad__content {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 400px;
+    }
+
+    .burbujas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .avatar {
+        position: absolute;
+        border-radius: 50%;
+        object-fit: cover;
+        /*  animation: bounce 3s infinite ease-in-out; */
+    }
+
+    /* @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    } */
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        width: 100%;
+    }
+
+    h4 {
+        width: auto;
+        font-weight: 400;
+        color: var(--text-paragraph);
+    }
+
+    .cantidad h1 {
+        line-height: 1;
+        color: var(--primary-color);
+        font-size: 3.5rem;
+    }
+
+    .cards__container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .cards__section {
+        display: flex;
+        gap: 20px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px;
+        gap: 30px;
+        border-radius: 10px;
+        height: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card__descripcion {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .icon {
+        width: 80px;
+        height: 80px;
+        color: var(--primary-color);
+        background-color: var(--primary-50);
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .descripcion h3 {
+        font-size: 1.15rem;
+        font-weight: 650;
+        text-align: center;
+    }
+
+    .descripcion {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+</style>

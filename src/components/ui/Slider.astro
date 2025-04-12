@@ -1,20 +1,22 @@
 ---
-import Right from "/src/assets/icons/arrow-right-line.svg";
-import Left from "/src/assets/icons/arrow-left-line.svg";
+import Right from "/src/assets/icons/right.svg";
+import Left from "/src/assets/icons/left.svg";
 
 interface Props {
     cant: number;
+    cantShow: number;
+    id: string;
 }
 
-const { cant } = Astro.props;
+const { cant, cantShow, id } = Astro.props;
 
 const cantidadCards = cant;
-const cardsToShow = 4;
+const cardsToShow = cantShow;
 /* const cardsToScroll = 1; */
 const tamañoCard = `${(cantidadCards / cardsToShow) * 100}%`;
 ---
 
-<div class="container" style={`--tamañoCard: ${tamañoCard};`}>
+<div id={id} class="container" style={`--tamañoCard: ${tamañoCard};`}>
     <div class="container__carousel">
         <div class="carruseles" id="slider">
             <slot />
@@ -38,59 +40,65 @@ const tamañoCard = `${(cantidadCards / cardsToShow) * 100}%`;
     </div>
 </div>
 
-<script>
-    const btnLeft = document.querySelector(".btn-left") as HTMLElement;
-    const btnRight = document.querySelector(".btn-right") as HTMLElement;
-    const slider = document.querySelector("#slider") as HTMLElement;
-    const cardSection = document.querySelectorAll(".card__section");
+<script define:vars={{ id, cantidadCards, cardsToShow }} is:inline>
+    const container = document.querySelector("#" + id);
 
-    const cardsToShow = 4;
-    const cardsToScroll = 1;
-    const totalCards = cardSection.length;
-    const maxCounter = totalCards - cardsToShow;
+    if (container) {
+        const btnLeft = container.querySelector(".btn-left");
+        const btnRight = container.querySelector(".btn-right");
+        const slider = container.querySelector("#slider");
+        /* const cardSection = container.querySelectorAll(".card__section"); */
 
-    let operacion = 0;
-    let counter = 0;
+        const cardsShow = cardsToShow;
+        const cardsToScroll = 1;
+        const totalCards = cantidadCards;
+        const maxCounter = totalCards - cardsShow;
 
-    btnLeft?.addEventListener("click", () => {
-        if (!btnLeft.classList.contains("disabled")) moveToLeft();
-    });
+        let operacion = 0;
+        let counter = 0;
 
-    btnRight?.addEventListener("click", () => {
-        if (!btnRight.classList.contains("disabled")) moveToRight();
-    });
+        btnLeft?.addEventListener("click", () => {
+            if (!btnLeft.classList.contains("disabled")) moveToLeft();
+        });
 
-    updateButtons();
-
-    function moveToRight(): void {
-        if (counter < maxCounter) {
-            counter += cardsToScroll;
-            if (counter > maxCounter) counter = maxCounter;
-
-            operacion = (counter * 100) / totalCards;
-            slider.style.transform = `translate(-${operacion}%)`;
-            slider.style.transition = "all ease .3s";
-        }
+        btnRight?.addEventListener("click", () => {
+            if (!btnRight.classList.contains("disabled")) moveToRight();
+        });
 
         updateButtons();
-    }
 
-    function moveToLeft(): void {
-        if (counter > 0) {
-            counter -= cardsToScroll;
-            if (counter < 0) counter = 0;
+        function moveToRight() {
+            if (counter < maxCounter) {
+                counter += cardsToScroll;
+                if (counter > maxCounter) counter = maxCounter;
 
-            operacion = (counter * 100) / totalCards;
-            slider.style.transform = `translate(-${operacion}%)`;
-            slider.style.transition = "all ease .3s";
+                operacion = (counter * 100) / totalCards;
+                slider.style.transform = `translate(-${operacion}%)`;
+                slider.style.transition = "all ease .3s";
+            }
+
+            updateButtons();
         }
 
-        updateButtons();
-    }
+        function moveToLeft() {
+            if (counter > 0) {
+                counter -= cardsToScroll;
+                if (counter < 0) counter = 0;
 
-    function updateButtons(): void {
-        btnLeft.classList.toggle("disabled", counter <= 0);
-        btnRight.classList.toggle("disabled", counter >= maxCounter);
+                operacion = (counter * 100) / totalCards;
+                slider.style.transform = `translate(-${operacion}%)`;
+                slider.style.transition = "all ease .3s";
+            }
+
+            updateButtons();
+        }
+
+        function updateButtons() {
+            btnLeft.classList.toggle("disabled", counter <= 0);
+            btnRight.classList.toggle("disabled", counter >= maxCounter);
+        }
+    } else {
+        console.error("No se encontró el contenedor con el ID:", id);
     }
 </script>
 
@@ -141,13 +149,13 @@ const tamañoCard = `${(cantidadCards / cardsToShow) * 100}%`;
         cursor: pointer;
         transition: 0.5s ease;
         user-select: none;
+        background-color: var(--gray-100);
         color: var(--secondary-color);
     }
 
     .btn-left:hover,
     .btn-right:hover {
-        background-color: var(--secondary-color);
-        color: #fff;
+        color: var(--primary-color);
     }
 
     .posicion {

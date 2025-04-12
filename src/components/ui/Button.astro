@@ -7,6 +7,7 @@ interface Props {
     icon?: any; 
     destino: string;
     border?: string;
+    fontSize?: string;
 }
 
 const {
@@ -17,13 +18,14 @@ const {
     icon: Icon,
     destino,
     border,
+    fontSize,
 } = Astro.props;
 ---
 
 <a
     href={destino}
     class="button"
-    style={`color: ${color}; background-color: ${bgColor}; border: ${border};`}
+    style={`color: ${color}; background-color: ${bgColor}; border: ${border}; font-size: ${fontSize};`}
     onmouseover={`this.style.backgroundColor='${hoverColor}'`}
     onmouseout={`this.style.backgroundColor='${bgColor}'`}
 >
