@@ -1,0 +1,108 @@
+:root {
+    --border-radius: 20px;
+    --border-radius-btn: 10px;
+    --border-radius-card: 15px;
+
+    --max-width: 1300px;
+
+    --padding-section: 70px 50px;
+    --padding-width: 50px;
+
+    --box--shadow: 0 2px 4px rgb(212, 212, 212);
+
+    --font-size-hero: clamp(2.5rem, 3vw, 3rem);
+    --font-size--parrafo: clamp(1rem, 3vw, 1.2rem);
+    --font-size-card: clamp(1rem, 3vw, 1.1rem);;
+}
+
+/* :root {
+    --primary-color: ${style.primaryColor};
+    --secondary-color: ${style.secondaryColor};
+    --background-color: ${style.backgroundColor};
+    --text-color: ${style.textColor};
+    --title-color: ${style.titleColor};
+} */
+
+html,
+body,
+* {
+    font-size: 16px;
+    margin: 0;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    font-family: 'Roboto Variable', sans-serif;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+span.highlight {
+    color: var(--primary-color);
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+span.bold {
+    font-weight: bold;
+    font-size: inherit;
+}
+
+/* SPAN DE LOS BOTONES Y EL DATA */
+.button span,
+.data span {
+    width: 20px;
+    height: 20px;
+}
+
+.texts {
+    width: 700px;
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+}
+
+.texts .title {
+    font-weight: 800;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    line-height: 1;
+}
+
+p {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    line-height: 1.3;
+}
+
+.card__details .card__title {
+    font-size: clamp(1.25rem, 3vw, 1.5rem);
+}
+
+.card__details .card__description {
+    font-size: var(--font-size-card);
+}
+
+.sub__texts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    width: 700px;
+    margin: auto;
+}
+
+.sub__texts .title {
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.25;
+}
+
+.sub__texts .description {
+    line-height: 1.3;
+}

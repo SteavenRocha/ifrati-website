@@ -1,0 +1,270 @@
+<script setup>
+const { data } = await useApi('footer-configuration')
+
+// Config Footer
+const logo = data.value?.data?.logo ?? null
+const button = data.value?.data?.button ?? []
+
+// FORMATEAR TEXTOS **
+const description = data.value?.data?.description ?? ''
+const formattedDescription = ref(getTextFormated(description))
+
+// COLORES
+const bgColor = data.value?.data?.sectionStyles?.backgroundColor?.color ?? null
+const titleColor = data.value?.data?.sectionStyles?.titleColor?.color ?? null
+const textColor = data.value?.data?.sectionStyles?.textColor?.color ?? null
+// BG COLOR DEL FOOTER COMPONENT
+const bgColorFooterComponent = data.value?.data?.footerComponent?.backgroundColor ?? null
+
+// Links
+const quickLinks = data.value?.data?.quickLinks ?? null
+const contactLinks = data.value?.data?.contactLinks ?? null
+const legalLinks = data.value?.data?.legal ?? null
+
+// ============ OBTENER SVG POR ÍTEM ============ //
+// Obtener SVG plano para los contactLinks
+const processedContactLinks = reactive([])
+
+if (contactLinks?.links?.length) {
+    for (const link of contactLinks.links) {
+        const { svgHtml, loadSvg } = getSvgHtml()
+        const iconUrl = getResource(link.icon?.url ?? '').imageUrl
+        if (iconUrl) {
+            await loadSvg(iconUrl)
+        }
+        processedContactLinks.push({
+            ...link,
+            svgHtml: svgHtml.value,
+        })
+    }
+}
+
+// Disclaimer, Social y Libro de Reclamaciones
+const disclaimer = data.value?.data?.footerComponent?.disclaimer ?? ''
+const socialLinks = data.value?.data?.footerComponent?.social ?? []
+const complaintsBook = data.value?.data?.footerComponent?.complaintsBook ?? null
+
+// FORMATEAR TEXTOS **
+const formattedDisclaimer = ref(getTextFormated(disclaimer))
+</script>
+
+<template>
+    <footer :style="{
+        /* COLORES DE LA SECCION */
+        '--bg-color-footer': bgColor ?? 'var(--secondary-color)',
+        '--title-color-footer': titleColor ?? 'var(--title-color)',
+        '--text-color-footer': textColor ?? 'var(--text-color)',
+    }">
+        <div class="content__bg">
+            <div class="content">
+                <div class="footer__content">
+                    <div class="primary__item">
+                        <div class="content__item">
+                            <a class="logo" :href="logo?.href">
+                                <img v-if="logo?.image?.url" :src="getResource(logo.image.url).imageUrl"
+                                    :alt="logo.image.alternativeText || 'Logo'" />
+                            </a>
+                            <div class="description">
+                                <p v-html="formattedDescription"></p>
+                            </div>
+                        </div>
+                        <Button v-for="btn in button" :key="btn.id" :text="btn.text" :style="btn.style" :href="btn.href"
+                            :icon-url="getResource(btn.icon?.url).imageUrl" />
+                    </div>
+                    <!-- Quick Links -->
+                    <div v-if="quickLinks" class="item">
+                        <h1 class="title__item">{{ quickLinks?.title }}</h1>
+                        <div class="links">
+                            <a v-for="link in quickLinks?.links" :key="link.id" :href="link.href" class="link">
+                                {{ link.text }}
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Contact Links -->
+                    <div v-if="contactLinks" class="item">
+                        <h1 class="title__item">{{ contactLinks?.title }}</h1>
+                        <div class="links">
+                            <a v-for="link in processedContactLinks" :key="link.id" :href="link.href"
+                                class="contact__link" :target="link.isExternal ? '_blank' : '_self'">
+                                <span class="icon" v-if="link.svgHtml" v-html="link.svgHtml"></span>
+                                {{ link.label }}
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Legal Links -->
+                    <div v-if="legalLinks" class="item">
+                        <h1 class="title__item">{{ legalLinks.title }}</h1>
+                        <div class="links">
+                            <a v-for="link in legalLinks.links" :key="link.id" :href="link.href" class="link">
+                                {{ link.text }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer__component" :style="{
+                    /* COLORES DE LA SECCION */
+                    '--bg-color-footer--component': bgColorFooterComponent ?? 'var(--secondary-color)'
+                }">
+                    <!-- Disclaimer -->
+                    <div class="disclaimer" v-if="disclaimer">
+                        <p v-html="formattedDisclaimer"></p>
+                    </div>
+
+                    <!-- Redes Sociales -->
+                    <div class="social" v-if="socialLinks.length">
+                        <a v-for="link in socialLinks" :key="link.id" :href="link.href" class="social__link"
+                            :target="link.isExternal ? '_blank' : '_self'">
+                            <div class="social__icon">
+                                <img :src="getResource(link.image?.url).imageUrl" alt="">
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Libro de Reclamaciones -->
+                    <div class="complaints__book" v-if="complaintsBook?.href">
+                        <a :href="complaintsBook.href" :target="complaintsBook.isExternal ? '_blank' : '_self'">
+                            <div class="image__book">
+                                <img :src="getResource(complaintsBook.image?.url).imageUrl"" alt="">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</template>
+
+<style scoped>
+footer {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.content__bg {
+    padding: var(--padding-section);
+    background-color: var(--bg-color-footer);
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    max-width: var(--max-width);
+    overflow: hidden;
+    gap: 50px;
+}
+
+.footer__content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    width: auto;
+    max-width: 150px;
+}
+
+.icon {
+    width: 30px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: auto;
+}
+
+.primary__item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30%;
+}
+
+.content__item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.link,
+.contact__link,
+.description {
+    color: var(--text-color-footer);
+}
+
+.description p {
+    font-size: 1rem;
+}
+
+.contact__link {
+    display: flex;
+    align-items: center;
+}
+
+.title__item {
+    font-size: 1.2rem;
+    color: var(--title-color-footer);
+}
+
+a {
+    width: max-content;
+}
+
+.item a:hover {
+    color: var(--primary-color);
+}
+
+span {
+    color: var(--primary-color);
+}
+
+.footer__component {
+    background-color: var(--bg-color-footer--component);
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 20px;
+    align-items: center;
+}
+
+.disclaimer p {
+    font-size: 0.8rem;
+    color: var(--text-color-footer);
+}
+
+.image__book {
+    width: 120px;
+}
+
+.complaints__book {
+    width: auto;
+}
+
+.social {
+    display: flex;
+    gap: 10px;
+}
+
+.social__icon {
+    width: 45px;
+    height: 45px;
+    background-color: #313131;
+    border-radius: 50%;
+    padding: 10px;
+    transition: scale .3s ease;
+}
+
+.social__icon:hover {
+    scale: 1.2;
+}
+</style>
