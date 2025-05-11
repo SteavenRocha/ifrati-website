@@ -52,9 +52,9 @@ const altImage = props.sideImage?.alternativeText ?? ''
 /* STYLOS DEL HERO */
 const bgPath = props.styles?.backgroundImage?.url ?? null
 const { imageUrl: bgUrl } = getResource(bgPath)
-const heroBgColor = props.styles?.backgroundColor?.color ?? null
-const heroTitleColor = props.styles?.titleColor?.color ?? null
-const heroTextColor = props.styles?.textColor?.color ?? null
+const heroBgColor = props.styles?.backgroundColor ?? null
+const heroTitleColor = props.styles?.titleColor ?? null
+const heroTextColor = props.styles?.textColor ?? null
 
 const heroBackgroundStyle = computed(() => {
   if (bgUrl) {
@@ -67,9 +67,9 @@ const heroBackgroundStyle = computed(() => {
 })
 
 /* STYLOS DEL SOCIAL PROOF */
-const statisticsBgColor = props.socialStyles?.backgroundColor?.color ?? null
-const statisticsTitleColor = props.socialStyles?.titleColor?.color ?? null
-const statisticsTextColor = props.socialStyles?.textColor?.color ?? null
+const statisticsBgColor = props.socialStyles?.backgroundColor ?? null
+const statisticsTitleColor = props.socialStyles?.titleColor ?? null
+const statisticsTextColor = props.socialStyles?.textColor ?? null
 
 </script>
 
@@ -169,6 +169,7 @@ section {
 
 .texts {
   margin: 0;
+  width: 100%;
 }
 
 .STYLE__3 .left__content {
@@ -204,21 +205,12 @@ section {
   margin: auto;
 }
 
-.STYLE__1 .side__image img {
-  object-fit: cover;
-}
-
 .STYLE__3 .texts .description {
   display: none;
 }
 
-.texts {
-  width: 100%;
-}
-
 .content__hero .texts .title {
   color: var(--title-color-hero);
-  text-transform: uppercase;
   font-size: var(--font-size-hero);
   font-weight: 900;
   line-height: 1.125;

@@ -2,24 +2,24 @@
 const { data } = await useApi('footer-configuration')
 
 // Config Footer
-const logo = data.value?.data?.logo ?? null
-const button = data.value?.data?.button ?? []
+const logo = data.value?.data?.footer?.logo ?? null
+const button = data.value?.data?.footer?.button ?? {}
 
 // FORMATEAR TEXTOS **
-const description = data.value?.data?.description ?? ''
+const description = data.value?.data?.footer?.description ?? ''
 const formattedDescription = ref(getTextFormated(description))
 
 // COLORES
-const bgColor = data.value?.data?.sectionStyles?.backgroundColor?.color ?? null
-const titleColor = data.value?.data?.sectionStyles?.titleColor?.color ?? null
-const textColor = data.value?.data?.sectionStyles?.textColor?.color ?? null
+const bgColor = data.value?.data?.footerStyle?.backgroundColor ?? null
+const titleColor = data.value?.data?.footerStyle?.titleColor ?? null
+const textColor = data.value?.data?.footerStyle?.textColor ?? null
 // BG COLOR DEL FOOTER COMPONENT
 const bgColorFooterComponent = data.value?.data?.footerComponent?.backgroundColor ?? null
 
 // Links
-const quickLinks = data.value?.data?.quickLinks ?? null
-const contactLinks = data.value?.data?.contactLinks ?? null
-const legalLinks = data.value?.data?.legal ?? null
+const quickLinks = data.value?.data?.footer?.quickLinks ?? null
+const contactLinks = data.value?.data?.footer?.contactLinks ?? null
+const legalLinks = data.value?.data?.footer?.legalLinks ?? null
 
 // ============ OBTENER SVG POR ÍTEM ============ //
 // Obtener SVG plano para los contactLinks
@@ -41,7 +41,7 @@ if (contactLinks?.links?.length) {
 
 // Disclaimer, Social y Libro de Reclamaciones
 const disclaimer = data.value?.data?.footerComponent?.disclaimer ?? ''
-const socialLinks = data.value?.data?.footerComponent?.social ?? []
+const socialLinks = data.value?.data?.footerComponent?.socialLinks ?? []
 const complaintsBook = data.value?.data?.footerComponent?.complaintsBook ?? null
 
 // FORMATEAR TEXTOS **
@@ -68,8 +68,8 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                                 <p v-html="formattedDescription"></p>
                             </div>
                         </div>
-                        <Button v-for="btn in button" :key="btn.id" :text="btn.text" :style="btn.style" :href="btn.href"
-                            :icon-url="getResource(btn.icon?.url).imageUrl" />
+                        <Button :key="button.id" :text="button.text" :style="button.style" :href="button.href"
+                            :icon-url="getResource(button.icon?.url).imageUrl" />
                     </div>
                     <!-- Quick Links -->
                     <div v-if="quickLinks" class="item">
@@ -87,7 +87,7 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                             <a v-for="link in processedContactLinks" :key="link.id" :href="link.href"
                                 class="contact__link" :target="link.isExternal ? '_blank' : '_self'">
                                 <span class="icon" v-if="link.svgHtml" v-html="link.svgHtml"></span>
-                                {{ link.label }}
+                                {{ link.text }}
                             </a>
                         </div>
                     </div>
@@ -258,7 +258,7 @@ span {
 .social__icon {
     width: 45px;
     height: 45px;
-    background-color: #313131;
+    background-color: #3131316b;
     border-radius: 50%;
     padding: 10px;
     transition: scale .3s ease;

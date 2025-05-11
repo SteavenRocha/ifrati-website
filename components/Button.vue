@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
-import { getSvgHtml } from '@/composables/getSvgHtml' // ajusta la ruta si es necesario
+import { getSvgHtml } from '@/composables/getSvgHtml' 
 
 const props = defineProps({
     text: String,
@@ -20,8 +20,8 @@ onMounted(() => {
 
 <template>
     <a class="button" :href="href" :class="[style, extraClass]" :style="{ height: height || '50px' }">
-        <span v-if="svgHtml" v-html="svgHtml" />
         {{ text }}
+        <span v-if="svgHtml" v-html="svgHtml" />
     </a>
 </template>
 

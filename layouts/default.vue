@@ -3,7 +3,7 @@ import '@fontsource-variable/roboto';
 
 const { data } = await useApi('website-configuration')
 
-const style = data.value?.data?.style
+const style = data.value?.data?.styleSettings
 
 if (style) {
   useHead({

@@ -13,15 +13,11 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    button: {
-        type: Object,
-        required: true,
-    },
     sideImage: {
         type: Object,
         required: true,
     },
-    styles: {
+    style: {
         type: Object,
         required: false,
     },
@@ -41,9 +37,9 @@ const { imageUrl: imageUrl } = getResource(imagePath)
 const altImage = props.sideImage?.alternativeText ?? ''
 
 /* STYLOS */
-const bgColor = props.styles?.backgroundColor ?? null
-const titleColor = props.styles?.titleColor ?? null
-const textColor = props.styles?.textColor ?? null
+const bgColor = props.style?.backgroundColor ?? null
+const titleColor = props.style?.titleColor ?? null
+const textColor = props.style?.textColor ?? null
 </script>
 
 <template>
@@ -57,18 +53,13 @@ const textColor = props.styles?.textColor ?? null
             <div class="side__image">
                 <img :src="imageUrl" :alt="altImage" />
             </div>
-            <div class="content__about">
-                <div class="texts">
-                    <div class="pill__title">
-                        <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
-                            :bgColor="bgColorPill" :textColor="textColorPill" />
-                        <h1 class="title" v-html="formattedTitle"></h1>
-                    </div>
-                    <p class="description" v-html="formattedDescription"></p>
+            <div class="texts">
+                <div class="pill__title">
+                    <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
+                        :bgColor="bgColorPill" :textColor="textColorPill" />
+                    <h1 class="title" v-html="formattedTitle"></h1>
                 </div>
-
-                <Button :key="button.id" :text="button.text" :style="button.style" :href="button.href"
-                    :icon-url="getResource(button.icon?.url).imageUrl" />
+                <p class="description" v-html="formattedDescription"></p>
             </div>
         </div>
     </section>
@@ -80,7 +71,6 @@ section {
     height: auto;
     background-color: var(--bg-color-hero);
     padding: var(--padding-section);
-    padding-top: 180px;
     scroll-margin-top: 40px;
 }
 
@@ -104,11 +94,11 @@ section {
     text-align: start;
 }
 
-.content__about .texts .title {
+.texts .title {
     color: var(--title-color-about);
 }
 
-.content__about .texts .description {
+.texts .description {
     color: var(--text-color-about);
 }
 </style>

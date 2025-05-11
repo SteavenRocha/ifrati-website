@@ -6,20 +6,20 @@ const statusHeaderUp = statusHeaderUpStore()
 // Config Header
 const logo = data.value?.data?.header?.logo ?? null
 const links = data.value?.data?.header?.links ?? []
-const button = data.value?.data?.header?.button?.[0] ?? null
-const colors = data.value?.data?.header?.style ?? null
+const button = data.value?.data?.header?.button ?? null
+const colors = data.value?.data?.header?.headerStyle ?? null
 
 // Config HeaderUp
 const rawItemsData = data.value?.data?.headerUp?.data ?? []
-const colorsUp = data.value?.data?.headerUp?.style ?? null
+const colorsUp = data.value?.data?.headerUp?.headerUpStyle ?? null
 const isActive = data.value?.data?.headerUp?.isActive ?? false
 statusHeaderUp.setIsActive(isActive)
 
 // COLORES
-const headerUpBgColor = colorsUp?.backgroundColor?.color ?? null
-const headerUpTextColor = colorsUp?.textColor?.color ?? null
-const headerBgColor = colors?.backgroundColor?.color ?? null
-const headerTextColor = colors?.textColor?.color ?? null
+const headerUpBgColor = colorsUp?.backgroundColor ?? null
+const headerUpTextColor = colorsUp?.textColor ?? null
+const headerBgColor = colors?.backgroundColor ?? null
+const headerTextColor = colors?.textColor ?? null
 
 // LOGO
 const imagePath = logo?.image?.url ?? ''
@@ -61,7 +61,7 @@ for (const item of rawItemsData) {
                 <div class="data">
                     <a v-for="item in itemsData" :key="item.id" :href="item.href" target="_blank">
                         <span v-if="item.svgHtml" v-html="item.svgHtml" />
-                        {{ item.label }}
+                        {{ item.text }}
                     </a>
                 </div>
             </div>
