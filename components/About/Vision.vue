@@ -45,10 +45,10 @@ const textColor = props.style?.textColor ?? null
 <template>
     <section :style="{
         /* COLORES DE LA SECCION */
-        '--bg-color-hero': bgColor ?? 'var(--background-color)',
-        '--title-color-about': titleColor ?? 'var(--title-color)',
-        '--text-color-about': textColor ?? 'var(--text-color)',
-    }" id="about">
+        '--bg-color-vision': bgColor ?? 'var(--background-color)',
+        '--title-color-vision': titleColor ?? 'var(--title-color)',
+        '--text-color-vision': textColor ?? 'var(--text-color)',
+    }">
         <div class="content">
             <div class="texts">
                 <div class="pill__title">
@@ -69,7 +69,7 @@ const textColor = props.style?.textColor ?? null
 section {
     display: flex;
     height: auto;
-    background-color: var(--bg-color-hero);
+    background-color: var(--bg-color-vision);
     padding: var(--padding-section);
     scroll-margin-top: 40px;
 }
@@ -82,23 +82,16 @@ section {
     gap: 50px;
 }
 
-.content__about {
-    display: flex;
-    margin: auto;
-    flex-direction: column;
-    gap: 60px;
-}
-
 .texts {
     width: 100%;
     text-align: start;
 }
 
 .texts .title {
-    color: var(--title-color-about);
+    color: var(--title-color-vision);
 }
 
 .texts .description {
-    color: var(--text-color-about);
+    color: var(--text-color-vision);
 }
 </style>

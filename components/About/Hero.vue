@@ -99,6 +99,6 @@ section {
 .content__hero .texts .description {
     color: var(--text-color-hero);
     text-align: start;
-    font-size: var(--font-size--parrafo);
+    font-size: var(--font-size-parrafo-hero);
 }
 </style>

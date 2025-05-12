@@ -33,8 +33,8 @@ if (props.iconUrl) await loadSvg(props.iconUrl)
     padding: 5px 10px;
     border-radius: 5px;
     gap: 5px;
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.9rem;
+    font-weight: 450;
 }
 
 .pill span {

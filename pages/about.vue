@@ -2,6 +2,9 @@
 import Hero from '~/components/About/Hero.vue';
 import Mission from '~/components/About/Mission.vue';
 import Vision from '~/components/About/Vision.vue';
+import Values from '~/components/About/Values.vue';
+import Team from '~/components/About/Team.vue';
+import Cta from '~/components/About/Cta.vue';
 
 const { data } = await useApi('about-page')
 
@@ -36,6 +39,38 @@ const pillVisionn = vision?.pill ?? '' // PILL
 const sideImageVision = vision?.sideImage ?? {} // SIDEIMAGE
 const styleVision = vision?.sectionStyle ?? {} // STYLES
 
+/********************* VALUES SECTION *********************/
+/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+const values = data?.value?.data?.sections?.[3] ?? {}
+
+/* DATOS DEL ABOUT SECTION */
+const titleValues = values?.title ?? '' // TITLE
+const descriptionValues = values?.description ?? '' // DESCRIPTION
+const pillValues = values?.pill ?? '' // PILL
+const cardValues = values?.cardSection ?? {} // CARD
+const styleValues = values?.sectionStyle ?? {} // STYLES
+
+/********************* TEAM SECTION *********************/
+/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+const team = data?.value?.data?.sections?.[4] ?? {}
+
+/* DATOS DEL ABOUT SECTION */
+const titleTeam = team?.title ?? '' // TITLE
+const descriptionTeam = team?.description ?? '' // DESCRIPTION
+const pillTeam = team?.pill ?? '' // PILL
+const cardTeam = team?.cardSection ?? {} // CARD
+const styleTeam = team?.sectionStyle ?? {} // STYLES
+
+/********************* CTA SECTION *********************/
+/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+const cta = data?.value?.data?.sections?.[5] ?? {}
+
+/* DATOS DEL ABOUT SECTION */
+const titleCta = cta?.title ?? '' // TITLE
+const descriptionCta = cta?.description ?? '' // DESCRIPTION
+const buttonCta = cta?.button ?? [] // BUTTON
+const styleCta = cta?.ctaStyle ?? {} // STYLES
+
 </script>
 
 <template>
@@ -47,6 +82,13 @@ const styleVision = vision?.sectionStyle ?? {} // STYLES
 
     <Vision :title="titleVision" :description="descriptionVision" :pill="pillVisionn" :sideImage="sideImageVision"
       :style="styleVision" />
+
+    <Values :title="titleValues" :description="descriptionValues" :pill="pillValues" :card="cardValues"
+      :style="styleValues" />
+
+    <Team :title="titleTeam" :description="descriptionTeam" :pill="pillTeam" :card="cardTeam" :style="styleTeam" />
+
+    <Cta :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
   </div>
 </template>
 
