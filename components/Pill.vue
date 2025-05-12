@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from 'vue'
 import { getSvgHtml } from '@/composables/getSvgHtml'
 
 const props = defineProps({

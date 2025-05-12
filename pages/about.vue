@@ -24,7 +24,7 @@ const mission = data?.value?.data?.sections?.[1] ?? {}
 /* DATOS DEL ABOUT SECTION */
 const titleMission = mission?.title ?? '' // TITLE
 const descriptionMission = mission?.description ?? '' // DESCRIPTION
-const pillMission = mission?.pill ?? '' // PILL
+const pillMission = mission?.pill ?? {} // PILL
 const sideImageMission = mission?.sideImage ?? {} // SIDEIMAGE
 const styleMission = mission?.sectionStyle ?? {} // STYLES
 
@@ -35,7 +35,7 @@ const vision = data?.value?.data?.sections?.[2] ?? {}
 /* DATOS DEL ABOUT SECTION */
 const titleVision = vision?.title ?? '' // TITLE
 const descriptionVision = vision?.description ?? '' // DESCRIPTION
-const pillVisionn = vision?.pill ?? '' // PILL
+const pillVisionn = vision?.pill ?? {} // PILL
 const sideImageVision = vision?.sideImage ?? {} // SIDEIMAGE
 const styleVision = vision?.sectionStyle ?? {} // STYLES
 
@@ -46,7 +46,7 @@ const values = data?.value?.data?.sections?.[3] ?? {}
 /* DATOS DEL ABOUT SECTION */
 const titleValues = values?.title ?? '' // TITLE
 const descriptionValues = values?.description ?? '' // DESCRIPTION
-const pillValues = values?.pill ?? '' // PILL
+const pillValues = values?.pill ?? {} // PILL
 const cardValues = values?.cardSection ?? {} // CARD
 const styleValues = values?.sectionStyle ?? {} // STYLES
 
@@ -57,7 +57,7 @@ const team = data?.value?.data?.sections?.[4] ?? {}
 /* DATOS DEL ABOUT SECTION */
 const titleTeam = team?.title ?? '' // TITLE
 const descriptionTeam = team?.description ?? '' // DESCRIPTION
-const pillTeam = team?.pill ?? '' // PILL
+const pillTeam = team?.pill ?? {} // PILL
 const cardTeam = team?.cardSection ?? {} // CARD
 const styleTeam = team?.sectionStyle ?? {} // STYLES
 

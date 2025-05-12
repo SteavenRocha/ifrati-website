@@ -38,7 +38,7 @@ const about = data?.value?.data?.sections?.[1] ?? {}
 /* DATOS DEL ABOUT SECTION */
 const titleAbout = about?.title ?? '' // TITLE
 const descriptionAbout = about?.description ?? '' // DESCRIPTION
-const pillAbout = about?.pill ?? '' // PILL
+const pillAbout = about?.pill ?? {} // PILL
 const buttonAbout = about?.button ?? {} // BUTTON
 const sideImageAbout = about?.sideImage ?? {} // SIDEIMAGE
 const stylesAbout = about?.sectionStyle ?? {} // STYLES
@@ -50,14 +50,14 @@ const program = data?.value?.data?.sections?.[2] ?? {}
 /* DATOS DEL PROGRAM SECTION */
 const titleProgram = program?.program?.title ?? '' // TITLE
 const descriptionProgram = program?.program?.description ?? '' // DESCRIPTION
-const pillProgram = program?.program?.pill ?? '' // PILL
+const pillProgram = program?.program?.pill ?? {} // PILL
 const video = program?.program?.video ?? {} // VIDEO
 const stylesProgram = program?.program?.sectionStyle ?? {} // STYLES MAIN PROGRAM
 
 /* DATOS DEL HOW HELP SECTION */
 const titleHowHelp = program?.howHelp?.title ?? '' // TITLE
 const descriptionHowHelp = program?.howHelp?.description ?? '' // DESCRIPTION
-const pillHowHelp = program?.howHelp?.pill ?? '' // PILL
+const pillHowHelp = program?.howHelp?.pill ?? {} // PILL
 const cards = program?.howHelp?.cardSection ?? {} // CARDS
 const button = program?.howHelp?.button ?? [] // BUTTON
 const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
