@@ -11,9 +11,8 @@ const props = defineProps({
 
 const { svgHtml, loadSvg } = getSvgHtml()
 
-onMounted(() => {
-    if (props.iconUrl) loadSvg(props.iconUrl)
-})
+if (props.iconUrl) await loadSvg(props.iconUrl)
+
 </script>
 
 <template>

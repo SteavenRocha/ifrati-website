@@ -72,9 +72,7 @@ const { svgHtml, loadSvg } = getSvgHtml()
 const showModal = ref(false)
 const modalType = ref('')
 
-onMounted(() => {
-    if (iconUrl) loadSvg(iconUrl)
-})
+if (iconUrl) await loadSvg(iconUrl)
 </script>
 
 <template>

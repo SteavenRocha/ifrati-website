@@ -86,7 +86,6 @@ for (const item of rawItemsData) {
     </header>
 </template>
 
-
 <style scoped>
 header {
     position: fixed;
