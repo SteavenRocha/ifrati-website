@@ -59,13 +59,6 @@ const selectCard = (id) => {
 const selectedCard = computed(() =>
     cards.find((card) => card.id === selectedCardId.value)
 )
-
-// REDERIZAMOS EL ICON
-const iconPath = props.pillarsCard?.cardStyle?.icon?.url ?? null
-const { imageUrl: iconUrl } = getResource(iconPath)
-
-const { svgHtml, loadSvg } = getSvgHtml()
-if (iconUrl) await loadSvg(iconUrl)
 </script>
 
 <template>
@@ -118,7 +111,11 @@ if (iconUrl) await loadSvg(iconUrl)
                                     <li v-for="(item, index) in selectedCard.programComponent.textComponent"
                                         :key="item.id">
                                         <div class="bullet__icon">
-                                            <span v-if="svgHtml" v-html="svgHtml" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                fill="currentColor">
+                                                <path
+                                                    d="M4 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0Zm8-10a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm5.46 7.46-1.42-1.42L11 13.1l-2.8-2.8-1.4 1.42 4.2 4.2 6.46-6.45Z" />
+                                            </svg>
                                         </div>
                                         <p class="description__componenet">{{ item.text }}</p>
                                     </li>
