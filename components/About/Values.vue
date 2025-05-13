@@ -28,8 +28,8 @@ const formattedTitle = ref(getTextFormated(props.title))
 const formattedDescription = ref(getTextFormated(props.description))
 
 /* RECUPERAMOS STYLOS DE LA PILL */
-const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--primary-color)'
-const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--title-color)'
+const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--pill-bg-color)'
+const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--pill-text-color)'
 
 /* RECUPERAR LA CARD */
 const cards = props.card?.card ?? []
@@ -52,7 +52,7 @@ const textColor = props.style?.textColor ?? null
         '--text-color-values': textColor ?? 'var(--text-color)',
     }">
         <div class="content">
-            <div class="texts">
+            <div class="centered__texts">
                 <div class="pill__title">
                     <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
                         :bgColor="bgColorPill" :textColor="textColorPill" />
@@ -96,7 +96,6 @@ section {
     flex-direction: column;
     margin: auto;
     max-width: var(--max-width);
-    overflow: hidden;
     gap: 50px;
 }
 
@@ -104,18 +103,11 @@ section {
     align-items: center;
 }
 
-.texts {
-    width: 700px;
-    text-align: start;
-}
-
-.texts .title {
-    text-align: center;
+.title {
     color: var(--title-color-values);
 }
 
-.texts .description {
-    text-align: center;
+.description {
     color: var(--text-color-values);
 }
 
@@ -133,7 +125,9 @@ section {
     border-radius: var(--border-radius-card);
     padding: 20px;
     gap: 20px;
-    width: calc(33.3% - 13px);
+    width: calc(33.3% - 20px);
+    box-shadow: var(--box-shadow);
+    border: 1px solid rgba(216, 216, 216, 0.7);
 }
 
 .card__details {

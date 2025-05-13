@@ -11,6 +11,7 @@ if (!data.value) {
 }
 
 const style = data.value?.data?.styleSettings
+const pillStyle = data.value?.data?.pillSettings
 
 if (style) {
   useHead({
@@ -23,6 +24,9 @@ if (style) {
             --background-color: ${style.backgroundColor};
             --text-color: ${style.textColor};
             --title-color: ${style.titleColor};
+
+            --pill-bg-color: ${pillStyle.backgroundColor};
+            --pill-text-color: ${pillStyle.textColor};
           }
         `
       }

@@ -98,7 +98,7 @@ header {
     left: 0;
     height: auto;
     max-height: 110px;
-    box-shadow: var(--box--shadow);
+    box-shadow: var(--box-shadow);
     z-index: 20;
 }
 
@@ -130,8 +130,6 @@ header {
 }
 
 img {
-    width: 100%;
-    height: 100%;
     object-fit: contain;
 }
 

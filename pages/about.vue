@@ -29,7 +29,7 @@ const sideImageMission = mission?.sideImage ?? {} // SIDEIMAGE
 const styleMission = mission?.sectionStyle ?? {} // STYLES
 
 /********************* VISION SECTION *********************/
-/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+/* CONFIGURACION GLOBAL DEL VISION SECTION */
 const vision = data?.value?.data?.sections?.[2] ?? {}
 
 /* DATOS DEL ABOUT SECTION */
@@ -40,7 +40,7 @@ const sideImageVision = vision?.sideImage ?? {} // SIDEIMAGE
 const styleVision = vision?.sectionStyle ?? {} // STYLES
 
 /********************* VALUES SECTION *********************/
-/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+/* CONFIGURACION GLOBAL DEL VALUES SECTION */
 const values = data?.value?.data?.sections?.[3] ?? {}
 
 /* DATOS DEL ABOUT SECTION */
@@ -51,7 +51,7 @@ const cardValues = values?.cardSection ?? {} // CARD
 const styleValues = values?.sectionStyle ?? {} // STYLES
 
 /********************* TEAM SECTION *********************/
-/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+/* CONFIGURACION GLOBAL DEL TEAM SECTION */
 const team = data?.value?.data?.sections?.[4] ?? {}
 
 /* DATOS DEL ABOUT SECTION */
@@ -62,7 +62,7 @@ const cardTeam = team?.cardSection ?? {} // CARD
 const styleTeam = team?.sectionStyle ?? {} // STYLES
 
 /********************* CTA SECTION *********************/
-/* CONFIGURACION GLOBAL DEL MISSION SECTION */
+/* CONFIGURACION GLOBAL DEL CTA SECTION */
 const cta = data?.value?.data?.sections?.[5] ?? {}
 
 /* DATOS DEL ABOUT SECTION */

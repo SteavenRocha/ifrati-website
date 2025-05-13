@@ -52,7 +52,7 @@ const ctaBackgroundStyle = computed(() => {
         <div class="content" :style="{
             ...ctaBackgroundStyle,
         }">
-            <div class="texts">
+            <div class="centered__texts">
                 <h1 class="title" v-html="formattedTitle"></h1>
                 <p class="description" v-html="formattedDescription"></p>
 
@@ -88,18 +88,11 @@ section {
     background-repeat: no-repeat;
 }
 
-.texts {
-    width: 700px;
-    text-align: start;
-}
-
-.texts .title {
-    text-align: center;
+.title {
     color: var(--title-color-cta);
 }
 
-.texts .description {
-    text-align: center;
+.description {
     color: var(--text-color-cta);
 }
 

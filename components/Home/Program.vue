@@ -5,6 +5,7 @@ const props = defineProps({
     description: { type: String, required: true },
     video: { type: Object, required: true },
     styles: { type: Object, required: true },
+    button: { type: Object, required: true },
     pill: {
         type: Object,
         required: true,
@@ -14,7 +15,6 @@ const props = defineProps({
     titleHowHelp: { type: String, required: true },
     descriptionHowHelp: { type: String, required: true },
     cards: { type: Object, required: true },
-    button: { type: Object, required: true },
     stylesHowHelp: { type: Object, required: true },
     pillHowHelp: {
         type: Object,
@@ -45,8 +45,8 @@ const titleColor = props.styles?.titleColor ?? null
 const textColor = props.styles?.textColor ?? null
 
 /* RECUPERAMOS STYLOS DE LA PILL */
-const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--primary-color)'
-const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--title-color)'
+const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--pill-bg-color)'
+const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--pill-text-color)'
 
 /* CÓMO AYUDAMOS */
 const formattedTitleHowHelp = ref(getTextFormated(props.titleHowHelp))
@@ -61,8 +61,8 @@ const titleColorHowHelp = props.stylesHowHelp?.titleColor ?? null
 const textColorHowHelp = props.stylesHowHelp?.textColor ?? null
 
 /* RECUPERAMOS STYLOS DE LA PILL */
-const bgColorPillHowHelp = props.pillHowHelp?.pillStyle?.backgroundColor ?? 'var(--primary-color)'
-const textColorPillHowHelp = props.pillHowHelp?.pillStyle?.textColor ?? 'var(--title-color)'
+const bgColorPillHowHelp = props.pillHowHelp?.pillStyle?.backgroundColor ?? 'var(--pill-bg-color)'
+const textColorPillHowHelp = props.pillHowHelp?.pillStyle?.textColor ?? 'var(--pill-text-color)'
 
 const iconPaht = props.cards?.cardButton?.icon?.url ?? ''
 const iconUrl = getResource(iconPaht).imageUrl
@@ -83,13 +83,18 @@ if (iconUrl) await loadSvg(iconUrl)
             '--text-color-program': textColor ?? 'var(--text-color)',
         }">
             <div class="content">
-                <div class="texts">
-                    <div class="pill__title">
-                        <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
-                            :bgColor="bgColorPill" :textColor="textColorPill" />
-                        <h1 class="title" v-html="formattedTitle"></h1>
+                <div class="content__program">
+                    <div class="texts">
+                        <div class="pill__title">
+                            <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
+                                :bgColor="bgColorPill" :textColor="textColorPill" />
+                            <h1 class="title" v-html="formattedTitle"></h1>
+                        </div>
+                        <p class="description" v-html="formattedDescription"></p>
                     </div>
-                    <p class="description" v-html="formattedDescription"></p>
+
+                    <Button :key="button.id" :text="button.text" :style="button.style" :href="button.href"
+                        :icon-url="getResource(button.icon?.url).imageUrl" />
                 </div>
 
                 <div class="video__container">
@@ -157,8 +162,9 @@ if (iconUrl) await loadSvg(iconUrl)
             <div class="how__help__content">
                 <div class="sub__texts">
                     <div class="pill__title">
-                        <Pill :key="pillHowHelp.id" :text="pillHowHelp.text" :icon-url="getResource(pillHowHelp.icon?.url).imageUrl"
-                            :bgColor="bgColorPillHowHelp" :textColor="textColorPillHowHelp" />
+                        <Pill :key="pillHowHelp.id" :text="pillHowHelp.text"
+                            :icon-url="getResource(pillHowHelp.icon?.url).imageUrl" :bgColor="bgColorPillHowHelp"
+                            :textColor="textColorPillHowHelp" />
                         <h1 class="title" v-html="formattedTitleHowHelp"></h1>
                     </div>
                     <p class="description" v-html="formattedDescriptionHowHelp"></p>
@@ -193,9 +199,6 @@ if (iconUrl) await loadSvg(iconUrl)
                         </div>
                     </div>
                 </div>
-
-                <Button :key="button.id" :text="button.text" :style="button.style" :href="button.href"
-                    :icon-url="getResource(button.icon?.url).imageUrl" />
             </div>
         </div>
     </section>
@@ -220,6 +223,13 @@ section {
     align-items: center;
     max-width: var(--max-width);
     gap: 50px;
+}
+
+.content__program {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    gap: 60px;
 }
 
 .how__help__content {
@@ -396,6 +406,8 @@ h3 {
     max-width: 100%;
     min-width: 30%;
     background-color: var(--bg-color-card);
+    box-shadow: var(--box-shadow);
+    border: 1px solid rgba(216, 216, 216, 0.7);
 }
 
 .card:hover .card__button {

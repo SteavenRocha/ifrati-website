@@ -267,4 +267,8 @@ span {
 .social__icon:hover {
     scale: 1.2;
 }
+
+img {
+    object-fit: contain;
+}
 </style>

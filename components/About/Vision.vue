@@ -28,8 +28,8 @@ const formattedTitle = ref(getTextFormated(props.title))
 const formattedDescription = ref(getTextFormated(props.description))
 
 /* RECUPERAMOS STYLOS DE LA PILL */
-const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--primary-color)'
-const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--title-color)'
+const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--pill-bg-color)'
+const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--pill-text-color)'
 
 /* RECUPERAR LA SIDEIMAGE */
 const imagePath = props.sideImage?.url ?? ''  // SIDEIMAGE

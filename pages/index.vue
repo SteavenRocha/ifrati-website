@@ -51,6 +51,7 @@ const program = data?.value?.data?.sections?.[2] ?? {}
 const titleProgram = program?.program?.title ?? '' // TITLE
 const descriptionProgram = program?.program?.description ?? '' // DESCRIPTION
 const pillProgram = program?.program?.pill ?? {} // PILL
+const buttonProgram = program?.program?.button ?? {} // BUTTON
 const video = program?.program?.video ?? {} // VIDEO
 const stylesProgram = program?.program?.sectionStyle ?? {} // STYLES MAIN PROGRAM
 
@@ -59,22 +60,21 @@ const titleHowHelp = program?.howHelp?.title ?? '' // TITLE
 const descriptionHowHelp = program?.howHelp?.description ?? '' // DESCRIPTION
 const pillHowHelp = program?.howHelp?.pill ?? {} // PILL
 const cards = program?.howHelp?.cardSection ?? {} // CARDS
-const button = program?.howHelp?.button ?? [] // BUTTON
 const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
 
 </script>
 
 <template>
   <div>
-    <Hero :style="style" :title="title" :description="description" :sideImage="sideImage"
-      :buttons="buttons" :styles="styles" :statistics="statistics" :socialStyles="socialStyles"/>
+    <Hero :style="style" :title="title" :description="description" :sideImage="sideImage" :buttons="buttons"
+      :styles="styles" :statistics="statistics" :socialStyles="socialStyles" />
 
-    <About :title="titleAbout" :description="descriptionAbout" :pill="pillAbout" :button="buttonAbout" :sideImage="sideImageAbout"
-      :styles="stylesAbout"/>
+    <About :title="titleAbout" :description="descriptionAbout" :pill="pillAbout" :button="buttonAbout"
+      :sideImage="sideImageAbout" :styles="stylesAbout" />
 
-    <Program :title="titleProgram" :description="descriptionProgram" :pill="pillProgram" :video="video" :styles="stylesProgram"
-      :titleHowHelp="titleHowHelp" :descriptionHowHelp="descriptionHowHelp" :pillHowHelp="pillHowHelp" :cards="cards" :button="button"
-      :stylesHowHelp="stylesHowHelp"/>
+    <Program :title="titleProgram" :description="descriptionProgram" :pill="pillProgram" :button="buttonProgram"
+      :video="video" :styles="stylesProgram" :titleHowHelp="titleHowHelp" :descriptionHowHelp="descriptionHowHelp"
+      :pillHowHelp="pillHowHelp" :cards="cards" :stylesHowHelp="stylesHowHelp" />
 
     <!--<Testimonies :title="titleTestimonies" :description="descriptionTestimonies" :card="testimoniesCard" :styles="stylesTestimonies"/>
 
@@ -88,7 +88,7 @@ const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
 
     <Faq :title="titleFaq" :description="descriptionFaq" :component="faqComponent" :styles="stylesFaq"/> -->
 
-   <!--  <Contact />
+    <!--  <Contact />
 
     <Social /> -->
 

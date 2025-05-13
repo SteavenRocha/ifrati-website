@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-    /* MISSION DATA */
+    /* PURPOSE DATA */
     title: {
         type: String,
         required: true,
@@ -45,9 +45,9 @@ const textColor = props.style?.textColor ?? null
 <template>
     <section :style="{
         /* COLORES DE LA SECCION */
-        '--bg-color-mission': bgColor ?? 'var(--background-color)',
-        '--title-color-mission': titleColor ?? 'var(--title-color)',
-        '--text-color-mission': textColor ?? 'var(--text-color)',
+        '--bg-color-purpose': bgColor ?? 'var(--background-color)',
+        '--title-color-purpose': titleColor ?? 'var(--title-color)',
+        '--text-color-purpose': textColor ?? 'var(--text-color)',
     }">
         <div class="content">
             <div class="side__image">
@@ -69,7 +69,7 @@ const textColor = props.style?.textColor ?? null
 section {
     display: flex;
     height: auto;
-    background-color: var(--bg-color-mission);
+    background-color: var(--bg-color-purpose);
     padding: var(--padding-section);
     scroll-margin-top: 40px;
 }
@@ -88,10 +88,10 @@ section {
 }
 
 .texts .title {
-    color: var(--title-color-mission);
+    color: var(--title-color-purpose);
 }
 
 .texts .description {
-    color: var(--text-color-mission);
+    color: var(--text-color-purpose);
 }
 </style>
