@@ -284,11 +284,6 @@ section {
     overflow: hidden;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid transparent;
-}
-
-.card:hover {
-    border: 1px solid var(--primary-color);
 }
 
 .card:hover .card__title {
@@ -297,8 +292,7 @@ section {
 
 .card.expanded {
     max-height: 600px;
-    border: 1px solid var(--primary-color);
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .card.expanded .card__title {

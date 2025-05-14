@@ -85,10 +85,10 @@ const selectedCard = computed(() =>
                 <div class="pillars__row">
                     <div v-if="cards" v-for="card in cards" :key="card.id" class="pillar__item__title"
                         @click="selectCard(card.id)" :class="{ active: selectedCardId === card.id }">
-                        <div class="icon">
+                        <div class="icon row">
                             <img :src="getResource(card.icon?.url).imageUrl" alt="">
                         </div>
-                        <h1 class="item__title">{{ card.title }}</h1>
+                        <!-- <h1 class="item__title">{{ card.title }}</h1> -->
                     </div>
                 </div>
 
@@ -174,9 +174,13 @@ section {
 
 .pillars__row {
     display: flex;
-    justify-content: space-between;
     gap: 20px;
-    padding: 0 100px;
+    width: calc(50% + 20px);
+}
+
+.row {
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
 }
 
 .pillar__item__title {
@@ -184,31 +188,30 @@ section {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 10px;
+    padding: 15px 10px;
     width: 100%;
     cursor: pointer;
     background-color: var(--bg-color-card);
     border-radius: var(--border-radius-card);
     box-shadow: inset 3px 0 0 transparent;
-    transition: box-shadow 0.3s ease, border 0.3s ease;
-    border: 1px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.pillar__item__title:hover .item__title {
-    color: var(--primary-color);
+.pillar__item__title:hover .row {
+    filter: grayscale(0%);
 }
 
 .pillar__item__title:hover {
-    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
 }
 
-.pillar__item__title.active .item__title {
-    color: var(--primary-color);
+.pillar__item__title.active .row {
+    filter: grayscale(0%);
 }
 
 .pillar__item__title.active {
-    border: 1px solid var(--primary-color);
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background-color: var(--primary-color);
 }
 
 .icon {
@@ -221,8 +224,8 @@ section {
     width: auto;
     display: flex;
     align-items: center;
-    font-size: clamp(1rem, 3vw, 1.1rem);
-    font-weight: 400;
+    font-size: clamp(1rem, 3vw, 1rem);
+    font-weight: 500;
     transition: color 0.3s ease;
 }
 

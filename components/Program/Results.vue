@@ -260,7 +260,7 @@ section {
 }
 
 .card__title__qualitative {
-    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: var(--title-color-qual);
 }
 
