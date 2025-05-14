@@ -46,8 +46,7 @@ const ctaBackgroundStyle = computed(() => {
     <section :style="{
         '--sectionBg-color': ctaSectionBgColor ?? 'var(--background-color)',
         '--title-color-cta': ctaTitleColor ?? 'var(--title-color)',
-        '--text-color-cta': ctaTextColor ?? 'var(--text-color)',
-        paddingTop: ctaSectionBgColor ? '90px' : '70px'
+        '--text-color-cta': ctaTextColor ?? 'var(--text-color)'
     }">
         <div class="content" :style="{
             ...ctaBackgroundStyle,

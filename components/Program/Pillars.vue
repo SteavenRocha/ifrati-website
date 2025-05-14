@@ -169,17 +169,14 @@ section {
 .pillars {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .pillars__row {
     display: flex;
     justify-content: space-between;
-    background-color: var(--bg-color-card);
-    padding: 10px;
-    border-radius: var(--border-radius-card);
-    gap: 10px;
-    box-shadow: var(--box-shadow);
+    gap: 20px;
+    padding: 0 100px;
 }
 
 .pillar__item__title {
@@ -187,13 +184,14 @@ section {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background-color: whitesmoke;
     padding: 10px;
-    border-radius: 10px;
     width: 100%;
     cursor: pointer;
+    background-color: var(--bg-color-card);
+    border-radius: var(--border-radius-card);
+    box-shadow: inset 3px 0 0 transparent;
     transition: box-shadow 0.3s ease, border 0.3s ease;
-    border: 1px solid rgb(214, 214, 214);
+    border: 1px solid transparent;
 }
 
 .pillar__item__title:hover .item__title {
@@ -210,7 +208,7 @@ section {
 
 .pillar__item__title.active {
     border: 1px solid var(--primary-color);
-    box-shadow: inset 3px 0 0 var(--primary-color), var(--box-shadow);
+    box-shadow: var(--box-shadow);
 }
 
 .icon {
@@ -266,31 +264,26 @@ section {
 
 li {
     display: flex;
-    gap: 5px;
+    gap: 10px;
+    align-items: center;
 }
 
 .icon img {
     object-fit: contain;
 }
 
-.bullet__icon {
-    width: 20px;
-    color: var(--primary-color);
-}
-
 .pillar__container {
     display: flex;
     gap: 15px;
+    background-color: var(--bg-color-card);
+    border-radius: var(--border-radius);
 }
 
 .pillar__content {
-    box-shadow: var(--box-shadow);
     display: flex;
     flex-direction: column;
     gap: 20px;
-    background-color: var(--bg-color-card);
     padding: 30px;
-    border-radius: var(--border-radius-card);
 }
 
 .pillar__title__content {

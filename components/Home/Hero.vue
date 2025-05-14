@@ -111,7 +111,7 @@ const statisticsTextColor = props.socialStyles?.textColor ?? null
       <div class="statistics">
         <div v-for="(stat, index) in statistics" :key="stat.id" class="statistics__item">
           <div class="icon">
-            <img :src="getResource(stat.icon?.url).imageUrl" :alt="stat.icon?.alternativeText || 'Icono'" />
+            <img :src="getResource(stat.resource?.url).imageUrl" :alt="stat.resource?.alternativeText || 'Icono'" />
           </div>
           <div class="statistics__content">
             <div class="title">
@@ -212,7 +212,7 @@ section {
 .content__hero .texts .title {
   color: var(--title-color-hero);
   font-size: var(--font-size-hero);
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.125;
   text-align: start;
 }

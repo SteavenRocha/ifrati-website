@@ -1,6 +1,4 @@
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
-
 // Props
 const props = defineProps({
     title: { type: String, required: true },
@@ -37,16 +35,16 @@ const selectedCategoryData = computed(() => {
     return props.component?.faqComponent?.find(c => c.category === selectedCategory.value)
 })
 
-onMounted(() => {
+/* onMounted(() => {
     const firstCategory = props.component?.faqComponent?.[0]
     if (firstCategory?.faq?.[0]) {
         activeQuestion.value = firstCategory.faq[0].id
         lastOpenedQuestionByCategory.value[firstCategory.category] = firstCategory.faq[0].id
     }
-})
+}) */
 
 // Observa cambios de categoría
-watch(selectedCategory, (newCategory) => {
+/* watch(selectedCategory, (newCategory) => {
     const categoryData = props.component?.faqComponent.find(c => c.category === newCategory)
     const lastOpened = lastOpenedQuestionByCategory.value[newCategory]
     if (lastOpened !== undefined && lastOpened !== null) {
@@ -56,7 +54,7 @@ watch(selectedCategory, (newCategory) => {
         lastOpenedQuestionByCategory.value[newCategory] = activeQuestion.value
     }
 })
-
+ */
 // Alternar pregunta
 function toggleQuestion(faqId) {
     activeQuestion.value = activeQuestion.value === faqId ? null : faqId

@@ -406,8 +406,6 @@ h3 {
     max-width: 100%;
     min-width: 30%;
     background-color: var(--bg-color-card);
-    box-shadow: var(--box-shadow);
-    border: 1px solid rgba(216, 216, 216, 0.7);
 }
 
 .card:hover .card__button {

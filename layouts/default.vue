@@ -53,9 +53,9 @@ if (style) {
 
     <div class="page__content">
       <Header />
-      <main>
-        <slot />
-      </main>
+        <main>
+          <slot />
+        </main>
       <Footer />
     </div>
   </div>

@@ -70,7 +70,7 @@ const textColor = props.style?.textColor ?? null
                 <!-- Iterar sobre las cards y mostrarlas -->
                 <div v-for="(card, index) in cards" :key="card.id" class="card">
                     <div class="card__img">
-                        <img :src="getResource(card.icon?.url).imageUrl" alt="card icon" class="card__icon" />
+                        <img :src="getResource(card.resource?.url).imageUrl" alt="card icon" class="card__icon" />
                     </div>
                     <div class="card__details">
                         <h2 class="card__title">{{ card.title }}</h2>
@@ -126,8 +126,6 @@ section {
     padding: 20px;
     gap: 20px;
     width: calc(33.3% - 20px);
-    box-shadow: var(--box-shadow);
-    border: 1px solid rgba(216, 216, 216, 0.7);
 }
 
 .card__details {

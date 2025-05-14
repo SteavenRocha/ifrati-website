@@ -91,7 +91,7 @@ section {
 .content__hero .texts .title {
     color: var(--title-color-hero);
     font-size: var(--font-size-hero);
-    font-weight: 900;
+    font-weight: 800;
     line-height: 1.125;
     text-align: start;
 }
