@@ -56,6 +56,11 @@ span.bold {
     font-size: inherit;
 }
 
+a {
+  text-decoration: none; 
+  color: inherit;         
+}
+
 /* SPAN DE LOS BOTONES Y EL DATA */
 .button span,
 .data span {
@@ -78,6 +83,11 @@ span.bold {
     font-size: clamp(2rem, 3vw, 2.1rem);
     line-height: 1;
     font-weight: 700;
+}
+
+.title__shop {
+  font-weight: 800;
+  font-size: clamp(2rem, 3vw, 2.1rem);
 }
 
 .texts .description {
