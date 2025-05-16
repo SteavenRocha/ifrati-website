@@ -182,6 +182,7 @@ section {
     display: flex;
     gap: 10px;
     flex-direction: column;
+    border: 1px solid rgba(185, 185, 185, 0.3);
 }
 
 .card__qual:hover .card__content__qual {

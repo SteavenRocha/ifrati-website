@@ -4,7 +4,7 @@ import Mission from '~/components/About/Mission.vue';
 import Vision from '~/components/About/Vision.vue';
 import Values from '~/components/About/Values.vue';
 import Team from '~/components/About/Team.vue';
-import Cta from '~/components/About/Cta.vue';
+/* import Cta from '~/components/About/Cta.vue'; */
 
 const { data } = await useApi('about-page')
 

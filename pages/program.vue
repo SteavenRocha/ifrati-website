@@ -75,6 +75,17 @@ const pillParticipate = participate?.pill ?? {} // PILL
 const steps = participate?.stepsSection ?? {} // STEPS
 const collaborators = participate?.collaboratorsSection ?? {} // STEPS
 const styleParticipate = participate?.sectionStyle ?? {} // STYLES
+
+/********************* FAQS SECTION *********************/
+/* CONFIGURACION GLOBAL DEL FAQ SECTION */
+const faq = data?.value?.data?.sections?.[6] ?? {}
+
+/* DATOS DEL HERO SECTION */
+const titleFaq = faq.title ?? '' // TITLE
+const descriptionFaq = faq?.description ?? '' // DESCRIPTION
+const pillFaq = faq?.pill ?? {} // PILL
+const questions = faq?.questions ?? [] // QUESTIONS
+const styleFaq = faq?.sectionStyle ?? {} // STYLES
 </script>
 
 <template>
@@ -96,6 +107,8 @@ const styleParticipate = participate?.sectionStyle ?? {} // STYLES
 
     <Participate :title="titleParticipate" :description="descriptionParticipate" :pill="pillParticipate" :steps="steps"
       :collaborators="collaborators" :style="styleParticipate" />
+
+    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
   </div>
 </template>
 

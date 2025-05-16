@@ -282,7 +282,7 @@ section {
     justify-content: space-between;
     max-height: 75px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: max-height 0.3s ease;
     cursor: pointer;
 }
 
@@ -292,7 +292,7 @@ section {
 
 .card.expanded {
     max-height: 600px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(185, 185, 185, 0.3);
 }
 
 .card.expanded .card__title {

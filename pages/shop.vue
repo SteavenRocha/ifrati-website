@@ -1,5 +1,6 @@
 <script setup>
 import Hero from '~/components/About/Hero.vue';
+import Faq from '~/components/Faq.vue';
 
 const { data } = await useApi('shop-page')
 // TODAS LAS CATEGORIAS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
@@ -40,7 +41,7 @@ const categories = dataCategories?.data ?? []
 
 // Estado para la categoría seleccionada
 const currentPage = ref(1)
-const pageSize = ref(2)
+const pageSize = ref(15)
 const selectedCategory = ref('all')
 
 const products = ref([])  // productos actuales
@@ -49,17 +50,27 @@ const totalProducts = ref(0)
 
 function buildQuery() {
   let base = `products?filters[state][$eq]=true`
-  // Agregar filtro por categoría si no es "all"
+
+  // Filtro por categoría seleccionada
   if (selectedCategory.value !== 'all') {
     base += `&filters[product_categories][category][$eq]=${encodeURIComponent(selectedCategory.value)}`
   }
-  // Ordenar por fecha de creación
+
+  // Filtro para que solo muestre categorías con estado true
+  base += `&filters[product_categories][state][$eq]=true`
+
+  // Orden por fecha de creación
   base += `&sort[0]=createdAt:desc`
+
   // Paginación
   base += `&pagination[pageSize]=${pageSize.value}&pagination[page]=${currentPage.value}`
-  // Populate de categorías e imagen
+
+  // Populate para categoría (nombre y estado) e imagen
   base += `&populate[product_categories][fields][0]=category`
-  base += `&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText`
+  base += `&populate[product_categories][fields][1]=state`
+  base += `&populate[image][fields][0]=url`
+  base += `&populate[image][fields][1]=alternativeText`
+
   return base
 }
 
@@ -90,6 +101,26 @@ function selectCategory(category) {
 
 const productsPerPage = computed(() => products.value.data.length)
 
+/********************* FAQS SECTION *********************/
+/* CONFIGURACION GLOBAL DEL FAQ SECTION */
+const faq = data?.value?.data?.sections?.[2] ?? {}
+
+/* DATOS DEL HERO SECTION */
+const titleFaq = faq.title ?? '' // TITLE
+const descriptionFaq = faq?.description ?? '' // DESCRIPTION
+const pillFaq = faq?.pill ?? {} // PILL
+const questions = faq?.questions ?? [] // QUESTIONS
+const styleFaq = faq?.sectionStyle ?? {} // STYLES
+
+/********************* CTA SECTION *********************/
+/* CONFIGURACION GLOBAL DEL CTA SECTION */
+const cta = data?.value?.data?.sections?.[3] ?? {}
+
+/* DATOS DEL ABOUT SECTION */
+const titleCta = cta?.title ?? '' // TITLE
+const descriptionCta = cta?.description ?? '' // DESCRIPTION
+const buttonCta = cta?.button ?? [] // BUTTON
+const styleCta = cta?.ctaStyle ?? {} // STYLES
 </script>
 
 <template>
@@ -196,6 +227,10 @@ const productsPerPage = computed(() => products.value.data.length)
         </div>
       </div>
     </section>
+
+    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+
+    <Cta :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
   </div>
 </template>
 
@@ -208,6 +243,7 @@ button {
 .shop {
   display: flex;
   height: auto;
+  min-height: 900px;
   background-color: var(--bg-color-shop);
   padding: var(--padding-section);
 }
@@ -215,7 +251,7 @@ button {
 .container {
   display: flex;
   flex-direction: column;
-  margin: auto;
+  margin: 0 auto;
   max-width: var(--max-width);
   gap: 50px;
 }
@@ -327,7 +363,6 @@ button {
   border-radius: var(--border-radius-card);
   overflow: hidden;
   max-width: calc(100% / 3);
-  height: 100%;
   transition: box-shadow .6s ease;
   background-color: var(--bg-color-card);
 }
@@ -339,7 +374,7 @@ button {
   height: auto;
   justify-content: space-between;
   gap: 20px;
-  height: calc(100% - 250px);
+  height: calc(100% - 200px);
 }
 
 .product__container {
@@ -360,7 +395,7 @@ button {
 .product__image {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 200px;
   overflow: hidden;
 }
 
@@ -450,18 +485,18 @@ button svg {
 .icon__content {
   display: flex;
   overflow: hidden;
-  background-color: var(--primary-color);
-  padding: 12px;
+  padding: 6px;
   border-radius: 10px;
   cursor: pointer;
   gap: 15px;
-  max-width: 50px;
+  max-width: 40px;
   max-height: 50px;
   align-items: center;
   height: max-content;
   transition: all 0.4s ease;
-  color: white;
+  color: rgb(0, 0, 0);
   box-shadow: var(--box-shadow);
+  border: 1px solid rgba(185, 185, 185, 0.3);
 }
 
 .icon {
@@ -479,11 +514,14 @@ button svg {
   font-weight: 500;
   opacity: 0;
   transition: opacity .3s ease;
+  font-weight: 400;
+  font-size: .9rem;
 }
 
 .icon__content:hover {
-  max-width: 180px;
-  filter: brightness(90%);
+  max-width: 160px;
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .icon__content:hover p {
