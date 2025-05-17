@@ -14,7 +14,7 @@ defineProps(['error'])
             </svg>
             <h1 class="error__code">{{ error.statusCode }}</h1>
         </div>
-        <p class="error__message">{{ error.statusMessage }}</p>
+        <p class="error__message">{{ error.message }}</p>
 
         <Button v-if="error.statusCode === 404" text="Volver al inicio" class="button" href="/"/>
     </div>

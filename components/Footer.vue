@@ -95,7 +95,8 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                     <div v-if="legalLinks" class="item">
                         <h1 class="title__item">{{ legalLinks.title }}</h1>
                         <div class="links">
-                            <a v-for="link in legalLinks.links" :key="link.id" :href="link.href" class="link">
+                            <a v-for="link in legalLinks.links" :key="link.id" :href="`/legal/${link.slug}`"
+                                class="link">
                                 {{ link.text }}
                             </a>
                         </div>

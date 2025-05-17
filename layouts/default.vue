@@ -6,7 +6,7 @@ const { data } = await useApi('website-configuration')
 if (!data.value) {
   throw createError({
     statusCode: 500,
-    statusMessage: 'Error | Could not connect to the Server'
+    message: 'Error | Could not connect to the Server'
   })
 }
 

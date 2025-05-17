@@ -2,14 +2,14 @@
 import Hero from '~/components/Home/Hero.vue';
 import About from '~/components/Home/About.vue';
 import Program from '~/components/Home/Program.vue';
-import Testimonies from '~/components/Home/Testimonies.vue';
+/* import Testimonies from '~/components/Home/Testimonies.vue';
 import Brands from '~/components/Home/Brands.vue';
 import Donate from '~/components/Home/Donate.vue';
 import Choose from '~/components/Home/Choose.vue';
 import Shop from '~/components/Home/Shop.vue';
 import Faq from '~/components/Home/Faq.vue';
 import Contact from '~/components/Home/Contact.vue';
-import Social from '~/components/Home/Social.vue';
+import Social from '~/components/Home/Social.vue'; */
 
 const { data } = await useApi('home-page')
 
