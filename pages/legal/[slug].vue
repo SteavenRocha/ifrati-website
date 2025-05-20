@@ -1,7 +1,7 @@
 <script setup>
 import { marked } from 'marked'
 import 'github-markdown-css/github-markdown.css'
-/* OBTENER ESTADO DEL HEADER-UP */
+
 const statusHeaderUp = statusHeaderUpStore()
 const isActive = ref(false)
 
@@ -10,19 +10,44 @@ const slug = route.params.slug
 
 const { data } = await useApi('footer-configuration')
 
-// Buscar el markdown correspondiente
 const legalLinks = data.value?.data?.footer?.legalLinks?.links ?? []
 const currentPage = legalLinks.find(link => link.slug === slug)
 
 if (!currentPage) {
-    // Redirige o muestra 404 si no existe
     throw createError({ statusCode: 404, message: 'Página no encontrada' })
 }
 
+// Función para transformar la fecha al formato "16 de mayo del 2025"
+function formatDateToSpanish(dateString) {
+    const [year, month, day] = dateString.split('T')[0].split('-')
+    const date = new Date(Date.UTC(year, month - 1, day))
+
+    return date.toLocaleDateString('es-PE', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC'
+    }).replace(' de ', ' de ').replace(',', ' del')
+}
+
+// Función para insertar la fecha luego del primer título
+function insertUpdateDate(markdown, formattedDate) {
+    const lines = markdown.split('\n')
+    const index = lines.findIndex(line => line.startsWith('# '))
+    if (index !== -1) {
+        lines.splice(index + 1, 0, `<p class="update__date">Última actualización: ${formattedDate}</p>\n`)
+    }
+    return lines.join('\n')
+}
+
 const markdownContent = currentPage.markdown ?? ''
+const rawUpdateDate = currentPage.updateDate ?? ''
+const formattedDate = rawUpdateDate ? formatDateToSpanish(rawUpdateDate) : ''
+
+const finalMarkdown = insertUpdateDate(markdownContent, formattedDate)
 const htmlContent = ref('')
-htmlContent.value = marked.parse(markdownContent)
-// HEADER STATUS
+htmlContent.value = marked.parse(finalMarkdown)
+
 isActive.value = statusHeaderUp.isActive
 </script>
 
@@ -47,11 +72,16 @@ section {
 
 .content {
     display: flex;
+    flex-direction: column;
     margin: auto;
     max-width: var(--max-width);
     overflow: hidden;
-    gap: 50px;
-    padding: 30px 0;
+    padding: 70px 80px;
+}
+
+::v-deep(.update__date) {
+    font-size: .9rem;
+    color: rgb(75, 75, 75);
 }
 
 ::v-deep(del) {
@@ -60,5 +90,21 @@ section {
 
 ::v-deep(u) {
     text-decoration: underline !important;
+}
+
+::v-deep(p) {
+    color: var(--text-color);
+}
+
+::v-deep(h1) {
+    color: var(--primary-color);
+}
+
+::v-deep(h2),
+::v-deep(h3),
+::v-deep(h4),
+::v-deep(h5),
+::v-deep(h6) {
+    color: var(--title-color);
 }
 </style>

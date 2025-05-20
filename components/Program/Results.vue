@@ -144,7 +144,6 @@ section {
 }
 
 .pill__title {
-    display: flex;
     align-items: center;
 }
 

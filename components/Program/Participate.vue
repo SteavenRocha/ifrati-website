@@ -155,8 +155,6 @@ section {
 }
 
 .pill__title {
-    display: flex;
-    flex-direction: column;
     align-items: center;
 }
 

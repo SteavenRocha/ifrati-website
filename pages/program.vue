@@ -86,6 +86,18 @@ const descriptionFaq = faq?.description ?? '' // DESCRIPTION
 const pillFaq = faq?.pill ?? {} // PILL
 const questions = faq?.questions ?? [] // QUESTIONS
 const styleFaq = faq?.sectionStyle ?? {} // STYLES
+
+/********************* Contact SECTION *********************/
+/* CONFIGURACION GLOBAL DEL FAQ SECTION */
+const contact = data?.value?.data?.sections?.[7] ?? {}
+
+/* DATOS DEL HERO SECTION */
+const titleContact = contact.title ?? '' // TITLE
+const descriptionContact = contact?.description ?? '' // DESCRIPTION
+const pillContact = contact?.pill ?? {} // PILL
+const contactCard = contact?.contactCard ?? [] // CONTACT
+const contactInformation = contact?.contactInformation ?? [] // INFORMATION
+const styleContact = contact?.sectionStyle ?? {} // STYLES
 </script>
 
 <template>
@@ -109,6 +121,9 @@ const styleFaq = faq?.sectionStyle ?? {} // STYLES
       :collaborators="collaborators" :style="styleParticipate" />
 
     <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+
+    <Contact :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
+      :contactInformation="contactInformation" :style="styleContact" />
   </div>
 </template>
 

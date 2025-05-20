@@ -79,7 +79,6 @@ a {
 
 .texts .title {
     width: auto;
-    font-weight: 800;
     font-size: clamp(2rem, 3vw, 2.1rem);
     line-height: 1;
     font-weight: 700;

@@ -169,6 +169,7 @@ footer {
 
 .icon {
     width: 30px;
+    height: 30px;
 }
 
 .item {
@@ -209,6 +210,7 @@ footer {
 
 .contact__link {
     display: flex;
+    gap: 10px;
     align-items: center;
 }
 
