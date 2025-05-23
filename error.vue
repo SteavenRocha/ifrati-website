@@ -26,7 +26,7 @@ defineProps(['error'])
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100svh;
     background: #f4f4f4;
     text-align: center;
     padding: 0 20px;

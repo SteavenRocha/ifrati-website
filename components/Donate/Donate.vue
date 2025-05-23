@@ -113,8 +113,15 @@ watch(otherAmount, (newVal) => {
                         </div>
                     </div>
 
-                    <!-- Impacto del amount seleccionado -->
-                    <div class="impact__frm" v-if="selectedDonation">
+                    <!-- Mostrar mensaje personalizado si hay un monto personalizado -->
+                    <div v-if="otherAmount !== ''" class="impact__frm">
+                        <h1 class="title__impact">Donación personalizada</h1>
+                        <p class="description">Gracias por tu generosidad. Esta donación será destinada a nuestras
+                            causas principales.</p>
+                    </div>
+
+                    <!-- Mostrar impacto solo si se seleccionó un amount fijo -->
+                    <div class="impact__frm" v-else-if="selectedDonation">
                         <h1 class="title__impact">{{ donationForm.secondTitle }}</h1>
                         <div class="impact__container">
                             <div class="image">
@@ -208,13 +215,14 @@ section {
 .title__impact {
     font-size: clamp(1rem, 3vw, 1.4rem);
     font-weight: 500;
+    color: var(--title-color-donate);
 }
 
 .amount__frm {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 50%;
+    max-width: 50%;
     border: 1px solid rgba(185, 185, 185, 0.3);
     padding: 30px;
     gap: 20px;

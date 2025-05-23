@@ -306,10 +306,6 @@ ul {
     padding-left: 0;
 }
 
-li {
-    display: flex;
-}
-
 .side__image {
     max-height: 100%;
 }
