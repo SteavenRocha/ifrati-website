@@ -17,6 +17,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    goalsForm: {
+        type: Object,
+        required: true,
+    },
     style: {
         type: Object,
         required: false,
@@ -36,6 +40,16 @@ const bgColor = props.style?.backgroundColor ?? null
 const titleColor = props.style?.titleColor ?? null
 const textColor = props.style?.textColor ?? null
 
+/* STYLOS FORM */
+const bgColorForm = props.donationForm?.formStyle?.backgroundColor ?? null
+const titleColorForm = props.donationForm?.formStyle?.titleColor ?? null
+const textColorForm = props.donationForm?.formStyle?.textColor ?? null
+
+/* CTA STYLES */
+const bgColorCta = props.goalsForm?.cta?.ctaStyle?.backgroundColor ?? null
+const titleColorCta = props.goalsForm?.cta?.ctaStyle?.titleColor ?? null
+const textColorCta = props.goalsForm?.cta?.ctaStyle?.textColor ?? null
+
 // ESTADOS
 const activeTab = ref('general') // 'general' o 'specific'
 const selectedAmountId = ref(props.donationForm.donationDetails[0]?.id)
@@ -53,6 +67,45 @@ watch(otherAmount, (newVal) => {
     }
 })
 
+const svgHtmlMap = reactive({})
+const cards = props.donationForm.donationDetails.flatMap(detail => detail.detailsCard || [])
+
+for (const detail of cards) {
+    const url = getResource(detail.resource?.url).imageUrl
+    if (url) {
+        const { svgHtml, loadSvg } = getSvgHtml()
+        await loadSvg(url)
+        svgHtmlMap[detail.id] = svgHtml.value
+    }
+}
+
+/* SLIDER */
+// TODAS LAS METAS CON ESTADO TRUE
+const dataGoals = await useApi('goals?filters[state][$eq]=true&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText')
+const goals = dataGoals?.data ?? []
+/* OBTNER CANTIDAD DE CARDS ACTIVAS */
+const activeCardsCount = goals.value.data.length
+/* OBTNER CANTIDAD DE CARDS VISIBLES */
+const visibleCards = 3
+
+function daysRemaining(deadline) {
+    const today = new Date()
+    const endDate = new Date(deadline)
+    const diffTime = endDate - today
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays > 0 ? `${diffDays} días restantes` : 'Fecha vencida'
+}
+
+const getProgress = (collected, goal) => {
+    if (!goal || goal === 0) return 0
+    const total = collected || 0
+    return Math.min(100, Math.round((total / goal) * 100))
+}
+
+/* CARD STYLES */
+const bgColorCard = props.goalsForm?.cardStyle?.backgroundColor ?? null
+const titleColorCard = props.goalsForm?.cardStyle?.titleColor ?? null
+const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
 </script>
 
 <template>
@@ -71,12 +124,18 @@ watch(otherAmount, (newVal) => {
                 <p class="description" v-html="formattedDescription"></p>
             </div>
 
-            <div class="form__container">
+            <div class="form__container" :style="{
+                '--bg-color-form': bgColorForm ?? 'var(--background-color)',
+                '--title-color-form': titleColorForm ?? 'var(--title-color)',
+                '--text-color-form': textColorForm ?? 'var(--text-color)',
+            }">
                 <div class="type">
                     <h1 class="item" :class="{ active: activeTab === 'general' }" @click="activeTab = 'general'">
-                        Donación General</h1>
-                    <h1 class="item" :class="{ active: activeTab === 'specific' }" @click="activeTab = 'specific'">Metas
-                        Específicas</h1>
+                        {{ donationForm.selectedTitle }}
+                    </h1>
+                    <h1 class="item" :class="{ active: activeTab === 'specific' }" @click="activeTab = 'specific'">
+                        {{ goalsForm.selectedTitle }}
+                    </h1>
                 </div>
 
                 <div class="general__donation" v-if="activeTab === 'general'">
@@ -129,6 +188,20 @@ watch(otherAmount, (newVal) => {
                                 <h1 class="image__title">{{ selectedDonation.impact.title }}</h1>
                             </div>
                             <p class="description">{{ selectedDonation.impact.description }}</p>
+
+                            <div class="details__cards">
+                                <div v-for="(detail, index) in selectedDonation.detailsCard" :key="detail.id"
+                                    class="details__card">
+                                    <div class="title__card">
+                                        <div class="icon">
+                                            <span v-if="svgHtmlMap[detail.id]" v-html="svgHtmlMap[detail.id]" />
+                                        </div>
+                                        <h3 class="details__card__title">{{ detail.title }}</h3>
+                                    </div>
+                                    <p class="details__card__description">{{ detail.description }}</p>
+                                </div>
+                            </div>
+
                             <div class="aditional__impact">
                                 <h1 class="aditional__title">{{ selectedDonation.aditionalImpact.title }}</h1>
                                 <p class="aditional__description">{{ selectedDonation.aditionalImpact.description }}</p>
@@ -137,8 +210,69 @@ watch(otherAmount, (newVal) => {
                     </div>
                 </div>
 
-                <div class="specific_goals" v-if="activeTab === 'specific'">
-                    <p>Contenido de Metas Específicas</p>
+                <div class="specific_goals" v-if="activeTab === 'specific'" :style="{
+                    '--bg-color-card': bgColorCard ?? 'var(--background-color)',
+                    '--title-color-card': titleColorCard ?? 'var(--title-color)',
+                    '--text-color-card': textColorCard ?? 'var(--text-color)',
+                }">
+                    <h1 class="title__goals">
+                        {{ goalsForm.title }}
+                    </h1>
+
+                    <Slider id="goalsSlider" :totalCards=activeCardsCount :visibleCards=visibleCards>
+                        <div class="card__section" v-for="(item, index) in goals.data" :key="index">
+                            <div class="goal__image">
+                                <img :src="getResource(item.image?.url).imageUrl" alt="">
+                                <h2 class="deadline">
+                                    {{ daysRemaining(item.deadline) }}
+                                </h2>
+                            </div>
+                            <div class="card__content">
+                                <div class="card__texts">
+                                    <h1 class="card__title">
+                                        {{ item.title }}
+                                    </h1>
+                                    <p class="card__description">
+                                        {{ item.description }}
+                                    </p>
+                                </div>
+                                <div class="progress__container">
+                                    <div class="progress__content">
+                                        <p class="progress">{{ getProgress(item.totalCollected, item.goal) }}%
+                                            completado</p>
+                                        <div class="collected__content">
+                                            <p class="collected__text">
+                                                {{ item.totalCollected || 0 }} S/. de
+                                            </p>
+                                            <p class="goal__text">
+                                                {{ item.goal }} S/.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="progress__bar">
+                                        <div class="progress__fill"
+                                            :style="{ width: getProgress(item.totalCollected, item.goal) + '%' }"></div>
+                                    </div>
+                                </div>
+                                <button class="goal__button">
+                                    Donar a esta meta
+                                </button>
+                            </div>
+                        </div>
+                    </Slider>
+
+                    <div class="cta" :style="{
+                        '--bg-color-cta': bgColorCta ?? 'var(--background-color)',
+                        '--title-color-cta': titleColorCta ?? 'var(--title-color)',
+                        '--text-color-cta': textColorCta ?? 'var(--text-color)',
+                    }">
+                        <h1 class="cta__title">
+                            {{ goalsForm.cta?.title }}
+                        </h1>
+                        <p class="cta__description">
+                            {{ goalsForm.cta?.description }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -203,6 +337,7 @@ section {
     border: 1px solid rgba(185, 185, 185, 0.3);
     padding: 25px;
     border-radius: var(--border-radius);
+    background-color: var(--bg-color-form);
 }
 
 .general__donation {
@@ -215,7 +350,13 @@ section {
 .title__impact {
     font-size: clamp(1rem, 3vw, 1.4rem);
     font-weight: 500;
-    color: var(--title-color-donate);
+    color: var(--title-color-form);
+}
+
+.title__goals {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 500;
+    color: var(--title-color-form);
 }
 
 .amount__frm {
@@ -258,6 +399,7 @@ section {
     flex: 1 1 calc(33.33% - 20px);
     box-sizing: border-box;
     cursor: pointer;
+    color: var(--text-color-form);
 }
 
 .amount__container:hover {
@@ -301,6 +443,7 @@ section {
     box-sizing: border-box;
     cursor: pointer;
     background-color: white;
+    color: var(--text-color-form);
 }
 
 .frequency button:hover {
@@ -343,7 +486,7 @@ section {
     width: auto;
     font-size: .8rem;
     font-weight: 400;
-    color: var(--text-color-donate);
+    color: var(--text-color-form);
 }
 
 .image {
@@ -390,7 +533,7 @@ section {
 }
 
 .description {
-    color: var(--text-color-donate);
+    color: var(--text-color-form);
     line-height: 1.3
 }
 
@@ -401,7 +544,184 @@ section {
 }
 
 .aditional__description {
-    color: var(--text-color-donate);
+    color: var(--text-color-form);
     line-height: 1.3;
+}
+
+.details__cards {
+    display: flex;
+    gap: 20px;
+}
+
+.details__card {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 15px;
+    border-radius: 15px;
+    gap: 5px;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon span {
+    width: 20px;
+    height: 20px;
+    color: var(--secondary-color);
+}
+
+.title__card {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.details__card__title {
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.details__card__description {
+    color: var(--text-color-form);
+}
+
+.specific_goals {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cta {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-color-cta);
+    padding: 50px;
+    border-radius: 15px;
+    gap: 10px;
+}
+
+.cta__title {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 600;
+    color: var(--title-color-cta);
+    text-align: center;
+}
+
+.cta__description {
+    line-height: 1.3;
+    color: var(--text-color-cta);
+    text-align: center;
+}
+
+.card__section {
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: var(--bg-color-card);
+}
+
+.card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+}
+
+.card__texts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card__title {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 700;
+    color: var(--title-color-card);
+}
+
+.card__description {
+    line-height: 1.3;
+    color: var(--text-color-card);
+}
+
+.goal__image {
+    width: 100%;
+    height: 250px;
+    position: relative;
+}
+
+.deadline {
+    position: absolute;
+    width: auto;
+    top: 5%;
+    right: 2.5%;
+    color: var(--primary-color);
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: clamp(0.9rem, 3vw, 0.9rem);
+    font-weight: 600;
+    border: 1px solid var(--primary-color);
+}
+
+.goal__image img {
+    object-fit: cover;
+}
+
+.goal__button {
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: white;
+    color: var(--text-color-card);
+    transition: all .3s ease;
+}
+
+.goal__button:hover {
+    border: 1px solid var(--primary-color);
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.progress__content {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    color: var(--text-color-card);
+}
+
+.collected__content,
+.progress,
+.collected__text,
+.goal__text {
+    width: auto;
+}
+
+.collected__content {
+    display: flex;
+    gap: 5px;
+}
+
+.progress__bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+.progress__fill {
+    height: 100%;
+    background-color: var(--primary-color);
+    transition: width 0.3s ease-in-out;
 }
 </style>

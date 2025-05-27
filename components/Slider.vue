@@ -71,7 +71,7 @@ function movetoLeft() {
                 </svg>
             </div>
 
-            <div class="pagination" v-if="id === 'testimoniesSlider' || id == 'productSlider'">
+            <div class="pagination" v-if="id === 'testimoniesSlider' || id == 'productSlider' || id == 'goalsSlider'">
                 <span v-for="(dot, index) in paginationDots" :key="index" :class="{ active: index === counter }"
                     class="dot" />
             </div>

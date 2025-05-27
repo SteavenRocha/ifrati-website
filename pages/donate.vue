@@ -18,18 +18,19 @@ const style = hero?.heroStyle ?? {} // STYLES
 /* CONFIGURACION GLOBAL DEL DONATE SECTION */
 const donate = data?.value?.data?.sections?.[1] ?? {}
 
-/* DATOS DEL HERO SECTION */
+/* DATOS DEL DONATE SECTION */
 const titleDonate = donate.title ?? '' // TITLE
 const descriptionDonate = donate?.description ?? '' // DESCRIPTION
 const pillDonate = donate?.pill ?? {} // PILL
 const donationForm = donate?.donationForm ?? {} // FORM
+const goalsForm = donate?.specificGoalsForm ?? {} // FORM
 const styleDonate = donate?.sectionStyle ?? {} // STYLES
 
 /********************* IMPORTANT SECTION *********************/
 /* CONFIGURACION GLOBAL DEL IMPORTANT SECTION */
 const important = data?.value?.data?.sections?.[2] ?? {}
 
-/* DATOS DEL HERO SECTION */
+/* DATOS DEL IMPORTANT SECTION */
 const titleImportat = important.title ?? '' // TITLE
 const descriptionImportat = important?.description ?? '' // DESCRIPTION
 const pillImportat = important?.pill ?? {} // PILL
@@ -40,7 +41,7 @@ const styleImportat = important?.sectionStyle ?? {} // STYLES
 /* CONFIGURACION GLOBAL DEL FAQ SECTION */
 const faq = data?.value?.data?.sections?.[3] ?? {}
 
-/* DATOS DEL HERO SECTION */
+/* DATOS DEL FAQS SECTION */
 const titleFaq = faq.title ?? '' // TITLE
 const descriptionFaq = faq?.description ?? '' // DESCRIPTION
 const pillFaq = faq?.pill ?? {} // PILL
@@ -54,7 +55,7 @@ const styleFaq = faq?.sectionStyle ?? {} // STYLES
     <Hero :title="title" :description="description" :style="style" />
 
     <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :donationForm="donationForm"
-      :style="styleDonate" />
+      :goalsForm="goalsForm" :style="styleDonate" />
 
     <Important :title="titleImportat" :description="descriptionImportat" :pill="pillImportat" :card="card"
       :style="styleImportat" />
