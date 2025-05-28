@@ -13,6 +13,9 @@ if (!data.value) {
 const style = data.value?.data?.styleSettings
 const pillStyle = data.value?.data?.pillSettings
 
+const contactData = data.value?.data?.contactSettings
+provide('contactData', contactData)
+
 if (style) {
   useHead({
     style: [

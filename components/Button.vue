@@ -8,19 +8,26 @@ const props = defineProps({
     href: String,
     height: String,
     extraClass: String,
+    type: {
+        type: String,
+        default: 'button'
+    }
 })
 
 const { svgHtml, loadSvg } = getSvgHtml()
 
 if (props.iconUrl) await loadSvg(props.iconUrl)
 
+const isLink = computed(() => !!props.href)
+
 </script>
 
 <template>
-    <a class="button" :href="href" :class="[style, extraClass]" :style="{ height: height || '50px' }">
+    <component :is="isLink ? 'a' : 'button'" :href="isLink ? href : undefined" :type="!isLink ? type : undefined"
+        class="button" :class="[style, extraClass]" :style="{ height: height || '50px' }">
         {{ text }}
         <span v-if="svgHtml" v-html="svgHtml" />
-    </a>
+    </component>
 </template>
 
 <style scoped>
@@ -35,6 +42,10 @@ if (props.iconUrl) await loadSvg(props.iconUrl)
     border-radius: var(--border-radius-btn);
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+}
+
+button {
+    border: none;
 }
 
 .PRIMARY {

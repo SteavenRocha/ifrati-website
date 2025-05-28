@@ -66,11 +66,58 @@ const form = reactive({
     message: ''
 })
 
-function handleSubmit() {
-    console.log('Formulario enviado:', form)
-    // Aquí puedes integrar la lógica para enviar los datos
+const modalVisible = ref(false)
+const modalMessage = ref('')
+const modalType = ref('success') // 'success' o 'error'
+
+function clearForm() {
+    form.name = ''
+    form.email = ''
+    form.phone = ''
+    form.subject = ''
+    form.message = ''
+    form.termsAccepted = false
 }
 
+/* POST PARA ENVIAR FORMULARIO */
+async function handleSubmit() {
+    try {
+        const response = await $fetch('/api/sendForm?endpoint=inboxes', {
+            method: 'POST',
+            body: {
+                name: form.name,
+                email: form.email,
+                phone: form.phone,
+                subject: form.subject,
+                message: form.message,
+            },
+        })
+
+        if (response === 'success') {
+            clearForm()
+            modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
+            modalType.value = 'success'
+            modalVisible.value = true
+        }
+    } catch (error) {
+        clearForm()
+        modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
+        modalType.value = 'error'
+        modalVisible.value = true
+    }
+}
+
+const subjectData = await useApi('subjects')
+const subjectList = subjectData?.data ?? []
+
+watch(() => form.subject, (newSubject) => {
+    const selected = subjectList.value.data.find((s) => s.title === newSubject)
+    if (selected?.defaultMessage) {
+        form.message = selected.defaultMessage
+    } else {
+        form.message = ''
+    }
+})
 </script>
 
 <template>
@@ -79,7 +126,7 @@ function handleSubmit() {
         '--bg-color-contact': bgColor ?? 'var(--background-color)',
         '--title-color-contact': titleColor ?? 'var(--title-color)',
         '--text-color-contact': textColor ?? 'var(--text-color)',
-    }">
+    }" id="contact">
         <div class="content">
             <div class="centered__texts">
                 <div class="pill__title">
@@ -97,42 +144,54 @@ function handleSubmit() {
                     <form @submit.prevent="handleSubmit" class="contact__form">
                         <div class="form__group">
                             <label for="name">Nombre</label>
-                            <input type="text" id="name" v-model="form.name" required />
+                            <input type="text" id="name" v-model="form.name" placeholder="Tu Nombre Completo"
+                                required />
                         </div>
 
                         <div class="form__group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" v-model="form.email" required />
+                            <input type="email" id="email" v-model="form.email" placeholder="correo_example@gmail.com"
+                                required />
                         </div>
 
                         <div class="form__group">
-                            <label for="phone">Celular</label>
-                            <input type="tel" id="phone" v-model="form.phone" required />
+                            <label for="phone">Celular (Opcional)</label>
+                            <input type="tel" id="phone" v-model="form.phone" placeholder="+51 987654321"
+                                inputmode="numeric" pattern="[0-9]*"
+                                @input="form.phone = form.phone.replace(/\D/g, '')" />
                         </div>
 
                         <div class="form__group">
                             <label for="subject">Asunto</label>
-                            <input type="text" id="subject" v-model="form.subject" required />
+                            <select v-model="form.subject" :class="{ 'selected': form.subject !== '' }">
+                                <option disabled value="">Selecciona un asunto</option>
+                                <option v-for="subject in subjectList.data" :key="subject.id" :value="subject.title">
+                                    {{ subject.title }}
+                                </option>
+                            </select>
                         </div>
 
                         <div class="form__group">
                             <label for="message">Mensaje</label>
-                            <textarea id="message" rows="5" v-model="form.message" required></textarea>
+                            <textarea id="message" rows="5" v-model="form.message"
+                                placeholder="Detalla tu mensaje los mas posible" required></textarea>
                         </div>
 
                         <div class="form__group checkbox__group">
-                            <label>
+                            <label class="checkbox">
                                 <input type="checkbox" v-model="form.termsAccepted" required />
-                                Acepto haber leído los <a href="/terminos-y-condiciones" target="_blank">términos y
-                                    condiciones</a>
+                                <span>Acepto haber leído los <a href="/legal/Términos y condiciones"
+                                        target="_blank">términos y condiciones</a></span>
                             </label>
                         </div>
 
-                        <Button :key="contactCard.button.id" :text="contactCard.button.text"
-                            :style="contactCard.button.style" :href="contactCard.button.href"
+                        <Button type="submit" :text="contactCard.button.text" :style="contactCard.button.style"
                             :icon-url="getResource(contactCard.button.icon?.url).imageUrl" />
                     </form>
                 </div>
+
+                <ModalMessage :visible="modalVisible" :message="modalMessage" :type="modalType"
+                    @update:visible="modalVisible = $event" />
 
                 <div class="contact__information__container">
                     <h1 class="sub__title">{{ contactInformation.title }}</h1>
@@ -167,7 +226,7 @@ section {
     height: auto;
     background-color: var(--bg-color-contact);
     padding: var(--padding-section);
-    scroll-margin-top: 40px;
+    scroll-margin-top: 100px;
 }
 
 .content {
@@ -222,6 +281,9 @@ section {
 }
 
 .contact__frm__container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
     width: 50%;
 }
 
@@ -265,5 +327,82 @@ section {
 .map iframe {
     width: 100%;
     height: 100%;
+}
+
+.contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+label {
+    color: var(--text-color-contact);
+}
+
+input,
+textarea,
+select {
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    color: #888;
+}
+
+select.selected {
+    color: var(--text-color-contact);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #888;
+}
+
+input:valid:not(:placeholder-shown),
+textarea:valid:not(:placeholder-shown) {
+    color: var(--text-color-contact);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.checkbox span,
+.checkbox a {
+    font-size: 0.9rem;
+    color: var(--text-color-contact);
+}
+
+.checkbox a {
+    color: var(--primary-color);
+}
+
+.checkbox a:hover {
+    filter: brightness(90%);
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
 }
 </style>

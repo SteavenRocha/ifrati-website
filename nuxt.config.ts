@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   /* API */
   runtimeConfig: {
     strapiApiToken: process.env.STRAPI_API_TOKEN,
+    strapiApiTokenWrite: process.env.STRAPI_API_TOKEN_WRITE,
     public: {
       strapiApiUrl: process.env.STRAPI_API_URL,
     },

@@ -81,7 +81,7 @@ for (const detail of cards) {
 
 /* SLIDER */
 // TODAS LAS METAS CON ESTADO TRUE
-const dataGoals = await useApi('goals?filters[state][$eq]=true&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText')
+const dataGoals = await useApi('goals?populate[image][fields][0]=url&populate[image][fields][1]=alternativeText')
 const goals = dataGoals?.data ?? []
 /* OBTNER CANTIDAD DE CARDS ACTIVAS */
 const activeCardsCount = goals.value.data.length

@@ -4,7 +4,7 @@ import Faq from '~/components/Faq.vue';
 
 const { data } = await useApi('shop-page')
 // TODAS LAS CATEGORIAS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
-const dataCategories = await useApi('product-categories?sort[0]=category:asc&filters[state][$eq]=true')
+const dataCategories = await useApi('product-categories?sort[0]=category:asc')
 // TODAS LOS PRODUCTOS FILTRADOS ASCEDENTEMENTE POR FECHA DE PUBLICACION CON ESTADO TRUE
 /* const dataProduct = await useApi('products?filters[state][$eq]=true&sort[0]=createdAt:asc&populate[product_categories][fields][0]=category&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText&pagination[pageSize]=2&pagination[page]=1&total[page]')
 const dataProductFilter = await useApi('api/products?filters[state][$eq]=true&filters[product_categories][category][$eq]=Artesanal&sort[0]=createdAt:asc&populate[product_categories][fields][0]=category&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText') */
@@ -41,7 +41,7 @@ const categories = dataCategories?.data ?? []
 
 // Estado para la categoría seleccionada
 const currentPage = ref(1)
-const pageSize = ref(15)
+const pageSize = ref(2)
 const selectedCategory = ref('all')
 
 const products = ref([])  // productos actuales
@@ -49,15 +49,12 @@ const totalPages = ref(1) // total páginas que devuelve la API
 const totalProducts = ref(0)
 
 function buildQuery() {
-  let base = `products?filters[state][$eq]=true`
+  let base = `products?filters[product_categories][publishedAt][$notNull]=true`
 
   // Filtro por categoría seleccionada
   if (selectedCategory.value !== 'all') {
     base += `&filters[product_categories][category][$eq]=${encodeURIComponent(selectedCategory.value)}`
   }
-
-  // Filtro para que solo muestre categorías con estado true
-  base += `&filters[product_categories][state][$eq]=true`
 
   // Orden por fecha de creación
   base += `&sort[0]=createdAt:desc`
@@ -67,7 +64,7 @@ function buildQuery() {
 
   // Populate para categoría (nombre y estado) e imagen
   base += `&populate[product_categories][fields][0]=category`
-  base += `&populate[product_categories][fields][1]=state`
+  /* base += `&populate[product_categories][fields][1]=state` */
   base += `&populate[image][fields][0]=url`
   base += `&populate[image][fields][1]=alternativeText`
 
@@ -202,10 +199,9 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
 
               <div class="pagination" v-if="totalPages > 1">
                 <button class="button left" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z">
-                    </path>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="4" d="M31 36L19 24l12-12" />
                   </svg>
                 </button>
                 <div class="button__number__container">
@@ -215,10 +211,9 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                   </button>
                 </div>
                 <button class="button right" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path
-                      d="M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z">
-                    </path>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
+                    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="4" d="m19 12l12 12l-12 12" />
                   </svg>
                 </button>
               </div>
@@ -437,23 +432,30 @@ button {
 }
 
 .button {
-  border-radius: 10px;
+  border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(109, 109, 109, 0.116);
   transition: all .3s ease;
+  pointer-events: all;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  color: rgba(0, 0, 0, 0.685);
+  border: 1px solid rgb(161, 161, 161);
 }
 
 .button__number__container {
   display: flex;
   width: auto;
-  gap: 10px;
+  gap: 5px;
 }
 
 .button:hover {
   color: var(--primary-color);
-  background-color: rgba(109, 109, 109, 0.185);
+  border: 1px solid var(--primary-color);
 }
 
 .button.number:hover {
@@ -462,12 +464,14 @@ button {
 
 .button.left,
 .button.right {
-  padding: 7px 5px;
-  height: max-content;
+  width: 40px;
+  height: 40px;
 }
 
 .button.number {
-  padding: 10px 15px;
+  border-radius: 10px;
+  width: 30px;
+  height: 30px;
   color: var(--text-color-shop);
 }
 
@@ -476,6 +480,7 @@ button {
   color: white;
   border: none;
   font-weight: bold;
+  border: 1px solid var(--primary-color);
 }
 
 button svg {
@@ -525,5 +530,10 @@ button svg {
 
 .icon__content:hover p {
   opacity: 1;
+}
+
+svg {
+    width: 30px;
+    height: auto;
 }
 </style>
