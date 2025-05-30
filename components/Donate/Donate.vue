@@ -67,6 +67,16 @@ watch(otherAmount, (newVal) => {
     }
 })
 
+// Computed para obtener el monto final
+const selectedAmount = computed(() => {
+    if (otherAmount.value !== '') {
+        const parsed = parseFloat(otherAmount.value)
+        return isNaN(parsed) ? 0 : parsed
+    }
+    const selected = props.donationForm.donationDetails.find(d => d.id === selectedAmountId.value)
+    return selected?.amount || 0
+})
+
 const svgHtmlMap = reactive({})
 const cards = props.donationForm.donationDetails.flatMap(detail => detail.detailsCard || [])
 
@@ -81,7 +91,7 @@ for (const detail of cards) {
 
 /* SLIDER */
 // TODAS LAS METAS CON ESTADO TRUE
-const dataGoals = await useApi('goals?populate[image][fields][0]=url&populate[image][fields][1]=alternativeText')
+const dataGoals = await useApi('goals?sort[0]=title:asc&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText')
 const goals = dataGoals?.data ?? []
 /* OBTNER CANTIDAD DE CARDS ACTIVAS */
 const activeCardsCount = goals.value.data.length
@@ -106,6 +116,123 @@ const getProgress = (collected, goal) => {
 const bgColorCard = props.goalsForm?.cardStyle?.backgroundColor ?? null
 const titleColorCard = props.goalsForm?.cardStyle?.titleColor ?? null
 const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
+
+/* MODALES */
+/* MODAL PARA PEDIR DATOS */
+const donationType = ref(null) // 'general' o 'meta'
+const showModal = ref(false);
+const firstInputRef = ref(null);
+const step = ref('form');
+/* META SELECCIONADA */
+const selectedGoal = ref(null);
+
+watch(showModal, async (newVal) => {
+    document.body.style.overflow = newVal ? 'hidden' : ''
+
+    if (newVal) {
+        if (donationType.value === 'general') {
+            selectedGoal.value = null
+            await nextTick()
+            firstInputRef.value?.focus()
+        } else if (donationType.value === 'meta') {
+            step.value = 'amount'
+            otherAmount.value = ''
+        }
+    } else {
+        clearForm()
+        step.value = 'form'
+        selectedGoal.value = null
+        donationType.value = null
+        selectedAmountId.value = props.donationForm.donationDetails[0]?.id
+        otherAmount.value = ''
+    }
+})
+
+const form = reactive({
+    name: '',
+    email: '',
+    phone: ''
+})
+
+function clearForm() {
+    form.name = ''
+    form.email = ''
+    form.phone = ''
+}
+
+const handleContinue = async (type) => {
+    switch (type) {
+        case 'anonymous':
+            clearForm()
+            step.value = 'anonymous';
+            break
+        case 'review':
+            step.value = 'review';
+            break
+        case 'form':
+            clearForm()
+            step.value = 'form'
+            await nextTick()
+            firstInputRef.value?.focus()
+            break
+        default:
+            console.warn('Tipo no reconocido en handleContinue:', type)
+    }
+}
+
+async function submitDonation() {
+    try {
+        const response = await $fetch('/api/sendForm?endpoint=donations', {
+            method: 'POST',
+            body: {
+                donor: form.name || 'Anónimo',
+                email: form.email || null,
+                phone: form.phone || null,
+                frequency: selectedFrequency.value,
+                amount: selectedAmount.value,
+                donationType: donationType.value,
+                donationForm: step.value === 'anonymous' ? 'anonymous' : 'personal',
+                goal: selectedGoal.value ? selectedGoal.value.documentId : null,
+            },
+        })
+
+        if (response === 'success' && selectedGoal.value) {
+
+            const newTotalCollected = selectedAmount.value + selectedGoal.value.totalCollected
+            const id = selectedGoal.value.documentId
+            try {
+                const response = await $fetch(`/api/sendForm?endpoint=goals/${id}`, {
+                    method: 'PUT',
+                    body: {
+                        totalCollected: newTotalCollected,
+                    },
+                })
+                if (response === 'success') {
+                    clearForm()
+                    showModal.value = false
+                    /*  modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
+                     modalType.value = 'success'
+                     modalVisible.value = true */
+                }
+            } catch (error) {
+                clearForm()
+                showModal.value = false
+                /*  modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
+                 modalType.value = 'error'
+                 modalVisible.value = true */
+            }
+        } else {
+            clearForm()
+            showModal.value = false
+        }
+    } catch (error) {
+        clearForm()
+        showModal.value = false
+        /*  modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
+         modalType.value = 'error'
+         modalVisible.value = true */
+    }
+}
 </script>
 
 <template>
@@ -167,7 +294,7 @@ const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
                             </div>
                         </div>
                         <div class="button__container">
-                            <button>Donar</button>
+                            <button @click="donationType = 'general'; showModal = true">Donar</button>
                             <p class="button__text">Tu donación es deducible fiscalmente</p>
                         </div>
                     </div>
@@ -254,7 +381,8 @@ const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
                                             :style="{ width: getProgress(item.totalCollected, item.goal) + '%' }"></div>
                                     </div>
                                 </div>
-                                <button class="goal__button">
+                                <button class="goal__button"
+                                    @click="donationType = 'meta'; showModal = true; selectedGoal = item">
                                     Donar a esta meta
                                 </button>
                             </div>
@@ -273,6 +401,158 @@ const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
                             {{ goalsForm.cta?.description }}
                         </p>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCION DE MODALES -->
+        <!-- Modal para pedir datos -->
+        <div v-if="showModal" class="modal" :style="{
+            '--bg-color-form': bgColorForm ?? 'var(--background-color)',
+            '--title-color-form': titleColorForm ?? 'var(--title-color)',
+            '--text-color-form': textColorForm ?? 'var(--text-color)',
+        }">
+            <span @click="showModal = false"><svg xmlns="http://www.w3.org/2000/svg" width="118.64" height="128"
+                    viewBox="0 0 1216 1312">
+                    <path fill="currentColor"
+                        d="M1202 1066q0 40-28 68l-136 136q-28 28-68 28t-68-28L608 976l-294 294q-28 28-68 28t-68-28L42 1134q-28-28-28-68t28-68l294-294L42 410q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294l294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68L880 704l294 294q28 28 28 68" />
+                </svg></span>
+
+            <div class="modal__content">
+                <!-- Contenido del impacto -->
+                <div v-if="donationType === 'general' && selectedDonation">
+                    <div class="image">
+                        <img :src="getResource(selectedDonation.impact.resource?.url).imageUrl" alt="Impacto" />
+                        <h2 class="image__title">{{ selectedDonation.impact.title }}</h2>
+                    </div>
+                </div>
+
+                <div v-if="donationType === 'meta' && selectedGoal">
+                    <div class="image">
+                        <img :src="getResource(selectedGoal.image?.url).imageUrl" alt="Impacto" />
+
+                        <div class="overlay__goal__details">
+                            <div class="goal__details__container">
+                                <h2 class="image__title__goal">{{ selectedGoal.title }}</h2>
+
+                                <div class="progress__container">
+                                    <div class="progress__content">
+                                        <p class="progress">{{ getProgress(selectedGoal.totalCollected,
+                                            selectedGoal.goal)
+                                        }}%
+                                            completado</p>
+                                        <div class="collected__content">
+                                            <p class="collected__text">
+                                                {{ selectedGoal.totalCollected || 0 }} S/. de
+                                            </p>
+                                            <p class="goal__text">
+                                                {{ selectedGoal.goal }} S/.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="progress__bar">
+                                        <div class="progress__fill"
+                                            :style="{ width: getProgress(selectedGoal.totalCollected, selectedGoal.goal) + '%' }">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="otherAmount !== '' && donationType === 'general'" class="personalized">
+                    <h1 class="title__impact">Donación personalizada</h1>
+                    <p class="description">Gracias por tu generosidad. Esta donación será destinada a nuestras
+                        causas principales.</p>
+                </div>
+
+                <div v-if="step === 'amount' && selectedGoal" class="get__amount__goal">
+                    <div class="amount__frm">
+                        <div class="amount__content">
+                            <h1 class="title__amount">{{ donationForm.title }}</h1>
+                            <div class="container__frm">
+                                <div class="amount__container" v-for="amount in donationForm?.donationDetails"
+                                    :key="amount.id"
+                                    :class="{ selected: selectedAmountId === amount.id && otherAmount === '' }"
+                                    @click="() => { selectedAmountId = amount.id; otherAmount = '' }">
+                                    <div class="amount">{{ amount.amount }}PEN</div>
+                                </div>
+                            </div>
+                            <div class="another__amount">
+                                <div class="input-wrapper">
+                                    <input type="number" placeholder="PEN Otra cantidad" v-model="otherAmount" />
+                                </div>
+                            </div>
+                            <div class="frequency">
+                                <button :class="{ active: selectedFrequency === 'mensual' }"
+                                    @click="selectedFrequency = 'mensual'">
+                                    Mensual
+                                </button>
+                                <button :class="{ active: selectedFrequency === 'unica' }"
+                                    @click="selectedFrequency = 'unica'">
+                                    Única
+                                </button>
+                            </div>
+                        </div>
+                        <div class="button__container">
+                            <button @click="handleContinue('form')">Donar</button>
+                            <p class="button__text">Tu donación es deducible fiscalmente</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="step === 'form'" class="get__data__container">
+                    <h1 class="title__modal">Introduce tus datos o elige donar anonimamente</h1>
+
+                    <form @submit.prevent="handleContinue('review')">
+                        <div class="data__form">
+                            <div class="form__group">
+                                <label for="name">Nombre</label>
+                                <input type="text" id="name" ref="firstInputRef" v-model="form.name"
+                                    placeholder="Tu Nombre Completo" required />
+                            </div>
+
+                            <div class="form__group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" v-model="form.email"
+                                    placeholder="correo_example@gmail.com" required />
+                            </div>
+
+                            <div class="form__group">
+                                <label for="phone">Celular (Opcional)</label>
+                                <input type="tel" id="phone" v-model="form.phone" placeholder="+51 987654321"
+                                    inputmode="numeric" pattern="[0-9]*"
+                                    @input="form.phone = form.phone.replace(/\D/g, '')" />
+                            </div>
+                        </div>
+
+                        <div class="button__container__modal">
+                            <button class="modal__button anonymus" type="button"
+                                @click="handleContinue('anonymous')">Donar
+                                Anonimamente</button>
+                            <button class="modal__button" type="submit">Continuar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Paso 2: Vista anónima -->
+                <div v-else-if="step === 'anonymous'" class="get__data__container">
+                    {{ selectedFrequency }}
+                    <p>Monto seleccionado: S/ {{ selectedAmount.toFixed(2) }}</p>
+                    <h1 class="title__modal">Completar donación</h1>
+                    <button class="modal__button" @click="submitDonation">Donar</button>
+                </div>
+
+                <!-- Paso 3: Vista con revisión de datos -->
+                <div v-else-if="step === 'review'" class="get__data__container">
+                    {{ selectedFrequency }}
+                    <p>Monto seleccionado: S/ {{ selectedAmount.toFixed(2) }}</p>
+                    <h1 class="title__modal">Completar donación</h1>
+                    <p><strong>Nombre:</strong> {{ form.name }}</p>
+                    <p><strong>Email:</strong> {{ form.email }}</p>
+                    <p><strong>Celular:</strong> {{ form.phone }}</p>
+                    <button class="modal__button" @click="submitDonation">Donar</button>
                 </div>
             </div>
         </div>
@@ -378,6 +658,16 @@ section {
 
 .impact__frm {
     width: 50%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #F9FAFB;
+    border-radius: 20px;
+}
+
+.personalized {
+    width: 100%;
     padding: 30px;
     display: flex;
     flex-direction: column;
@@ -723,5 +1013,178 @@ section {
     height: 100%;
     background-color: var(--primary-color);
     transition: width 0.3s ease-in-out;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.title__group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.title__modal {
+    font-size: clamp(1.1rem, 3vw, 1.2rem);
+    font-weight: 500;
+    color: var(--title-color-form);
+}
+
+.modal__content {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    gap: 20px;
+    padding: 20px 10px;
+}
+
+.data__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.modal span {
+    position: fixed;
+    top: 30px;
+    right: 50px;
+    width: 50px;
+    color: white;
+    font-weight: bolder;
+    z-index: 40;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.modal span:hover {
+    color: var(--primary-color);
+    scale: 1.2;
+}
+
+.get__data__container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 30px;
+    gap: 20px;
+    border-radius: 15px;
+}
+
+label {
+    color: var(--text-color-form);
+}
+
+input {
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    color: #888;
+}
+
+input::placeholder {
+    color: #888;
+}
+
+input:valid:not(:placeholder-shown) {
+    color: var(--text-color-donate);
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid var(--primary-color);
+}
+
+textarea {
+    resize: vertical;
+}
+
+.form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.button__container__modal {
+    display: flex;
+    gap: 20px;
+}
+
+.modal__button {
+    border: 1px solid var(--primary-color);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: white;
+    transition: filter .3s ease;
+}
+
+.modal__button.anonymus {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.modal__button:hover {
+    filter: brightness(90%);
+}
+
+.overlay__goal__details {
+    position: absolute;
+    bottom: 0;
+    color: white;
+    z-index: 2;
+    padding: 15px;
+}
+
+.goal__details__container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.image__title__goal {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 600;
+}
+
+.goal__details__container p {
+    font-size: clamp(1.1rem, 3vw, 1.2rem);
+    font-weight: 450;
+}
+
+.get__amount__goal {
+    display: flex;
+    width: auto;
+}
+
+.get__amount__goal .amount__frm {
+    display: flex;
+    max-width: 100%;
+    gap: 100px;
+    background-color: white;
 }
 </style>

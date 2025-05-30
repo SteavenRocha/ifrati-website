@@ -384,6 +384,8 @@ textarea {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    cursor: pointer;
+    width: max-content;
 }
 
 .checkbox span,

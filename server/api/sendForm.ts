@@ -4,6 +4,7 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   const endpoint = getQuery(event).endpoint as string
+  const method = event.method // Detecta el método (POST, PUT, etc.)
 
   if (!endpoint) {
     return { error: 'Falta el parámetro "endpoint"' }
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     await $fetch(url, {
-      method: 'POST',
+      method, // Usa el método detectado
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
