@@ -27,6 +27,11 @@ const props = defineProps({
     },
 })
 
+const companyInformation = inject('companyInformation')
+if (!companyInformation) {
+    console.warn('companyInformation no está disponible')
+}
+
 // FORMATEAR EL TITULO Y DESCRIPTION **
 const formattedTitle = ref(getTextFormated(props.title))
 const formattedDescription = ref(getTextFormated(props.description))
@@ -44,8 +49,8 @@ const textColor = props.style?.textColor ?? null
 // Obtener SVG plano para los contactLinks
 const processedContactInformation = reactive([])
 
-if (props.contactInformation?.information?.length) {
-    for (const link of props.contactInformation.information) {
+if (companyInformation?.information?.length) {
+    for (const link of companyInformation.information) {
         const { svgHtml, loadSvg } = getSvgHtml()
         const iconUrl = getResource(link.resource?.url ?? '').imageUrl
         if (iconUrl) {
@@ -143,7 +148,7 @@ watch(() => form.subject, (newSubject) => {
 
                     <form @submit.prevent="handleSubmit" class="contact__form">
                         <div class="form__group">
-                            <label for="name">Nombre</label>
+                            <label for="name">Nombres</label>
                             <input type="text" id="name" v-model="form.name" placeholder="Tu Nombre Completo"
                                 required />
                         </div>
@@ -162,8 +167,8 @@ watch(() => form.subject, (newSubject) => {
                         </div>
 
                         <div class="form__group">
-                            <label for="subject">Asunto</label>
-                            <select v-model="form.subject" :class="{ 'selected': form.subject !== '' }">
+                            <label for="subject">Asunto *</label>
+                            <select v-model="form.subject" required :class="{ 'selected': form.subject !== '' }">
                                 <option disabled value="">Selecciona un asunto</option>
                                 <option v-for="subject in subjectList.data" :key="subject.id" :value="subject.title">
                                     {{ subject.title }}
@@ -173,8 +178,11 @@ watch(() => form.subject, (newSubject) => {
 
                         <div class="form__group">
                             <label for="message">Mensaje</label>
-                            <textarea id="message" rows="5" v-model="form.message"
+                            <textarea id="message" rows="5" maxlength="4000" v-model="form.message"
                                 placeholder="Detalla tu mensaje los mas posible" required></textarea>
+                            <div class="char-counter">
+                                {{ form.message.length }} / 4000 caracteres
+                            </div>
                         </div>
 
                         <div class="form__group checkbox__group">
@@ -194,7 +202,7 @@ watch(() => form.subject, (newSubject) => {
                     @update:visible="modalVisible = $event" />
 
                 <div class="contact__information__container">
-                    <h1 class="sub__title">{{ contactInformation.title }}</h1>
+                    <h1 class="sub__title">{{ contactInformation.text }}</h1>
 
                     <div class="information__container">
                         <div class="information" v-for="item in processedContactInformation" :key="item.id">
@@ -209,8 +217,8 @@ watch(() => form.subject, (newSubject) => {
                         </div>
                     </div>
 
-                    <div class="map">
-                        <iframe :src="contactInformation.googleMapsLink" width="100%" height="450" style="border:0;"
+                    <div class="map" v-if="companyInformation.googleMapsLink">
+                        <iframe :src="companyInformation.googleMapsLink" width="100%" height="450" style="border:0;"
                             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
@@ -406,5 +414,13 @@ input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 4px;
 }
 </style>

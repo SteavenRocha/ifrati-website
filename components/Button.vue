@@ -1,6 +1,4 @@
 <script setup>
-import { getSvgHtml } from '@/composables/getSvgHtml'
-
 const props = defineProps({
     text: String,
     style: String,
@@ -15,7 +13,6 @@ const props = defineProps({
 })
 
 const { svgHtml, loadSvg } = getSvgHtml()
-
 if (props.iconUrl) await loadSvg(props.iconUrl)
 
 const isLink = computed(() => !!props.href)

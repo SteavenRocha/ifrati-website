@@ -13,8 +13,9 @@ if (!data.value) {
 const style = data.value?.data?.styleSettings
 const pillStyle = data.value?.data?.pillSettings
 
-const contactData = data.value?.data?.contactSettings
-provide('contactData', contactData)
+/* COMPANY INFORMATION */
+const companyInformation = data.value?.data?.companyInformation
+provide('companyInformation', companyInformation)
 
 if (style) {
   useHead({

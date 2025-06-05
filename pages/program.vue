@@ -87,20 +87,17 @@ const pillFaq = faq?.pill ?? {} // PILL
 const questions = faq?.questions ?? [] // QUESTIONS
 const styleFaq = faq?.sectionStyle ?? {} // STYLES
 
-
 /********************* Contact SECTION *********************/
-const contactData = inject('contactData')
-if (!contactData) {
-  console.warn('contactData no está disponible')
-}
+/* CONFIGURACION GLOBAL DEL CONTACT SECTION */
+const contact = data?.value?.data?.sections?.[7] ?? {}
 
-/* DATOS DEL HERO SECTION */
-const titleContact = contactData.title ?? '' // TITLE
-const descriptionContact = contactData?.description ?? '' // DESCRIPTION
-const pillContact = contactData?.pill ?? {} // PILL
-const contactCard = contactData?.contactCard ?? [] // CONTACT
-const contactInformation = contactData?.contactInformation ?? [] // INFORMATION
-const styleContact = contactData?.sectionStyle ?? {} // STYLES
+/* DATOS DEL CONTACT SECTION */
+const titleContact = contact.title ?? '' // TITLE
+const descriptionContact = contact?.description ?? '' // DESCRIPTION
+const pillContact = contact?.pill ?? {} // PILL
+const contactCard = contact?.contactCard ?? [] // CONTACT
+const contactInformation = contact?.contactInformation ?? [] // INFORMATION
+const styleContact = contact?.sectionStyle ?? {} // STYLES
 </script>
 
 <template>

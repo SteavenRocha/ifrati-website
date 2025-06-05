@@ -124,9 +124,9 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
 
                     <!-- Libro de Reclamaciones -->
                     <div class="complaints__book" v-if="complaintsBook?.href">
-                        <a :href="complaintsBook.href" :target="complaintsBook.isExternal ? '_blank' : '_self'">
+                        <a :href="complaintsBook.href" target="_blank" rel="noopener noreferrer">
                             <div class="image__book">
-                                <img :src="getResource(complaintsBook.image?.url).imageUrl"" alt="">
+                                <img :src="getResource(complaintsBook.image?.url).imageUrl" alt="">
                             </div>
                         </a>
                     </div>
@@ -250,7 +250,15 @@ span {
 }
 
 .complaints__book {
-    width: auto;
+    border-radius: 10px;
+    overflow: hidden;
+    max-width: 120px;
+    max-height: 80px;
+}
+
+.image__book img {
+    width: 120px;
+    height: 80px;
 }
 
 .social {
