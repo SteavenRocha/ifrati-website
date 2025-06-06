@@ -2,9 +2,9 @@
 import Hero from '~/components/Home/Hero.vue';
 import About from '~/components/Home/About.vue';
 import Program from '~/components/Home/Program.vue';
-/* import Testimonies from '~/components/Home/Testimonies.vue';
+import Testimonies from '~/components/Home/Testimonies.vue';
 import Brands from '~/components/Home/Brands.vue';
-import Donate from '~/components/Home/Donate.vue';
+/*import Donate from '~/components/Home/Donate.vue';
 import Choose from '~/components/Home/Choose.vue';
 import Shop from '~/components/Home/Shop.vue';
 import Faq from '~/components/Home/Faq.vue';
@@ -62,6 +62,26 @@ const pillHowHelp = program?.howHelp?.pill ?? {} // PILL
 const cards = program?.howHelp?.cardSection ?? {} // CARDS
 const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
 
+/********************* TESTIMONIES SECTION *********************/
+/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
+const testimonies = data?.value?.data?.sections?.[3] ?? {}
+
+/* DATOS DEL PROGRAM SECTION */
+const titleTestimonies = testimonies?.title ?? '' // TITLE
+const descriptionTestimonies = testimonies?.description ?? '' // DESCRIPTION
+const pillTestimonies = testimonies?.pill ?? {} // PILL
+const testimoniesCard = testimonies?.testimonialsSection ?? {} // DESCRIPTION
+const stylesTestimonies = testimonies?.sectionStyle ?? {} // STYLES TESTIMONIES
+
+/********************* BRANDS SECTION *********************/
+/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
+const brands = data?.value?.data?.sections?.[4] ?? {}
+
+/* DATOS DEL PROGRAM SECTION */
+const titleBrand = brands?.title ?? '' // TITLE
+const pillBrand = brands?.pill ?? {} // PILL
+const stylesBrands = brands?.sectionStyle ?? {} // STYLES TESTIMONIES
+const brandsImgs = brands ?? [] // BRANDS
 </script>
 
 <template>
@@ -76,10 +96,12 @@ const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
       :video="video" :styles="stylesProgram" :titleHowHelp="titleHowHelp" :descriptionHowHelp="descriptionHowHelp"
       :pillHowHelp="pillHowHelp" :cards="cards" :stylesHowHelp="stylesHowHelp" />
 
-    <!--<Testimonies :title="titleTestimonies" :description="descriptionTestimonies" :card="testimoniesCard" :styles="stylesTestimonies"/>
+    <Testimonies :title="titleTestimonies" :description="descriptionTestimonies" :pill="pillTestimonies"
+      :card="testimoniesCard" :styles="stylesTestimonies" />
 
-    <Brands :title="titleBrands" :styles="stylesBrands" :brands="brandsImgs"/>
+    <Brands :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
 
+    <!--
     <Donate :title="titleDonate" :description="descriptionDonate" :cta="donateCTA" :styles="stylesDonate"/>
 
     <Choose :title="titleChoose" :description="descriptionChoose" :cards="chooseCard" :styles="stylesChoose"/>

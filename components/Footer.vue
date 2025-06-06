@@ -254,6 +254,11 @@ span {
     overflow: hidden;
     max-width: 120px;
     max-height: 80px;
+    transition: scale .3s ease;
+}
+
+.complaints__book:hover {
+    scale: 1.05;
 }
 
 .image__book img {

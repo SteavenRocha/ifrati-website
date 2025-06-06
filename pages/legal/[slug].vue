@@ -79,6 +79,10 @@ section {
     padding: 70px 80px;
 }
 
+.markdown-body {
+    background-color: white;
+}
+
 ::v-deep(.update__date) {
     font-size: .9rem;
     color: rgb(75, 75, 75);

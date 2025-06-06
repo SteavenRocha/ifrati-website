@@ -9,8 +9,12 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    pill: {
+        type: Object,
+        required: true,
+    },
     card: {
-        type: Array,
+        type: Object,
         required: true,
     },
     styles: {
@@ -23,93 +27,80 @@ const props = defineProps({
 const formattedTitle = ref(getTextFormated(props.title))
 const formattedDescription = ref(getTextFormated(props.description))
 
-/* STYLOS DEL TESTIMONIES SECTION */
-const bgColor = props.styles?.backgroundColor?.color ?? null
-const titleColor = props.styles?.titleColor?.color ?? null
-const textColor = props.styles?.textColor?.color ?? null
+/* RECUPERAMOS STYLOS DE LA PILL */
+const bgColorPill = props.pill?.pillStyle?.backgroundColor ?? 'var(--pill-bg-color)'
+const textColorPill = props.pill?.pillStyle?.textColor ?? 'var(--pill-text-color)'
 
-/* OBTENER LA CARD */
-const cards = props.card?.testimoniesCard ?? null
+/* STYLOS */
+const bgColor = props.styles?.backgroundColor ?? null
+const titleColor = props.styles?.titleColor ?? null
+const textColor = props.styles?.textColor ?? null
 
-/* STYLOS DEL CARD TESTIMONIES */
-const bgColorCard = props.card?.cardStyles?.backgroundColor?.color ?? null
-const titleColorCard = props.card?.cardStyles?.titleColor?.color ?? null
-const textColorCard = props.card?.cardStyles?.textColor?.color ?? null
+/* STYLOS DE LA CARD*/
+const bgColorCard = props.card?.cardStyle?.backgroundColor ?? null
+const titleColorCard = props.card?.cardStyle?.titleColor ?? null
+const textColorCard = props.card?.cardStyle?.textColor ?? null
 
 /* OBTNER CANTIDAD DE CARDS ACTIVAS */
-const activeCardsCount = computed(() => cards.filter(c => c.isActive).length)
+const activeCardsCount = props.card?.testimonies.filter(t => t.statuS).length
 /* OBTNER CANTIDAD DE CARDS VISIBLES */
-const visibleCards = 2
-
+const visibleCards = 3
 </script>
 
 <template>
-    <section class="section__main">
-        <div class="content__bg" :style="{
-            /* COLORES DE LA SECCION */
-            '--bg-color-testimonies': bgColor ?? 'var(--background-color)',
-            '--title-color-testimonies': titleColor ?? 'var(--title-color)',
-            '--text-color-testimonies': textColor ?? 'var(--text-color)',
-        }">
-            <div class="content" :style="{
+    <section :style="{
+        /* COLORES DE LA SECCION */
+        '--bg-color-testimonies': bgColor ?? 'var(--background-color)',
+        '--title-color-testimonies': titleColor ?? 'var(--title-color)',
+        '--text-color-testimonies': textColor ?? 'var(--text-color)',
+    }">
+        <div class="content">
+            <div class="centered__texts">
+                <div class="pill__title">
+                    <Pill :key="pill.id" :text="pill.text" :icon-url="getResource(pill.icon?.url).imageUrl"
+                        :bgColor="bgColorPill" :textColor="textColorPill" />
+                    <h1 class="title" v-html="formattedTitle"></h1>
+                </div>
+                <p class="description" v-html="formattedDescription"></p>
+            </div>
+
+            <Slider id="testimoniesSlider" :totalCards=activeCardsCount :visibleCards=visibleCards :style="{
                 /* COLORES DE LA SECCION */
                 '--bg-color-card': bgColorCard ?? 'var(--background-color)',
                 '--title-color-card': titleColorCard ?? 'var(--title-color)',
                 '--text-color-card': textColorCard ?? 'var(--text-color)',
             }">
-                <div class="texts">
-                    <h1 class="title" v-html="formattedTitle"></h1>
-                    <p class="description" v-html="formattedDescription"></p>
-                </div>
-                <client-only>
-                    <Slider id="testimoniesSlider" :totalCards=activeCardsCount :visibleCards=visibleCards>
-                        <div class="card__section" v-for="(item, index) in cards.filter(c => c.isActive)" :key="index"
-                            :style="{ width: `${100 / activeCardsCount}%` }">
-                            <div class="testimony__content">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 16 16"
-                                    fill="currentColor">
-                                    <g fill="none">
-                                        <g clip-path="url(#a)">
-                                            <path fill="currentColor" fill-rule="evenodd"
-                                                d="M12.411 6.33A2.75 2.75 0 0 1 14.5 9v.25A2.75 2.75 0 0 1 11.75 12h-.25a2.747 2.747 0 0 1-2.748-2.657V9.34H8.75V9q0-.197.027-.386.03-.392.09-.77a8 8 0 0 1 .559-1.918 7.2 7.2 0 0 1 2.162-2.801l.098-.076A.24.24 0 0 1 11.83 3c.186 0 .306.202.22.367a19 19 0 0 0-.22.433 18 18 0 0 0-.43.951 14 14 0 0 0-.557 1.578l.054-.013a2.8 2.8 0 0 1 .603-.066h.25q.343.001.661.08m.549-1.405A4.25 4.25 0 0 1 16 9v.25a4.25 4.25 0 0 1-4.25 4.25h-.25A4.25 4.25 0 0 1 8 11.662 4.25 4.25 0 0 1 4.5 13.5h-.25A4.25 4.25 0 0 1 0 9.336V9q0-.275.035-.543c.207-2.62 1.358-4.966 3.488-6.599A1.74 1.74 0 0 1 4.58 1.5c1.341 0 2.146 1.425 1.548 2.564-.111.211-.26.508-.418.86.788.234 1.481.69 2.005 1.297a8.76 8.76 0 0 1 3.058-4.363A1.74 1.74 0 0 1 11.83 1.5c1.341 0 2.146 1.425 1.548 2.564-.111.211-.26.508-.418.86M5.16 6.33a2.8 2.8 0 0 0-.661-.08h-.25a2.8 2.8 0 0 0-.657.079 14 14 0 0 1 .68-1.865A18 18 0 0 1 4.8 3.367.25.25 0 0 0 4.58 3a.24.24 0 0 0-.144.049 8 8 0 0 0-.93.844 7.2 7.2 0 0 0-1.39 2.172 8 8 0 0 0-.498 1.779q-.062.378-.091.77A3 3 0 0 0 1.5 9v.339h.001v.004A2.747 2.747 0 0 0 4.25 12h.251a2.75 2.75 0 0 0 2.75-2.75V9c0-1.29-.89-2.374-2.089-2.67"
-                                                clip-rule="evenodd" />
-                                        </g>
-                                        <defs>
-                                            <clipPath id="a">
-                                                <path fill="#000" d="M0 0h16v16H0z" />
-                                            </clipPath>
-                                        </defs>
-                                    </g>
-                                </svg>
-                                <p class="testimony">{{ item.testimony }}</p>
-                            </div>
-                            <div class="student">
-                                <div class="student__img">
-                                    <img :src="getResource(item.image?.url).imageUrl" :alt="item.name" />
-                                </div>
-                                <div class="student__data">
-                                    <h2 class="student__name">{{ item.name }}</h2>
-                                    <h2 class="student__description" v-if="item.description"> {{ item.description }}</h2>
-                                </div>
-                            </div>
+                <div class="card__section" v-for="(item, index) in card.testimonies.filter(t => t.statuS)" :key="index">
+                    <div class="card__header">
+                        <div class="image">
+                            <img :src="getResource(item.image?.url).imageUrl" alt="">
                         </div>
-                    </Slider>
-                </client-only>
-            </div>
+                        <div class="data">
+                            <h3 class="name">{{ item.name }}</h3>
+                            <p class="description">{{ item.description }}</p>
+                        </div>
+                    </div>
+                    <div class="card__content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="133.34" height="128" viewBox="0 0 25 24">
+                            <path fill="currentColor"
+                                d="m7.45 18.18-.32-.68za.75.75 0 0 1-1.07-.68v-2.56a4.63 4.63 0 0 1 .75-9.19 4.63 4.63 0 0 1 4.62 4.63c0 2.84-1.05 4.8-2.12 6.03a8 8 0 0 1-1.47 1.33 6 6 0 0 1-.64.4l-.05.03h-.01zM4 10.38c0 1.72 1.4 3.12 3.13 3.12a.75.75 0 0 1 .75.75v1.81a7.47 7.47 0 0 0 2.38-5.68 3.13 3.13 0 0 0-6.26 0m14.2 7.8-.32-.68za.75.75 0 0 1-1.07-.68v-2.56a4.63 4.63 0 0 1 .75-9.19 4.63 4.63 0 0 1 4.62 4.63c0 2.84-1.05 4.8-2.12 6.03a8 8 0 0 1-1.47 1.33 6 6 0 0 1-.69.43h-.01zm-3.45-7.8c0 1.72 1.4 3.12 3.13 3.12a.75.75 0 0 1 .75.75v1.81A7.47 7.47 0 0 0 21 10.38a3.13 3.13 0 0 0-6.26 0" />
+                        </svg>
+                        <p class="testimony">
+                            {{ item.testimony }}
+                        </p>
+                    </div>
+                </div>
+            </Slider>
         </div>
     </section>
 </template>
 
 <style scoped>
-.section__main {
+section {
     display: flex;
-    flex-direction: column;
     height: auto;
-}
-
-.content__bg {
-    padding: var(--padding-section);
     background-color: var(--bg-color-testimonies);
+    padding: var(--padding-section);
 }
 
 .content {
@@ -117,87 +108,78 @@ const visibleCards = 2
     flex-direction: column;
     margin: auto;
     max-width: var(--max-width);
-    /* overflow: hidden; */
-    gap: 50px;
+    gap: 80px;
 }
 
-.content .texts .title {
+.pill__title {
+    align-items: center;
+}
+
+.centered__texts .title {
     color: var(--title-color-testimonies);
 }
 
-.content .texts .description {
+.centered__texts .description {
     color: var(--text-color-testimonies);
 }
 
-/* ESTILOS DEL CARD-SECTION / SLIDER*/
 .card__section {
+    border: 1px solid rgba(185, 185, 185, 0.3);
+    border-radius: 15px;
+    overflow: hidden;
+    /* background-color: var(--bg-color-card); */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    /* width: calc(100% / 3); */
-    height: auto;
-    border-radius: var(--border-radius-card);
-    overflow: hidden;
-    background-color: var(--bg-color-card);
-    padding: 25px;
-    gap: 20px;
 }
 
-.student {
+.card__header {
     display: flex;
     align-items: center;
-    width: auto;
-    gap: 15px;
+    gap: 10px;
+    background-color: var(--bg-color-card);
+    padding: 25px 30px;
 }
 
-.student__data {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: auto;
+.card__content {
+    padding: 30px;
+    background-color: white;
+    height: 100%;
 }
 
-.student__img {
+.image {
+    max-width: 80px;
+    height: 80px;
     border-radius: 50%;
-    height: 70px;
-    width: 70px;
     overflow: hidden;
 }
 
-.student__name {
-    width: auto;
-    height: max-content;
-    color: var(--title-color-card);
-    font-size: 1.2rem;
-}
-
-.student__description {
-    width: auto;
-    height: max-content;
-    color: var(--title-color-card);
-    font-size: 1rem;
-    font-weight: 400;
-}
-
-.testimony__content {
-    width: 100%;
+.data {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    gap: 20px;
-    color: var(--text-color-card);
+    gap: 10px;
+}
+
+.name {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 600;
+    color: var(--title-color-card);
+}
+
+.data .description {
+    font-weight: 300;
+    color: var(--title-color-card);
 }
 
 .testimony {
-    font-size: var(--font-size-card);
+    padding-left: 50px;
+    color: var(--text-color-card);
+    line-height: 1.3;
 }
 
-svg {
-    width: 50px;
-    top: 0;
-    left: 0;
-    height: auto;
+.card__content svg {
+    width: 60px;
     color: var(--primary-color);
-    opacity: 0.4;
+    transform: rotate(180deg);
+    opacity: 0.3;
 }
 </style>

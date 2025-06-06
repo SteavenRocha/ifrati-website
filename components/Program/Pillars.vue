@@ -280,6 +280,7 @@ li {
     gap: 15px;
     background-color: var(--bg-color-card);
     border-radius: var(--border-radius);
+    border: 1px solid rgba(185, 185, 185, 0.3);
 }
 
 .pillar__content {
