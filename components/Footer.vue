@@ -168,7 +168,8 @@ footer {
 }
 
 .icon {
-    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
     height: 30px;
 }
 
@@ -282,6 +283,11 @@ span {
 
 .social__icon:hover {
     scale: 1.2;
+}
+
+.contact__link {
+    width: auto;
+    max-width: 300px;
 }
 
 img {

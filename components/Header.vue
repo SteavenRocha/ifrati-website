@@ -45,6 +45,15 @@ for (const item of rawItemsData) {
         svgHtml: svgHtml.value,
     })
 }
+
+/* BURGER */
+const isMenuOpen = ref(false)
+
+watch(isMenuOpen, (newVal) => {
+    if (window.matchMedia('(max-width: 480px)').matches) {
+        document.body.style.overflow = newVal ? 'hidden' : ''
+    }
+})
 </script>
 
 <template>
@@ -53,6 +62,7 @@ for (const item of rawItemsData) {
         '--header-text': headerTextColor ?? 'var(--title-color)',
         '--headerUp-bg': headerUpBgColor ?? 'var(--background-color)',
         '--headerUp-text': headerUpTextColor ?? 'var(--text-color)',
+        '--sticky': isActive ? '110px' : '70px'
     }">
         <!-- Header-Up -->
         <div v-if="isActive" class="secondary__bg">
@@ -74,7 +84,7 @@ for (const item of rawItemsData) {
                     <img :src="imageUrl" :alt="altLogo" />
                 </a>
                 <nav>
-                    <ul class="nav__links">
+                    <ul :class="['nav__links', { open: isMenuOpen }]">
                         <li v-for="link in links" :key="link.id">
                             <a :href="link.href">{{ link.text }}</a>
                         </li>
@@ -82,7 +92,16 @@ for (const item of rawItemsData) {
                 </nav>
                 <Button :text="text" :style="style" :icon-url="iconUrl" :href="hrefButton" height="40px" />
             </div>
+
+            <label class="burger">
+                <input type="checkbox" id="burger" v-model="isMenuOpen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
         </div>
+
+        <div :class="['menu-overlay', { hidden: !isMenuOpen }]" @click="isMenuOpen = false"></div>
     </header>
 </template>
 
@@ -105,6 +124,8 @@ header {
 .primary__bg {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 30px;
     background-color: var(--header-bg);
     padding: 0 var(--padding-width);
 }
@@ -140,6 +161,7 @@ img {
     justify-content: center;
     border-bottom: 1px solid rgb(212, 212, 212);
     padding: 0 var(--padding-width);
+    height: 40px;
 }
 
 .secondary__content {
@@ -147,7 +169,7 @@ img {
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 40px;
+    height: 100%;
     max-width: var(--max-width);
 }
 
@@ -213,6 +235,7 @@ header ul {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 99;
 }
 
 header ul li {
@@ -242,5 +265,144 @@ header ul li a {
 header ul li a:hover {
     color: var(--primary-color);
     border-bottom: 3px solid var(--primary-color);
+}
+
+.menu-overlay {
+    position: fixed;
+    top: var(--sticky);
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    z-index: 98;
+}
+
+.menu-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+
+/* MENU BUTTON */
+.burger {
+    position: relative;
+    min-width: 40px;
+    max-width: 40px;
+    height: 30px;
+    background: transparent;
+    cursor: pointer;
+    display: none;
+}
+
+.burger input {
+    display: none;
+}
+
+.burger span {
+    display: block;
+    position: absolute;
+    height: 4px;
+    width: 100%;
+    background: var(--header-text);
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out;
+}
+
+.burger span:nth-of-type(1) {
+    top: 0px;
+    transform-origin: left center;
+}
+
+.burger span:nth-of-type(2) {
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: left center;
+}
+
+.burger span:nth-of-type(3) {
+    top: 100%;
+    transform-origin: left center;
+    transform: translateY(-100%);
+}
+
+.burger input:checked~span:nth-of-type(1) {
+    transform: rotate(45deg);
+    top: 0px;
+    left: 5px;
+}
+
+.burger input:checked~span:nth-of-type(2) {
+    width: 0%;
+    opacity: 0;
+}
+
+.burger input:checked~span:nth-of-type(3) {
+    transform: rotate(-45deg);
+    top: 28px;
+    left: 5px;
+}
+
+@media (max-width: 1024px) {
+    .burger {
+        display: block;
+    }
+
+    header ul {
+        position: fixed;
+        display: block;
+        overflow-y: scroll;
+        width: 35%;
+        height: 100%;
+        top: var(--sticky);
+        right: -100%;
+        padding: 40px 30px;
+        background-color: var(--header-bg);
+        transition:
+            top 0.3s ease-in-out,
+            right 0.3s ease-in-out;
+    }
+
+    header ul li {
+        padding: 10px 0;
+    }
+
+    header ul li a {
+        font-size: 1.25rem;
+        width: 100%;
+    }
+
+    header ul.open {
+        background-color: var(--header-bg);
+        transition:
+            top 0.3s ease-in-out,
+            right 0.3s ease-in-out;
+        top: var(--sticky);
+        border-top: 1px solid rgb(212, 212, 212);
+    }
+
+    header ul.open {
+        right: 0;
+    }
+}
+
+@media (max-width: 900px) {
+    header ul {
+        width: 40%;
+    }
+}
+
+@media (max-width: 480px) {
+    header ul {
+        width: 100%;
+    }
+
+    .no-scroll {
+        overflow: hidden;
+    }
 }
 </style>
