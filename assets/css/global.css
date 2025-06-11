@@ -64,7 +64,8 @@ a {
 /* SPAN DE LOS BOTONES Y EL DATA */
 .button span,
 .data span {
-    width: 20px;
+    min-width: 20px;
+    max-width: 20px;
     height: 20px;
 }
 

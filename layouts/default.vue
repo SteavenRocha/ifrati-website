@@ -50,5 +50,7 @@ if (style) {
 </template>
 
 <style scoped>
-
+main {
+  overflow: hidden;
+}
 </style>

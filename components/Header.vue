@@ -174,7 +174,7 @@ img {
 }
 
 .social {
-    width: 40%;
+    display: none;
 }
 
 .data {
@@ -182,7 +182,7 @@ img {
     justify-content: end;
     align-items: center;
     gap: 20px;
-    width: 60%;
+    width: 100%;
     height: 100%;
 }
 
@@ -401,8 +401,37 @@ header ul li a:hover {
         width: 100%;
     }
 
+    header ul li a {
+        font-size: 1.5rem;
+    }
+
     .no-scroll {
         overflow: hidden;
+    }
+
+    .data {
+        gap: 10px;
+    }
+
+    .data a[data-v-a81738bd]:not(:last-child) {
+        padding-right: 10px;
+    }
+
+    .secondary__bg {
+        padding: 0 20px;
+    }
+
+    .primary__bg {
+        gap: 10px;
+        padding: 0 20px;
+    }
+
+    .secondary__content .data a:not(:first-of-type) {
+        display: none;
+    }
+
+    .data a:not(:last-child)::after {
+        background-color: transparent;
     }
 }
 </style>
