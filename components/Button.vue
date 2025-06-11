@@ -67,4 +67,10 @@ button {
 .button:hover {
     filter: brightness(90%);
 }
+
+@media (max-width: 450px) {
+    .responsive__button {
+        width: 100%;
+    }
+}
 </style>

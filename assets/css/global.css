@@ -10,8 +10,8 @@
 
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-    --font-size-hero: clamp(2.5rem, 3vw, 3rem);
-    --font-size-parrafo-hero: clamp(1rem, 3vw, 1.2rem);
+    --font-size-hero: clamp(2.25rem, 3vw, 3rem);
+    --font-size-parrafo-hero: clamp(1.1rem, 3vw, 1.2rem);
     --font-size-card: clamp(1rem, 3vw, 1rem);
 }
 
@@ -170,4 +170,19 @@ a {
     max-height: 25px;
     color: var(--primary-color);
     height: max-content;
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --padding-section: 70px 20px;
+    --padding-width: 20px;
+  }
+
+  .side__image {
+    max-width: 500px;
+  }
+
+  .pill__title {
+    align-items: center;
+  }
 }

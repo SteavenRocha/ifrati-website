@@ -80,13 +80,13 @@ section {
     height: auto;
     background-color: var(--bg-color-hero);
     padding: var(--padding-section);
-    padding-top: 180px;
+    padding-top: 160px;
     scroll-margin-top: 40px;
 }
 
 .content {
     display: flex;
-    margin: auto;
+    margin: 0 auto;
     max-width: var(--max-width);
     overflow: hidden;
     gap: 50px;
@@ -110,5 +110,31 @@ section {
 
 .content__about .texts .description {
     color: var(--text-color-about);
+}
+
+@media (max-width: 1024px) {
+    section {
+        padding-top: 140px;
+    }
+
+    .content {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .content__about {
+        width: 60%;
+        align-items: center;
+    }
+
+    .texts {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .content__about {
+        width: 100%;
+    }
 }
 </style>

@@ -92,7 +92,7 @@ const statisticsTextColor = props.socialStyles?.textColor ?? null
           </div>
           <div class="buttons">
             <Button v-for="button in buttons" :key="button.id" :text="button.text" :style="button.style"
-              :href="button.href" :icon-url="getResource(button.icon?.url).imageUrl" />
+              :href="button.href" :icon-url="getResource(button.icon?.url).imageUrl" extraClass="responsive__button" />
           </div>
         </div>
 
@@ -231,17 +231,17 @@ section {
 /* SOCIAL PROOF */
 .social__proof__bg {
   display: flex;
-  height: 140px;
+  height: 120px;
   justify-content: center;
   padding: 0 50px;
   position: absolute;
-  bottom: -70px;
+  bottom: -60px;
 }
 
 .statistics {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 30px;
   max-width: var(--max-width);
   background-color: var(--bg-color-statistics);
   border-radius: 20px;
@@ -257,8 +257,8 @@ section {
 }
 
 .statistics__item .icon {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .statistics__item .icon img {
@@ -272,7 +272,107 @@ section {
 }
 
 .statistics__content .description {
-  font-size: var(--font-size--parrafo);
+  font-size: 1rem;
   color: var(--text-color-statistics);
+}
+
+@media (max-width: 1024px) {
+  .STYLE__1.hero__bg {
+    height: auto;
+  }
+
+  .STYLE__1 .left__content,
+  .STYLE__2 .left__content {
+    width: 60%;
+  }
+
+  .STYLE__1 .side__image {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .STYLE__1 .content__hero,
+  .STYLE__2 .content__hero {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .STYLE__1 .buttons,
+  .STYLE__2 .buttons {
+    justify-content: center;
+  }
+
+  .STYLE__1 .content__hero .texts .title,
+  .STYLE__1 .content__hero .texts .description,
+  .STYLE__2 .content__hero .texts .title,
+  .STYLE__2 .content__hero .texts .description {
+    text-align: center;
+  }
+
+  /* SOCIAL PROOF */
+  .social__proof__bg {
+    padding: 0 20px;
+    height: auto;
+  }
+
+  .statistics {
+    flex-wrap: wrap;
+    gap: 0;
+  }
+}
+
+@media (max-width: 880px) {
+  .social__proof__bg {
+    position: relative;
+  }
+
+  .content__hero {
+    margin-bottom: 50px;
+  }
+
+  .statistics {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .STYLE__1 .left__content,
+  .STYLE__2 .left__content,
+  .STYLE__3 .left__content,
+  .STYLE__4 .left__content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 450px) {
+  .content__hero .texts .title {
+    font-size: 2rem;
+  }
+
+  .STYLE__1 .left__content,
+  .STYLE__2 .left__content,
+  .STYLE__4 .left__content {
+    align-items: center;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    max-width: 180px;
+  }
+
+  .statistics__item {
+    width: 80%;
+  }
+
+  .statistics__content {
+    width: auto;
+  }
+
+  .statistics__item .icon {
+    min-width: 50px;
+    max-width: 50px;
+  }
 }
 </style>

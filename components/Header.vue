@@ -369,11 +369,11 @@ header ul li a:hover {
 
     header ul li {
         padding: 10px 0;
+        justify-content: start;
     }
 
     header ul li a {
         font-size: 1.25rem;
-        width: 100%;
     }
 
     header ul.open {
@@ -387,6 +387,18 @@ header ul li a:hover {
 
     header ul.open {
         right: 0;
+    }
+
+    .data a[data-v-a81738bd]:not(:last-child) {
+        padding-right: 10px;
+    }
+
+    .data {
+        gap: 10px;
+    }
+
+    .primary__bg {
+        gap: 10px;
     }
 }
 
@@ -407,23 +419,6 @@ header ul li a:hover {
 
     .no-scroll {
         overflow: hidden;
-    }
-
-    .data {
-        gap: 10px;
-    }
-
-    .data a[data-v-a81738bd]:not(:last-child) {
-        padding-right: 10px;
-    }
-
-    .secondary__bg {
-        padding: 0 20px;
-    }
-
-    .primary__bg {
-        gap: 10px;
-        padding: 0 20px;
     }
 
     .secondary__content .data a:not(:first-of-type) {
