@@ -279,6 +279,7 @@ section {
 
 .play p {
     font-size: 1rem;
+    text-align: center;
 }
 
 .play svg {
@@ -291,13 +292,9 @@ section {
     scale: 1.2;
 }
 
-iframe {
-    height: 100%;
-}
-
 video {
     width: 100%;
-    height: 400px;
+    height: 425px;
     object-fit: cover;
     transition: scale .3s ease;
 }
@@ -318,7 +315,7 @@ video {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60%;
+    width: 80%;
     height: 70vh;
     border-radius: 10px;
     object-fit: cover;
@@ -327,7 +324,7 @@ video {
 .popup__video span {
     position: absolute;
     top: 30px;
-    right: 50px;
+    right: 5%;
     width: 50px;
     color: white;
     font-weight: bolder;
@@ -391,6 +388,7 @@ h3 {
 
 .cards {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     width: 100%;
     gap: 20px;
@@ -399,6 +397,7 @@ h3 {
 
 .card {
     display: flex;
+    flex: 1 1 calc(33.333% - 20px);
     flex-direction: column;
     border-radius: var(--border-radius-card);
     overflow: hidden;
@@ -478,5 +477,68 @@ h3 {
     justify-content: center;
     width: 15px;
     height: 15px;
+}
+
+@media (max-width: 1024px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content__program {
+        width: 80%;
+        align-items: center;
+    }
+
+    .texts {
+        text-align: center;
+    }
+
+    .video__container {
+        max-width: 550px;
+    }
+
+    .card {
+        flex: 1 1 calc(50% - 20px);
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 900px) {
+
+    .popup__video video,
+    .popup__video iframe {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 600px) {
+    .content__program {
+        width: 100%;
+    }
+
+    .card {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    video {
+        max-height: 300px;
+    }
+
+    .video {
+        max-height: 300px;
+    }
+
+    .video img {
+        max-height: 300px;
+    }
+
+    .popup__video video,
+    .popup__video iframe {
+        height: 30vh;
+    }
 }
 </style>

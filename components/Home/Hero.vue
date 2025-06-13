@@ -288,7 +288,7 @@ section {
 
   .STYLE__1 .side__image {
     width: 100%;
-    max-width: 500px;
+    max-width: 550px;
   }
 
   .STYLE__1 .content__hero,

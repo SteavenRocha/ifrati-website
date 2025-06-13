@@ -389,10 +389,6 @@ header ul li a:hover {
         right: 0;
     }
 
-    .data a[data-v-a81738bd]:not(:last-child) {
-        padding-right: 10px;
-    }
-
     .data {
         gap: 10px;
     }
@@ -427,6 +423,10 @@ header ul li a:hover {
 
     .data a:not(:last-child)::after {
         background-color: transparent;
+    }
+
+    .data a:not(:last-child) {
+        padding-right: 0;
     }
 }
 </style>

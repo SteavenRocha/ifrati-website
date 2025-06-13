@@ -123,7 +123,7 @@ section {
     }
 
     .content__about {
-        width: 60%;
+        width: 80%;
         align-items: center;
     }
 

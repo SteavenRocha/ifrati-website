@@ -173,16 +173,26 @@ a {
 }
 
 @media (max-width: 1024px) {
-  :root {
-    --padding-section: 70px 20px;
-    --padding-width: 20px;
-  }
+    :root {
+        --padding-section: 70px 20px;
+        --padding-width: 20px;
+    }
 
-  .side__image {
-    max-width: 500px;
-  }
+    .side__image {
+        max-width: 550px;
+    }
 
-  .pill__title {
-    align-items: center;
-  }
+    .pill__title {
+        align-items: center;
+    }
+
+    .sub__texts {
+        width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    .sub__texts {
+        width: 100%;
+    }
 }
