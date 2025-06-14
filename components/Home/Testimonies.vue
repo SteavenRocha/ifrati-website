@@ -44,7 +44,27 @@ const textColorCard = props.card?.cardStyle?.textColor ?? null
 /* OBTNER CANTIDAD DE CARDS ACTIVAS */
 const activeCardsCount = props.card?.testimonies.filter(t => t.statuS).length
 /* OBTNER CANTIDAD DE CARDS VISIBLES */
-const visibleCards = 3
+const visibleCards = ref(3)
+
+function updateVisibleCards() {
+    const width = window.innerWidth
+    if (width < 640) {
+        visibleCards.value = 1
+    } else if (width < 1024) {
+        visibleCards.value = 2
+    } else {
+        visibleCards.value = 3
+    }
+}
+
+onMounted(() => {
+    updateVisibleCards()
+    window.addEventListener('resize', updateVisibleCards)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateVisibleCards)
+})
 </script>
 
 <template>

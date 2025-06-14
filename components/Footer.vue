@@ -71,34 +71,36 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                         <Button :key="button.id" :text="button.text" :style="button.style" :href="button.href"
                             :icon-url="getResource(button.icon?.url).imageUrl" />
                     </div>
-                    <!-- Quick Links -->
-                    <div v-if="quickLinks" class="item">
-                        <h1 class="title__item">{{ quickLinks?.title }}</h1>
-                        <div class="links">
-                            <a v-for="link in quickLinks?.links" :key="link.id" :href="link.href" class="link">
-                                {{ link.text }}
-                            </a>
+                    <div class="item__container">
+                        <!-- Quick Links -->
+                        <div v-if="quickLinks" class="item">
+                            <h1 class="title__item">{{ quickLinks?.title }}</h1>
+                            <div class="links">
+                                <a v-for="link in quickLinks?.links" :key="link.id" :href="link.href" class="link">
+                                    {{ link.text }}
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Contact Links -->
-                    <div v-if="contactLinks" class="item">
-                        <h1 class="title__item">{{ contactLinks?.title }}</h1>
-                        <div class="links">
-                            <a v-for="link in processedContactLinks" :key="link.id" :href="link.href"
-                                class="contact__link" :target="link.isExternal ? '_blank' : '_self'">
-                                <span class="icon" v-if="link.svgHtml" v-html="link.svgHtml"></span>
-                                {{ link.text }}
-                            </a>
+                        <!-- Contact Links -->
+                        <div v-if="contactLinks" class="item">
+                            <h1 class="title__item">{{ contactLinks?.title }}</h1>
+                            <div class="links">
+                                <a v-for="link in processedContactLinks" :key="link.id" :href="link.href"
+                                    class="contact__link" :target="link.isExternal ? '_blank' : '_self'">
+                                    <span class="icon" v-if="link.svgHtml" v-html="link.svgHtml"></span>
+                                    {{ link.text }}
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Legal Links -->
-                    <div v-if="legalLinks" class="item">
-                        <h1 class="title__item">{{ legalLinks.title }}</h1>
-                        <div class="links">
-                            <a v-for="link in legalLinks.links" :key="link.id" :href="`/legal/${link.slug}`"
-                                class="link">
-                                {{ link.text }}
-                            </a>
+                        <!-- Legal Links -->
+                        <div v-if="legalLinks" class="item">
+                            <h1 class="title__item">{{ legalLinks.title }}</h1>
+                            <div class="links">
+                                <a v-for="link in legalLinks.links" :key="link.id" :href="`/legal/${link.slug}`"
+                                    class="link">
+                                    {{ link.text }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,14 +115,14 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                     </div>
 
                     <!-- Redes Sociales -->
-                    <div class="social" v-if="socialLinks.length">
+                    <!-- <div class="social" v-if="socialLinks.length">
                         <a v-for="link in socialLinks" :key="link.id" :href="link.href" class="social__link"
                             :target="link.isExternal ? '_blank' : '_self'">
                             <div class="social__icon">
                                 <img :src="getResource(link.image?.url).imageUrl" alt="">
                             </div>
                         </a>
-                    </div>
+                    </div> -->
 
                     <!-- Libro de Reclamaciones -->
                     <div class="complaints__book" v-if="complaintsBook?.href">
@@ -160,6 +162,7 @@ footer {
 .footer__content {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
 }
 
 .logo {
@@ -171,6 +174,13 @@ footer {
     min-width: 30px;
     max-width: 30px;
     height: 30px;
+}
+
+.item__container {
+    display: flex;
+    justify-content: space-around;
+    width: 70%;
+    gap: 15px;
 }
 
 .item {
@@ -239,6 +249,31 @@ span {
     padding: 20px;
     border-radius: 20px;
     align-items: center;
+    gap: 20px;
+}
+
+.disclaimer {
+    width: 40%;
+}
+
+.social {
+    display: flex;
+    width: 20%;
+    gap: 10px;
+}
+
+.complaints__book {
+    display: flex;
+    width: 60%;
+    justify-content: end;
+}
+
+.complaints__book a {
+    width: 120px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: scale .3s ease;
 }
 
 .disclaimer p {
@@ -247,29 +282,11 @@ span {
 }
 
 .image__book {
-    width: 120px;
+    width: 100%;
 }
 
-.complaints__book {
-    border-radius: 10px;
-    overflow: hidden;
-    max-width: 120px;
-    max-height: 80px;
-    transition: scale .3s ease;
-}
-
-.complaints__book:hover {
+.complaints__book a:hover {
     scale: 1.05;
-}
-
-.image__book img {
-    width: 120px;
-    height: 80px;
-}
-
-.social {
-    display: flex;
-    gap: 10px;
 }
 
 .social__icon {
@@ -292,5 +309,45 @@ span {
 
 img {
     object-fit: contain;
+}
+
+@media (max-width: 900px) {
+    .footer__content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .primary__item {
+        width: 60%;
+    }
+
+    .item__container {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 550px) {
+    .primary__item {
+        width: 100%;
+    }
+
+    .item__container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .footer__component {
+        flex-direction: column;
+    }
+
+    .disclaimer {
+        width: 100%;
+    }
+
+    .complaints__book {
+        width: 100%;
+        justify-content: start;
+    }
 }
 </style>

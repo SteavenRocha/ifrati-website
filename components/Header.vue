@@ -49,10 +49,26 @@ for (const item of rawItemsData) {
 /* BURGER */
 const isMenuOpen = ref(false)
 
-watch(isMenuOpen, (newVal) => {
-    if (window.matchMedia('(max-width: 480px)').matches) {
-        document.body.style.overflow = newVal ? 'hidden' : ''
+function updateBodyScroll() {
+    const width = window.innerWidth
+    if (width < 480) {
+        document.body.style.overflow = isMenuOpen.value ? 'hidden' : ''
+    } else {
+        document.body.style.overflow = ''
     }
+}
+
+onMounted(() => {
+    updateBodyScroll()
+    window.addEventListener('resize', updateBodyScroll)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateBodyScroll)
+})
+
+watch(isMenuOpen, () => {
+    updateBodyScroll()
 })
 </script>
 
@@ -400,7 +416,7 @@ header ul li a:hover {
 
 @media (max-width: 900px) {
     header ul {
-        width: 40%;
+        width: 45%;
     }
 }
 
