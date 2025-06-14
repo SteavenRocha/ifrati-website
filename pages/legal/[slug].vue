@@ -100,6 +100,10 @@ section {
     color: var(--text-color);
 }
 
+::v-deep(li) {
+    color: var(--text-color);
+}
+
 ::v-deep(h1) {
     color: var(--primary-color);
 }
