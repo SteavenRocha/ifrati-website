@@ -108,7 +108,7 @@ section {
     }
 
     .content__hero .texts {
-        width: 70%;
+        width: 80%;
     }
 
     .content__hero .texts .title,

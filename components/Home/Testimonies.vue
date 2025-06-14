@@ -202,4 +202,16 @@ section {
     transform: rotate(180deg);
     opacity: 0.3;
 }
+
+@media (max-width: 1024px) {
+    .centered__texts {
+        width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    .centered__texts {
+        width: 100%;
+    }
+}
 </style>
