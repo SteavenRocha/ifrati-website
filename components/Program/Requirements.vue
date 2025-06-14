@@ -221,4 +221,34 @@ ul {
     font-size: clamp(1rem, 3vw, 1.1rem);
     line-height: 1.3;
 }
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+        gap: 30px;
+    }
+
+    .centered__texts {
+        width: 100%;
+    }
+
+    .container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .side__image {
+        max-width: 100%;
+    }
+
+    .title__requirements {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
+}
 </style>

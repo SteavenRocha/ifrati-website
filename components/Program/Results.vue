@@ -268,4 +268,53 @@ section {
     width: 100%;
     height: 100%;
 }
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+        gap: 30px;
+    }
+
+    .centered__texts {
+        width: 100%;
+    }
+
+    .card__container {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .card__quan {
+        width: calc(33.333% - 14px);
+    }
+
+    .card__qual {
+        width: calc(50% - 14px);
+    }
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
+
+    .card__quan {
+        width: calc(50% - 14px);
+    }
+
+    .card__qual {
+        width: 100%;
+    }
+}
+
+@media (max-width: 350px) {
+    .card__quan {
+        width: 100%;
+        align-items: center;
+    }
+
+    .card__content {
+        text-align: center;
+    }
+}
 </style>
