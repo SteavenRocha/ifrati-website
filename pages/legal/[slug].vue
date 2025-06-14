@@ -100,7 +100,7 @@ section {
     color: var(--text-color);
 }
 
-::v-deep(li) {
+::v-deep(.markdown-body li) {
     color: var(--text-color);
 }
 
