@@ -94,4 +94,30 @@ section {
 .texts .description {
     color: var(--text-color-vision);
 }
+
+@media (max-width: 1024px) {
+    .content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .texts {
+        width: 80%;
+        align-items: center;
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    .description {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .texts {
+        width: 100%;
+    }
+}
 </style>

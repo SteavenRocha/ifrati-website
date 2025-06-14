@@ -83,7 +83,7 @@ section {
     max-width: var(--max-width);
 }
 
-.texts {
+.content__hero .texts {
     margin: 0;
     width: 50%;
 }
@@ -100,5 +100,26 @@ section {
     color: var(--text-color-hero);
     text-align: start;
     font-size: var(--font-size-parrafo-hero);
+}
+
+@media (max-width: 1024px) {
+    .content__hero {
+        justify-content: center;
+    }
+
+    .content__hero .texts {
+        width: 70%;
+    }
+
+    .content__hero .texts .title,
+    .content__hero .texts .description {
+        text-align: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .content__hero .texts {
+        width: 100%;
+    }
 }
 </style>
