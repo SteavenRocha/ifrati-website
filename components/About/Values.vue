@@ -103,6 +103,10 @@ section {
     align-items: center;
 }
 
+.centered__texts {
+    width: 100%;
+}
+
 .title {
     color: var(--title-color-values);
 }
@@ -113,6 +117,7 @@ section {
 
 .card__container {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
     width: 100%;
     gap: 20px;
@@ -145,5 +150,36 @@ section {
 
 .card__description {
     color: var(--text-color-card);
+}
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+
+    .card__container {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: calc(50% - 10px);
+    }
+
+    .card__img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 100%;
+    }
 }
 </style>

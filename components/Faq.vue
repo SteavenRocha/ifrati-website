@@ -225,7 +225,7 @@ section {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .content {
         width: 100%;
     }

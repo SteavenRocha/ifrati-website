@@ -57,7 +57,8 @@ const ctaBackgroundStyle = computed(() => {
 
                 <div class="buttons">
                     <Button v-for="button in button" :key="button.id" :text="button.text" :style="button.style"
-                        :href="button.href" :icon-url="getResource(button.icon?.url).imageUrl" />
+                        :href="button.href" :icon-url="getResource(button.icon?.url).imageUrl"
+                        extraClass="responsive__button__cta" />
                 </div>
             </div>
         </div>
@@ -87,6 +88,10 @@ section {
     background-repeat: no-repeat;
 }
 
+.centered__texts {
+    width: 100%;
+}
+
 .title {
     color: var(--title-color-cta);
 }
@@ -98,6 +103,28 @@ section {
 .buttons {
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
+}
+
+@media (max-width: 900px) {
+    .centered__texts {
+        align-items: center;
+    }
+
+    .content {
+        padding: 60px 50px;
+    }
+}
+
+@media (max-width: 500px) {
+    .content {
+        padding: 50px 20px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+        max-width: 180px;
+    }
 }
 </style>

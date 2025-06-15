@@ -107,6 +107,10 @@ section {
     align-items: center;
 }
 
+.centered__texts {
+    width: 100%;
+}
+
 .title {
     color: var(--title-color-team);
 }
@@ -183,5 +187,17 @@ section {
 
 .card__description {
     color: var(--text-color-card);
+}
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        width: 100%;
+    }
 }
 </style>

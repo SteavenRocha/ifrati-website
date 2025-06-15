@@ -73,4 +73,10 @@ button {
         width: 100%;
     }
 }
+
+@media (max-width: 500px) {
+    .responsive__button__cta {
+        width: 100%;
+    }
+}
 </style>

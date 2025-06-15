@@ -348,9 +348,13 @@ ul {
         gap: 0;
     }
 
+    .pillar__content {
+        padding: 20px;
+    }
+
     .side__image {
         max-width: 100%;
-        padding: 0 30px 30px;
+        padding: 0 20px 20px;
         justify-content: center;
     }
 
@@ -362,7 +366,7 @@ ul {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .centered__texts {
         width: 100%;
     }

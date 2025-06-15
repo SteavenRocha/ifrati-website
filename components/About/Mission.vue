@@ -99,10 +99,10 @@ section {
     .content {
         flex-direction: column-reverse;
         align-items: center;
+        width: 80%;
     }
 
     .texts {
-        width: 80%;
         align-items: center;
     }
 
@@ -115,8 +115,8 @@ section {
     }
 }
 
-@media (max-width: 600px) {
-    .texts {
+@media (max-width: 640px) {
+    .content {
         width: 100%;
     }
 }
