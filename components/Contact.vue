@@ -204,23 +204,25 @@ watch(() => form.subject, (newSubject) => {
                 <div class="contact__information__container">
                     <h1 class="sub__title">{{ contactInformation.text }}</h1>
 
-                    <div class="information__container">
-                        <div class="information" v-for="item in processedContactInformation" :key="item.id">
-                            <span class="icon" v-if="item.svgHtml" v-html="item.svgHtml"></span>
+                    <div class="contact__container__right">
+                        <div class="information__container">
+                            <div class="information" v-for="item in processedContactInformation" :key="item.id">
+                                <span class="icon" v-if="item.svgHtml" v-html="item.svgHtml"></span>
 
-                            <div class="details">
-                                <h2 class="information__title">
-                                    {{ item.title }}
-                                </h2>
-                                <p class="information__description" v-html="getTextFormated(item.description)"></p>
+                                <div class="details">
+                                    <h2 class="information__title">
+                                        {{ item.title }}
+                                    </h2>
+                                    <p class="information__description" v-html="getTextFormated(item.description)"></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="map" v-if="companyInformation.googleMapsLink">
-                        <iframe :src="companyInformation.googleMapsLink" width="100%" height="450" style="border:0;"
-                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                        <div class="map" v-if="companyInformation.googleMapsLink">
+                            <iframe :src="companyInformation.googleMapsLink" width="100%" height="450" style="border:0;"
+                                allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -248,6 +250,10 @@ section {
 
 .pill__title {
     align-items: center;
+}
+
+.centered__texts {
+    width: 100%;
 }
 
 .centered__texts .title {
@@ -283,6 +289,12 @@ section {
 }
 
 .contact__information__container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.contact__container__right {
     display: flex;
     flex-direction: column;
     gap: 30px;
@@ -422,5 +434,42 @@ input[type="checkbox"] {
     font-size: 0.875rem;
     color: #666;
     margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+
+    .contact__container {
+        flex-direction: column;
+    }
+
+    .contact__frm__container,
+    .contact__information__container {
+        width: 100%;
+    }
+
+    .contact__container__right {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .sub__title {
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 900px) {
+    .contact__container__right {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
 }
 </style>

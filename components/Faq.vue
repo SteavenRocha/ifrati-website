@@ -119,6 +119,10 @@ section {
     align-items: center;
 }
 
+.centered__texts {
+    width: 100%;
+}
+
 .centered__texts .title {
     color: var(--title-color-faq);
 }
@@ -209,5 +213,21 @@ section {
 
 .down__icon {
     width: 20px;
+}
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+
+    .faq__container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .content {
+        width: 100%;
+    }
 }
 </style>

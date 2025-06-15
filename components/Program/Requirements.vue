@@ -194,6 +194,7 @@ section {
 
 .container {
     display: flex;
+    align-items: center;
     gap: 50px;
 }
 
@@ -235,10 +236,6 @@ ul {
     .container {
         flex-direction: column;
         gap: 30px;
-    }
-
-    .side__image {
-        max-width: 100%;
     }
 
     .title__requirements {

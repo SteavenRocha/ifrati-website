@@ -323,7 +323,12 @@ img {
 
     .item__container {
         width: 100%;
+        gap: 30px;
         justify-content: space-between;
+    }
+
+    .item {
+        gap: 10px;
     }
 }
 
@@ -334,7 +339,7 @@ img {
 
     .item__container {
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
     }
 
     .footer__component {

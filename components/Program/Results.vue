@@ -290,6 +290,7 @@ section {
 
     .card__qual {
         width: calc(50% - 14px);
+        height: 350px;
     }
 }
 
@@ -311,6 +312,10 @@ section {
     .card__quan {
         width: 100%;
         align-items: center;
+    }
+
+    .card__qual {
+       height: 300px;
     }
 
     .card__content {

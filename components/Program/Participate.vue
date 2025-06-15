@@ -158,6 +158,10 @@ section {
     align-items: center;
 }
 
+.centered__texts {
+    width: 100%;
+}
+
 .centered__texts .title {
     color: var(--title-color-participate);
 }
@@ -335,13 +339,35 @@ section {
 }
 
 @media (max-width: 1024px) {
-    .centered__texts {
+    .content {
         width: 80%;
+    }
+
+    .steps__wrap {
+        flex-direction: column;
+    }
+
+    .collaborators__content {
+        flex-direction: column-reverse;
+    }
+
+    .side__image {
+        height: auto;
+        max-height: 550px;
+    }
+
+    .steps__title,
+    .collaborators__title {
+        text-align: center;
+    }
+
+    .collaborators__wrap {
+        align-items: center;
     }
 }
 
 @media (max-width: 600px) {
-    .centered__texts {
+    .content {
         width: 100%;
     }
 }
