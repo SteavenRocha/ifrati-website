@@ -184,4 +184,30 @@ ul {
     flex-direction: column;
     gap: 8px;
 }
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+
+    .centered__texts {
+        width: 100%;
+    }
+
+    .card {
+        width: calc(50% - 20px);
+    }
+}
+
+@media (max-width: 900px) {
+    .card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        width: 100%;
+    }
+}
 </style>

@@ -186,14 +186,4 @@ a {
     .pill__title {
         align-items: center;
     }
-
-    .sub__texts {
-        width: 80%;
-    }
-}
-
-@media (max-width: 600px) {
-    .sub__texts {
-        width: 100%;
-    }
 }

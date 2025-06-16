@@ -41,7 +41,7 @@ const categories = dataCategories?.data ?? []
 
 // Estado para la categoría seleccionada
 const currentPage = ref(1)
-const pageSize = ref(2)
+const pageSize = ref(15)
 const selectedCategory = ref('all')
 
 const products = ref([])  // productos actuales
@@ -201,7 +201,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                 <button class="button left" @click="goToPage(currentPage - 1)" :disabled="currentPage === 1">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="4" d="M31 36L19 24l12-12" />
+                      stroke-width="4" d="M31 36L19 24l12-12" />
                   </svg>
                 </button>
                 <div class="button__number__container">
@@ -213,7 +213,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                 <button class="button right" @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="currentColor">
                     <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="4" d="m19 12l12 12l-12 12" />
+                      stroke-width="4" d="m19 12l12 12l-12 12" />
                   </svg>
                 </button>
               </div>
@@ -533,7 +533,49 @@ button svg {
 }
 
 svg {
-    width: 30px;
-    height: auto;
+  width: 30px;
+  height: auto;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    width: 80%;
+  }
+
+  .shop__container {
+    flex-direction: column;
+  }
+
+  .products__container {
+    width: 100%;
+  }
+
+  .categories__container {
+    width: 300px;
+  }
+}
+
+@media (max-width: 950px) {
+  .card {
+    flex: 1 1 calc(50% - 20px);
+    max-width: calc(100% / 2);
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories__container {
+    width: 100%;
+  }
+
+  .card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 }
 </style>

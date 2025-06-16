@@ -185,4 +185,16 @@ img {
         transform: translate(calc(-50% - 0.5rem));
     }
 }
+
+@media (max-width: 1024px) {
+    .sub__texts {
+        width: 80%;
+    }
+}
+
+@media (max-width: 640px) {
+    .sub__texts {
+        width: 100%;
+    }
+}
 </style>

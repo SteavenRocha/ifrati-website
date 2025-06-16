@@ -96,7 +96,29 @@ const goals = dataGoals?.data ?? []
 /* OBTNER CANTIDAD DE CARDS ACTIVAS */
 const activeCardsCount = goals.value.data.length
 /* OBTNER CANTIDAD DE CARDS VISIBLES */
-const visibleCards = 3
+const visibleCards = ref(3)
+
+function updateVisibleCards() {
+    const width = window.innerWidth
+    if (width < 800) {
+        visibleCards.value = 1
+    } else if (width < 1024) {
+        visibleCards.value = 2
+    } else {
+        visibleCards.value = 3
+    }
+}
+
+onMounted(() => {
+    updateVisibleCards()
+    window.addEventListener('resize', updateVisibleCards)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateVisibleCards)
+})
+
+//
 
 function daysRemaining(deadline) {
     const today = new Date()
@@ -921,6 +943,8 @@ section {
     flex-direction: column;
     gap: 20px;
     padding: 30px;
+    height: calc(100% - 250px);
+    justify-content: space-between;
 }
 
 .card__texts {
@@ -1186,5 +1210,68 @@ textarea {
     max-width: 100%;
     gap: 100px;
     background-color: white;
+}
+
+@media (max-width: 1024px) {
+    .content {
+        width: 80%;
+    }
+
+    .centered__texts {
+        width: 100%;
+    }
+
+    .general__donation {
+        flex-direction: column;
+    }
+
+    .amount__frm,
+    .impact__frm {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .card__content {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 640px) {
+    .content {
+        width: 100%;
+    }
+
+    .cta {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .form__container,
+    .amount__frm,
+    .impact__frm,
+    .aditional__impact {
+        padding: 12px;
+    }
+
+    .amount__container {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .container__frm {
+        gap: 8px;
+    }
+
+    .frequency {
+        gap: 8px;
+    }
+}
+
+@media (max-width: 400px) {
+    .details__cards {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 }
 </style>

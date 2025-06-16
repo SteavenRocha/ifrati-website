@@ -209,7 +209,7 @@ section {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .centered__texts {
         width: 100%;
     }

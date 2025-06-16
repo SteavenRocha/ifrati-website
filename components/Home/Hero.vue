@@ -283,7 +283,7 @@ section {
 
   .STYLE__1 .left__content,
   .STYLE__2 .left__content {
-    width: 60%;
+    width: 70%;
   }
 
   .STYLE__1 .side__image {
@@ -335,7 +335,7 @@ section {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
 
   .STYLE__1 .left__content,
   .STYLE__2 .left__content,

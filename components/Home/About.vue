@@ -132,7 +132,7 @@ section {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .content__about {
         width: 100%;
     }

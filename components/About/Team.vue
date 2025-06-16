@@ -193,11 +193,39 @@ section {
     .content {
         width: 80%;
     }
+
+    .card__container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+
+    .card__container .card {
+        grid-column: span 1 !important;
+    }
 }
 
 @media (max-width: 640px) {
     .content {
         width: 100%;
+    }
+
+    .card__container {
+        gap: 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .content {
+        width: 100%;
+    }
+
+    .card__container {
+        grid-template-columns: repeat(1, 1fr);
+        gap: 50px;
+    }
+
+    .card__container .card {
+        grid-column: span 1 !important;
     }
 }
 </style>

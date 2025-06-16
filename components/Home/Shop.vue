@@ -48,7 +48,6 @@ const activeCardsCount = computed(() => data.value?.data?.length || 0)
 /* OBTNER CANTIDAD DE CARDS VISIBLES */
 const visibleCards = 4
 
-
 </script>
 
 <template>

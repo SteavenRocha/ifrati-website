@@ -502,6 +502,10 @@ h3 {
         flex: 1 1 calc(50% - 20px);
         max-width: 50%;
     }
+
+    .sub__texts {
+        width: 80%;
+    }
 }
 
 @media (max-width: 900px) {
@@ -512,7 +516,7 @@ h3 {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .content__program {
         width: 100%;
     }
@@ -520,6 +524,10 @@ h3 {
     .card {
         flex: 1 1 100%;
         max-width: 100%;
+    }
+
+    .sub__texts {
+        width: 100%;
     }
 }
 
