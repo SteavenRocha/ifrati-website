@@ -4,8 +4,8 @@ import About from '~/components/Home/About.vue';
 import Program from '~/components/Home/Program.vue';
 import Testimonies from '~/components/Home/Testimonies.vue';
 import Brands from '~/components/Home/Brands.vue';
-/*import Donate from '~/components/Home/Donate.vue';
-import Choose from '~/components/Home/Choose.vue';
+import Donate from '~/components/Home/Donate.vue';
+/*import Choose from '~/components/Home/Choose.vue';
 import Shop from '~/components/Home/Shop.vue';
 import Faq from '~/components/Home/Faq.vue';
 import Contact from '~/components/Home/Contact.vue';
@@ -82,6 +82,19 @@ const titleBrand = brands?.title ?? '' // TITLE
 const pillBrand = brands?.pill ?? {} // PILL
 const stylesBrands = brands?.sectionStyle ?? {} // STYLES TESTIMONIES
 const brandsImgs = brands ?? [] // BRANDS
+
+/********************* DONATE SECTION *********************/
+/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
+const donate = data?.value?.data?.sections?.[5] ?? {}
+
+/* DATOS DEL PROGRAM SECTION */
+const titleDonate = donate?.title ?? '' // TITLE
+const pillDonate = donate?.pill ?? {} // PILL
+const descriptionDonate = donate?.description ?? '' // DESCRIPTION
+const numberDonate = donate?.number ?? '' // NUMBER
+const secondDescriptionDonate = donate?.secondDescription ?? '' // SECOND DESCRIPTION
+const donors = donate.donors ?? [] // DONORS
+const stylesDonate = donate?.sectionStyle ?? {} // STYLES DONATE
 </script>
 
 <template>
@@ -101,9 +114,10 @@ const brandsImgs = brands ?? [] // BRANDS
 
     <Brands :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
 
-    <!--
-    <Donate :title="titleDonate" :description="descriptionDonate" :cta="donateCTA" :styles="stylesDonate"/>
+    <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :number="numberDonate"
+      :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" />
 
+    <!--
     <Choose :title="titleChoose" :description="descriptionChoose" :cards="chooseCard" :styles="stylesChoose"/>
 
     <Shop :title="titleShop" :description="descriptionShop" :component="productSection" :button="productButton" :styles="stylesShop"/>

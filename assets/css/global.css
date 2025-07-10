@@ -13,6 +13,8 @@
     --font-size-hero: clamp(2.25rem, 3vw, 3rem);
     --font-size-parrafo-hero: clamp(1.1rem, 3vw, 1.2rem);
     --font-size-card: clamp(1rem, 3vw, 1rem);
+
+    overflow-x: unset;
 }
 
 /* :root {

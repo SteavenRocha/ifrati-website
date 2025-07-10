@@ -19,6 +19,18 @@ provide('companyInformation', companyInformation)
 
 if (style) {
   useHead({
+    /* link: [
+      {
+        rel: 'stylesheet',
+        href: config.public.niubizUrlCss
+      }
+    ],
+    script: [
+      {
+        src: config.public.niubizUrlJs,
+        defer: true
+      }
+    ], */
     style: [
       {
         innerHTML: `
@@ -32,7 +44,8 @@ if (style) {
             --pill-bg-color: ${pillStyle.backgroundColor};
             --pill-text-color: ${pillStyle.textColor};
           }
-        `
+        `,
+        type: 'text/css'
       }
     ]
   })
@@ -52,5 +65,6 @@ if (style) {
 <style scoped>
 main {
   overflow: hidden;
+  z-index: unset;
 }
 </style>

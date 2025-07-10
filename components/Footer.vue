@@ -41,7 +41,7 @@ if (contactLinks?.links?.length) {
 
 // Disclaimer, Social y Libro de Reclamaciones
 const disclaimer = data.value?.data?.footerComponent?.disclaimer ?? ''
-const socialLinks = data.value?.data?.footerComponent?.socialLinks ?? []
+//const socialLinks = data.value?.data?.footerComponent?.socialLinks ?? []
 const complaintsBook = data.value?.data?.footerComponent?.complaintsBook ?? null
 
 // FORMATEAR TEXTOS **
@@ -143,6 +143,11 @@ footer {
     display: flex;
     flex-direction: column;
     height: auto;
+
+    position: relative;
+    max-width: none;
+    padding: 0;
+    margin: 0;
 }
 
 .content__bg {

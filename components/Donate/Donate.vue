@@ -1,4 +1,21 @@
 <script setup>
+const config = useRuntimeConfig()
+
+useHead({
+    link: [
+        {
+            rel: 'stylesheet',
+            href: config.public.niubizUrlCss
+        }
+    ],
+    script: [
+        {
+            src: config.public.niubizUrlJs,
+            defer: true
+        }
+    ],
+})
+
 const props = defineProps({
     /* DONATE DATA */
     title: {
@@ -171,10 +188,18 @@ watch(showModal, async (newVal) => {
 })
 
 const form = reactive({
+    documentType: 'DNI',
+    documentNumber: '',
     name: '',
     email: '',
     phone: ''
 })
+
+/* const cardForm = reactive({
+    cardNumber: '',
+    expirationDate: '',
+    cvv: '' 
+})*/
 
 function clearForm() {
     form.name = ''
@@ -186,11 +211,20 @@ const handleContinue = async (type) => {
     switch (type) {
         case 'anonymous':
             clearForm()
-            step.value = 'anonymous';
+            step.value = 'pay';
+            break
+        case 'pay':
+            step.value = 'pay';
+            await nextTick()
+            await submitSessionInfo()
+            await initPayform()
             break
         case 'review':
-            step.value = 'review';
-            break
+            const ok = await pay();
+            if (ok) {
+                step.value = 'review';
+            }
+            break;
         case 'form':
             clearForm()
             step.value = 'form'
@@ -202,7 +236,245 @@ const handleContinue = async (type) => {
     }
 }
 
-async function submitDonation() {
+// NIUBIZ
+// OBTENER DATOS POR DNI
+watch(() => form.documentNumber, async (newDocumentNumber) => {
+    if (newDocumentNumber.length === 8) {
+        try {
+            const response = await $fetch('/api/getDataDni', {
+                method: 'GET',
+                params: { dni: newDocumentNumber }
+            })
+
+            if (response?.nombreCompleto) {
+                form.name = response.nombreCompleto
+            }
+
+        } catch (e) {
+            console.error('Error en la petición de DNI:', e)
+        }
+    }
+})
+
+// DONACION - REVIEW
+const channel = 'web'
+/* const amount = Number(selectedAmount.value).toFixed(2) */
+const correo = ''
+const id = ''
+
+const loading = ref(true)
+
+async function submitSessionInfo() {
+    try {
+        loading.value = true
+        const amount = Number(selectedAmount.value).toFixed(2)
+
+        const response = await $fetch('/api/getSessionInfo', {
+            method: 'POST',
+            params: {
+                amount: amount,
+                channel: channel
+            }
+        })
+
+        if (response && !response.error) {
+            console.log('Sesión obtenida:', response)
+
+            const configuration = {
+                callbackurl: '',
+                sessionkey: response.sessionKey,
+                channel,
+                merchantid: response.merchantId,
+                purchasenumber: 2020100901,
+                amount,
+                language: 'es',
+                font: 'https://fonts.googleapis.com/css?family=Montserrat:400&display=swap',
+                // recurrencemaxamount: '8.5'
+            }
+
+            console.log(configuration)
+
+            payform.setConfiguration(configuration)
+
+            loading.value = false
+
+        } else {
+            console.warn('Respuesta no valida:', response)
+        }
+
+    } catch (error) {
+        console.error('Error al enviar:', error)
+    }
+}
+
+/* watch([() => step.value, () => loading.value], async ([stepNow, loadingNow]) => {
+    if (stepNow === 'pay' && loadingNow === false) {
+        await nextTick()
+
+        // Verifica otra vez los elementos
+        const ready =
+            document.getElementById('txtNumeroTarjeta') &&
+            document.getElementById('txtFechaVencimiento') &&
+            document.getElementById('txtCvv')
+
+        if (!ready) {
+            console.warn('Intentando inicializar Payform, pero el DOM aún no está listo.')
+            return
+        }
+
+        initPayform()
+    }
+}) */
+
+async function initPayform() {
+    resetPayform()
+
+    var elementStyles = {
+        base: {
+            color: '#3A3A3C',
+            fontWeight: 500,
+            fontFamily: "'Montserrat', sans-serif",
+            fontSize: '16px',
+            fontSmoothing: 'antialiased',
+            placeholder: {
+                color: '#888',
+            },
+            autofill: {
+                color: '#e39f48',
+            },
+        },
+        invalid: {
+            color: '#E25950',
+            '::placeholder': {
+                color: '#FFCCA5',
+            },
+        },
+    };
+
+    const tarjeta = document.getElementById('txtNumeroTarjeta')
+    const fecha = document.getElementById('txtFechaVencimiento')
+    const cvv = document.getElementById('txtCvv')
+
+    if (!tarjeta || !fecha || !cvv) {
+        console.error('Contenedores de campos de tarjeta no están presentes en el DOM aún.')
+        return
+    }
+
+    // card-number
+    payform.createElement('card-number', {
+        style: elementStyles,
+        placeholder: 'Número de tarjeta'
+    }, 'txtNumeroTarjeta').then(element => {
+        window.cardNumber = element
+        element.on('change', function (data) {
+            // ...
+        })
+    })
+
+    // card-expiry
+    payform.createElement('card-expiry', {
+        style: elementStyles,
+        placeholder: 'MM/YY'
+    }, 'txtFechaVencimiento').then(element => {
+        window.cardExpiry = element
+        element.on('change', function (data) {
+            // ...
+        })
+    })
+
+    // card-cvc
+    payform.createElement('card-cvc', {
+        style: elementStyles,
+        placeholder: 'CVC'
+    }, 'txtCvv').then(element => {
+        window.cardCvc = element
+        element.on('change', function (data) {
+            // ...
+        })
+    })
+}
+
+function resetPayform() {
+    const tarjeta = document.getElementById('txtNumeroTarjeta')
+    const fecha = document.getElementById('txtFechaVencimiento')
+    const cvv = document.getElementById('txtCvv')
+
+    if (tarjeta) tarjeta.innerHTML = ''
+    if (fecha) fecha.innerHTML = ''
+    if (cvv) cvv.innerHTML = ''
+
+    window.cardNumber = null
+    window.cardExpiry = null
+    window.cardCvc = null
+}
+
+async function pay() {
+    // Validación de elementos de tarjeta
+    if (!window.cardNumber || !window.cardExpiry || !window.cardCvc) {
+        console.error('❌ Campos de tarjeta no están definidos');
+        alert('Hubo un problema al cargar el formulario de tarjeta. Recarga la página.');
+        return false;
+    }
+
+    // Datos del titular de tarjeta
+    const data = {
+        name: 'Juan',
+        lastName: 'Perez',
+        email: 'jperez@test.com',
+        alias: 'donacion-prueba-01'
+    };
+
+    return new Promise((resolve) => {
+        window.payform.createToken(
+            [window.cardNumber, window.cardExpiry, window.cardCvc],
+            data
+        ).then(async (tokenResponse) => {
+            if (!tokenResponse?.transactionToken) {
+                console.warn('⚠️ Token no generado:', tokenResponse);
+                alert('No se pudo generar el token de pago. Verifica los datos e inténtalo de nuevo.');
+                resolve(false);
+                return;
+            }
+
+            console.log('✅ Token generado:', tokenResponse.transactionToken);
+
+            // Obtener autorización
+            try {
+                const amount = Number(selectedAmount.value).toFixed(2);
+
+                const response = await $fetch('/api/getAuthorization', {
+                    method: 'POST',
+                    params: {
+                        amount: amount,
+                        channel: channel,
+                        tokenId: tokenResponse.transactionToken
+                    }
+                });
+
+                if (response && !response.error) {
+                    console.log('✅ Autorización obtenida:', response);
+                    resolve(true);
+                } else {
+                    console.warn('⚠️ Respuesta inválida al autorizar:', response);
+                    alert('La transacción no pudo ser autorizada.');
+                    resolve(false);
+                }
+
+            } catch (authError) {
+                console.error('❌ Error al obtener autorización:', authError);
+                alert('Error al procesar la autorización. Inténtalo más tarde.');
+                resolve(false);
+            }
+
+        }).catch((tokenError) => {
+            console.error('❌ Error al generar token:', tokenError);
+            alert('Por favor, completa todos los campos correctamente.');
+            resolve(false);
+        });
+    });
+}
+
+/* async function submitDonation() {
     try {
         const response = await $fetch('/api/sendForm?endpoint=donations', {
             method: 'POST',
@@ -232,16 +504,16 @@ async function submitDonation() {
                 if (response === 'success') {
                     clearForm()
                     showModal.value = false
-                    /*  modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
-                     modalType.value = 'success'
-                     modalVisible.value = true */
+                    //modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
+                    // modalType.value = 'success'
+                    // modalVisible.value = true 
                 }
             } catch (error) {
                 clearForm()
                 showModal.value = false
-                /*  modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
-                 modalType.value = 'error'
-                 modalVisible.value = true */
+                //modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
+                 //modalType.value = 'error'
+                 //modalVisible.value = true
             }
         } else {
             clearForm()
@@ -250,11 +522,11 @@ async function submitDonation() {
     } catch (error) {
         clearForm()
         showModal.value = false
-        /*  modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
-         modalType.value = 'error'
-         modalVisible.value = true */
+        // modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
+        // modalType.value = 'error'
+        // modalVisible.value = true
     }
-}
+} */
 </script>
 
 <template>
@@ -525,14 +797,31 @@ async function submitDonation() {
                 </div>
 
                 <div v-if="step === 'form'" class="get__data__container">
-                    <h1 class="title__modal">Introduce tus datos o elige donar anonimamente</h1>
+                    <h1 class="title__modal">Introduce tus datos para continuar</h1>
 
-                    <form @submit.prevent="handleContinue('review')">
+                    <form @submit.prevent="handleContinue('pay')">
                         <div class="data__form">
+                            <div class="form__row">
+                                <div class="form__group">
+                                    <label for="documentType">Tipo de Documento</label>
+                                    <select id="documentType" v-model="form.documentType" required disabled>
+                                        <option value="DNI">DNI</option>
+                                    </select>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="documentNumber">Número de Documento</label>
+                                    <input type="text" id="documentNumber" v-model="form.documentNumber"
+                                        ref="firstInputRef" placeholder="12345678" required inputmode="numeric"
+                                        pattern="[0-9]*"
+                                        @input="form.documentNumber = form.documentNumber.replace(/\D/g, '')" />
+                                </div>
+                            </div>
+
                             <div class="form__group">
                                 <label for="name">Nombre</label>
-                                <input type="text" id="name" ref="firstInputRef" v-model="form.name"
-                                    placeholder="Tu Nombre Completo" required />
+                                <input type="text" id="name" v-model="form.name" placeholder="Tu Nombre Completo"
+                                    required disabled />
                             </div>
 
                             <div class="form__group">
@@ -550,12 +839,51 @@ async function submitDonation() {
                         </div>
 
                         <div class="button__container__modal">
-                            <button class="modal__button anonymus" type="button"
-                                @click="handleContinue('anonymous')">Donar
-                                Anonimamente</button>
+                            <button class="modal__button cancel" type="button"
+                                @click="showModal = false">Cancelar</button>
                             <button class="modal__button" type="submit">Continuar</button>
                         </div>
                     </form>
+                </div>
+
+                <div v-if="step === 'pay'">
+
+                    <div v-if="loading" class="loader__container">
+                        <p>Cargando sesión de pago...</p>
+                    </div>
+
+                    <div v-else class="get__data__container">
+                        <h1 class="title__modal">Datos de la tarjeta</h1>
+
+                        <form @submit.prevent="handleContinue('review')">
+                            <div class="data__form">
+                                <!-- <div class="form__group">
+                                <label for="cardNumber">Número de Tarjeta</label>
+                                <input type="text" id="cardNumber" v-model="cardForm.cardNumber"
+                                    placeholder="1234 5678 9012 3456" inputmode="numeric" pattern="[0-9\s]*" required />
+                            </div>
+
+                            <div class="form__group">
+                                <label for="expirationDate">Fecha de Vencimiento</label>
+                                <input type="text" id="expirationDate" v-model="cardForm.expirationDate"
+                                    placeholder="MM/AA" pattern="(0[1-9]|1[0-2])\/\d{2}" required />
+                            </div>
+
+                            <div class="form__group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" v-model="cardForm.cvv" placeholder="123" maxlength="4"
+                                    inputmode="numeric" pattern="\d{3,4}" required />
+                            </div> -->
+                                <div id="txtNumeroTarjeta"></div>
+                                <div id="txtFechaVencimiento"></div>
+                                <div id="txtCvv"></div>
+                            </div>
+
+                            <div class="button__container__modal">
+                                <button class="modal__button" type="submit">Continuar</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Paso 2: Vista anónima -->
@@ -1079,6 +1407,7 @@ section {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow: hidden;
 }
 
 form {
@@ -1113,11 +1442,19 @@ form {
     border-radius: 15px;
 }
 
+.loader__container {
+    display: flex;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+
 label {
     color: var(--text-color-form);
 }
 
-input {
+input,
+select {
     border: 1px solid rgba(185, 185, 185, 0.6);
     border-radius: 10px;
     padding: 15px;
@@ -1133,13 +1470,19 @@ input:valid:not(:placeholder-shown) {
     color: var(--text-color-donate);
 }
 
-input:focus {
+input:focus,
+select:focus {
     outline: none;
     border: 1px solid var(--primary-color);
 }
 
 textarea {
     resize: vertical;
+}
+
+.form__row {
+    display: flex;
+    gap: 20px;
 }
 
 .form__group {
@@ -1164,7 +1507,7 @@ textarea {
     transition: filter .3s ease;
 }
 
-.modal__button.anonymus {
+.modal__button.cancel {
     background-color: white;
     color: var(--primary-color);
 }
@@ -1210,6 +1553,20 @@ textarea {
     max-width: 100%;
     gap: 100px;
     background-color: white;
+}
+
+#txtNumeroTarjeta,
+#txtFechaVencimiento,
+#txtCvv {
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
+    color: #888;
+}
+
+#txtCvv {
+    padding-left: 10px !important;
 }
 
 @media (max-width: 1024px) {
