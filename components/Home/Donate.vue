@@ -27,6 +27,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    buttons: {
+        type: Array,
+        required: true,
+    },
     styles: {
         type: Object,
         required: true,
@@ -79,6 +83,12 @@ const textColor = props.styles?.textColor ?? null
                     <p class="second__description">
                         {{ props.secondDescription }}
                     </p>
+
+                    <div class="buttons">
+                        <Button v-for="button in buttons" :key="button.id" :text="button.text" :style="button.style"
+                            :href="button.href" :icon-url="getResource(button.icon?.url).imageUrl"
+                            extraClass="responsive__button" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,6 +133,13 @@ section {
 
 .second__description {
     color: var(--text-color-donate);
+    padding-bottom: 10px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
 }
 
 .container {

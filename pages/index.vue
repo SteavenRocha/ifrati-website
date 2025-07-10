@@ -5,7 +5,8 @@ import Program from '~/components/Home/Program.vue';
 import Testimonies from '~/components/Home/Testimonies.vue';
 import Brands from '~/components/Home/Brands.vue';
 import Donate from '~/components/Home/Donate.vue';
-/*import Choose from '~/components/Home/Choose.vue';
+import Choose from '~/components/Home/Choose.vue';
+/*
 import Shop from '~/components/Home/Shop.vue';
 import Faq from '~/components/Home/Faq.vue';
 import Contact from '~/components/Home/Contact.vue';
@@ -74,7 +75,7 @@ const testimoniesCard = testimonies?.testimonialsSection ?? {} // DESCRIPTION
 const stylesTestimonies = testimonies?.sectionStyle ?? {} // STYLES TESTIMONIES
 
 /********************* BRANDS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
+/* CONFIGURACION GLOBAL DEL BRANDS SECTION */
 const brands = data?.value?.data?.sections?.[4] ?? {}
 
 /* DATOS DEL PROGRAM SECTION */
@@ -84,7 +85,7 @@ const stylesBrands = brands?.sectionStyle ?? {} // STYLES TESTIMONIES
 const brandsImgs = brands ?? [] // BRANDS
 
 /********************* DONATE SECTION *********************/
-/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
+/* CONFIGURACION GLOBAL DEL DONATE SECTION */
 const donate = data?.value?.data?.sections?.[5] ?? {}
 
 /* DATOS DEL PROGRAM SECTION */
@@ -94,7 +95,20 @@ const descriptionDonate = donate?.description ?? '' // DESCRIPTION
 const numberDonate = donate?.number ?? '' // NUMBER
 const secondDescriptionDonate = donate?.secondDescription ?? '' // SECOND DESCRIPTION
 const donors = donate.donors ?? [] // DONORS
+const buttonsDonate = donate.buttons ?? [] // BUTTONS
 const stylesDonate = donate?.sectionStyle ?? {} // STYLES DONATE
+
+/********************* CHOOSE SECTION *********************/
+/* CONFIGURACION GLOBAL DEL CHOOSE SECTION */
+const choose = data?.value?.data?.sections?.[6] ?? {}
+
+/* DATOS DEL PROGRAM SECTION */
+const titleChoose = choose?.title ?? '' // TITLE
+const pillChoose = choose?.pill ?? {} // PILL
+const descriptionChoose = choose?.description ?? '' // DESCRIPTION
+const chooseCont = choose?.choose ?? '' // CHOOSE CARDS
+const chooseStyles = choose.chooseStyles ?? [] // CARDS CHOOSE STYLES
+const stylesChoose = choose?.sectionStyle ?? {} // STYLES CHOOSE
 </script>
 
 <template>
@@ -115,11 +129,11 @@ const stylesDonate = donate?.sectionStyle ?? {} // STYLES DONATE
     <Brands :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
 
     <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :number="numberDonate"
-      :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" />
+      :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" :buttons="buttonsDonate"/>
 
+    <Choose :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont" :chooseStyles="chooseStyles" :styles="stylesChoose"/>
+    
     <!--
-    <Choose :title="titleChoose" :description="descriptionChoose" :cards="chooseCard" :styles="stylesChoose"/>
-
     <Shop :title="titleShop" :description="descriptionShop" :component="productSection" :button="productButton" :styles="stylesShop"/>
 
     <Faq :title="titleFaq" :description="descriptionFaq" :component="faqComponent" :styles="stylesFaq"/> -->
