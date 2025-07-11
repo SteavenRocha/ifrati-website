@@ -64,7 +64,7 @@ if (style) {
 
 <style scoped>
 main {
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: unset;
 }
 </style>

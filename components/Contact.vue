@@ -189,7 +189,7 @@ watch(() => form.subject, (newSubject) => {
                             <label class="checkbox">
                                 <input type="checkbox" v-model="form.termsAccepted" required />
                                 <span>Acepto haber leído los <a href="/legal/Términos y condiciones"
-                                        target="_blank">términos y condiciones</a></span>
+                                        target="_blank">términos y <br> condiciones</a></span>
                             </label>
                         </div>
 
@@ -398,6 +398,7 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    overflow: hidden;
 }
 
 .checkbox {
@@ -436,6 +437,10 @@ input[type="checkbox"] {
     margin-top: 4px;
 }
 
+br {
+    display: none;
+}
+
 @media (max-width: 1024px) {
     .content {
         width: 80%;
@@ -443,6 +448,10 @@ input[type="checkbox"] {
 
     .contact__container {
         flex-direction: column;
+    }
+
+    .contact__form {
+        align-items: center;
     }
 
     .contact__frm__container,
@@ -470,6 +479,12 @@ input[type="checkbox"] {
 @media (max-width: 640px) {
     .content {
         width: 100%;
+    }
+}
+
+@media (max-width: 365px) {
+    br {
+        display: block;
     }
 }
 </style>

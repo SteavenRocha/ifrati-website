@@ -46,7 +46,7 @@ const titleColorChoose = props.chooseStyles?.titleColor ?? null
 const textColorChoose = props.chooseStyles?.textColor ?? null
 
 // ============ OBTENER SVG POR ÍTEM ============ //
-const processedChooseInformation = reactive([])
+/* const processedChooseInformation = reactive([])
 
 if (props.choose?.length) {
     for (const link of props.choose) {
@@ -60,7 +60,7 @@ if (props.choose?.length) {
             svgHtml: svgHtml.value,
         })
     }
-}
+} */
 
 // LOGICA PARA LA SELECCION DE CARDS
 // ID de la card seleccionada
@@ -104,9 +104,11 @@ const selectedChoose = computed(() =>
                     '--text-color-choose-content': textColorChoose ?? 'var(--text-color)',
                 }">
                     <div class="left__content">
-                        <div class="option" v-for="choose in processedChooseInformation" :key="choose.id"
-                            @click="selectChoose(choose.id)" :class="{ active: selectedChooseId === choose.id }">
-                            <div class="icon" v-if="choose.svgHtml" v-html="choose.svgHtml"></div>
+                        <div class="option" v-for="choose in choose" :key="choose.id" @click="selectChoose(choose.id)"
+                            :class="{ active: selectedChooseId === choose.id }">
+                            <div class="icon">
+                                <img :src="getResource(choose?.icon?.url).imageUrl" alt="">
+                            </div>
                             <h3 class="option__text">{{ choose.title }}</h3>
                         </div>
                     </div>
@@ -183,6 +185,7 @@ section {
 .content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     margin: auto;
     max-width: var(--max-width);
     /*  overflow: hidden; */
@@ -228,27 +231,31 @@ section {
     display: flex;
     align-items: start;
     gap: 30px;
+    max-width: 1150px;
 }
 
 .left__content {
     position: sticky;
-    top: 20px;
+    top: 130px;
     display: flex;
     flex-direction: column;
     width: max-content;
     gap: 10px;
     background-color: var(--bg-color-choose-content);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
+    border: 1px solid rgba(185, 185, 185, 0.3);
     padding: 5px;
     border-radius: 15px;
     z-index: 10;
+    /*  overflow: hidden; */
 }
 
 .rigth__content {
     width: 100%;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /*  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
+    border: 1px solid rgba(185, 185, 185, 0.3);
 }
 
 .choose__content {
@@ -304,7 +311,8 @@ section {
 }
 
 .title__top h3 {
-    font-size: 3rem;
+    font-size: clamp(1.5rem, 8vw, 3rem);
+    width: max-content;
     color: white;
 }
 
@@ -329,7 +337,7 @@ section {
     background-color: white;
     width: 100%;
     height: 50px;
-    padding: 40px 30px;
+    padding: 40px 20px;
     border-radius: 15px;
     cursor: pointer;
     transition: all ease .6s;
@@ -348,16 +356,16 @@ section {
 }
 
 .option.active .icon {
-    color: white;
     background-color: rgba(255, 255, 255, 0.3);
 }
 
 .icon {
-    background-color: rgba(102, 102, 102, 0.2);
+    /*   background-color: rgba(102, 102, 102, 0.2); */
     border-radius: 15px;
-    padding: 5px;
-    width: 50px;
-    height: 50px;
+    padding: 10px;
+    max-width: 60px;
+    min-width: 60px;
+    height: 60px;
     color: var(--primary-color);
     transition: all ease .3s;
 }
@@ -390,10 +398,73 @@ section {
     .centered__texts {
         width: 80%;
     }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .left__content {
+        flex-direction: row;
+        width: 100%;
+    }
+}
+
+@media (max-width: 900px) {
+    .option__text {
+        width: auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .option {
+        padding: 40px 5px;
+        width: 100%;
+    }
 }
 
 @media (max-width: 640px) {
     .centered__texts {
+        width: 100%;
+    }
+
+    .choose__container {
+        padding: 20px;
+    }
+
+    /* .option__text {
+        display: none;
+    } */
+
+    .characteristics__container {
+        flex-wrap: wrap;
+    }
+
+    .characteristics {
+        width: calc(50% - 10px);
+    }
+}
+
+@media (max-width: 580px) {
+    .option__text {
+        display: none;
+    }
+
+    .option {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .benefits__content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .benefits {
+        width: 100%;
+    }
+
+    .characteristics {
         width: 100%;
     }
 }

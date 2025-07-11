@@ -6,11 +6,6 @@ import Testimonies from '~/components/Home/Testimonies.vue';
 import Brands from '~/components/Home/Brands.vue';
 import Donate from '~/components/Home/Donate.vue';
 import Choose from '~/components/Home/Choose.vue';
-/*
-import Shop from '~/components/Home/Shop.vue';
-import Faq from '~/components/Home/Faq.vue';
-import Contact from '~/components/Home/Contact.vue';
-import Social from '~/components/Home/Social.vue'; */
 
 const { data } = await useApi('home-page')
 
@@ -109,6 +104,29 @@ const descriptionChoose = choose?.description ?? '' // DESCRIPTION
 const chooseCont = choose?.choose ?? '' // CHOOSE CARDS
 const chooseStyles = choose.chooseStyles ?? [] // CARDS CHOOSE STYLES
 const stylesChoose = choose?.sectionStyle ?? {} // STYLES CHOOSE
+
+/********************* FAQS SECTION *********************/
+/* CONFIGURACION GLOBAL DEL FAQ SECTION */
+const faq = data?.value?.data?.sections?.[7] ?? {}
+
+/* DATOS DEL HERO SECTION */
+const titleFaq = faq.title ?? '' // TITLE
+const descriptionFaq = faq?.description ?? '' // DESCRIPTION
+const pillFaq = faq?.pill ?? {} // PILL
+const questions = faq?.questions ?? [] // QUESTIONS
+const styleFaq = faq?.sectionStyle ?? {} // STYLES
+
+/********************* Contact SECTION *********************/
+/* CONFIGURACION GLOBAL DEL CONTACT SECTION */
+const contact = data?.value?.data?.sections?.[8] ?? {}
+
+/* DATOS DEL CONTACT SECTION */
+const titleContact = contact.title ?? '' // TITLE
+const descriptionContact = contact?.description ?? '' // DESCRIPTION
+const pillContact = contact?.pill ?? {} // PILL
+const contactCard = contact?.contactCard ?? [] // CONTACT
+const contactInformation = contact?.contactInformation ?? [] // INFORMATION
+const styleContact = contact?.sectionStyle ?? {} // STYLES
 </script>
 
 <template>
@@ -129,18 +147,15 @@ const stylesChoose = choose?.sectionStyle ?? {} // STYLES CHOOSE
     <Brands :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
 
     <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :number="numberDonate"
-      :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" :buttons="buttonsDonate"/>
+      :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" :buttons="buttonsDonate" />
 
-    <Choose :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont" :chooseStyles="chooseStyles" :styles="stylesChoose"/>
-    
-    <!--
-    <Shop :title="titleShop" :description="descriptionShop" :component="productSection" :button="productButton" :styles="stylesShop"/>
+    <Choose :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont"
+      :chooseStyles="chooseStyles" :styles="stylesChoose" />
 
-    <Faq :title="titleFaq" :description="descriptionFaq" :component="faqComponent" :styles="stylesFaq"/> -->
+    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
 
-    <!--  <Contact />
-
-    <Social /> -->
+    <Contact :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
+      :contactInformation="contactInformation" :style="styleContact" />
 
   </div>
 

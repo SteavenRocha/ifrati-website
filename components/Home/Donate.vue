@@ -190,5 +190,11 @@ section {
     .centered__texts {
         width: 100%;
     }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+        max-width: 180px;
+    }
 }
 </style>
