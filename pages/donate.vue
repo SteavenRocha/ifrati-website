@@ -24,6 +24,7 @@ const descriptionDonate = donate?.description ?? '' // DESCRIPTION
 const pillDonate = donate?.pill ?? {} // PILL
 const donationForm = donate?.donationForm ?? {} // FORM
 const goalsForm = donate?.specificGoalsForm ?? {} // FORM
+const volunteerForm = donate?.volunteerForm ?? {} // FORM
 const styleDonate = donate?.sectionStyle ?? {} // STYLES
 
 /********************* IMPORTANT SECTION *********************/
@@ -55,7 +56,7 @@ const styleFaq = faq?.sectionStyle ?? {} // STYLES
     <Hero :title="title" :description="description" :style="style" />
 
     <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :donationForm="donationForm"
-      :goalsForm="goalsForm" :style="styleDonate" />
+      :goalsForm="goalsForm" :volunteerForm="volunteerForm" :style="styleDonate" />
 
     <Important :title="titleImportat" :description="descriptionImportat" :pill="pillImportat" :card="card"
       :style="styleImportat" />

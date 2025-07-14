@@ -38,6 +38,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    volunteerForm: {
+        type: Object,
+        required: true,
+    },
     style: {
         type: Object,
         required: false,
@@ -528,6 +532,141 @@ async function pay() {
         // modalVisible.value = true
     }
 } */
+
+/* VOLUNTARIADO */
+/* CARD STYLES */
+const bgColorCardV = props.volunteerForm?.cardStyle?.backgroundColor ?? null
+const titleColorCardV = props.volunteerForm?.cardStyle?.titleColor ?? null
+const textColorCardV = props.volunteerForm?.cardStyle?.textColor ?? null
+/* STYLOS FORM */
+const bgColorFormV = props.volunteerForm?.formStyle?.backgroundColor ?? null
+const titleColorFormV = props.volunteerForm?.formStyle?.titleColor ?? null
+const textColorFormV = props.volunteerForm?.formStyle?.textColor ?? null
+
+const firstInputRefVolunteer = ref(null);
+
+const volunteerForm_ = reactive({
+    documentType: 'DNI',
+    documentNumber: '',
+    name: '',
+    email: '',
+    phone: '',
+    type: '',
+    availability: '',
+    experience: '',
+    motivation: '',
+    termsAccepted: false,
+})
+
+function clearVolunteerForm() {
+    volunteerForm_.documentNumber = ''
+    volunteerForm_.name = ''
+    volunteerForm_.email = ''
+    volunteerForm_.phone = ''
+    volunteerForm_.type = ''
+    volunteerForm_.availability = ''
+    volunteerForm_.experience = ''
+    volunteerForm_.motivation = ''
+    volunteerForm_.termsAccepted = false
+}
+
+watch(() => volunteerForm_.documentNumber, async (newDocumentNumber) => {
+    if (newDocumentNumber.length === 8) {
+        try {
+            const response = await $fetch('/api/getDataDni', {
+                method: 'GET',
+                params: { dni: newDocumentNumber }
+            })
+
+            if (response?.nombreCompleto) {
+                volunteerForm_.name = response.nombreCompleto
+            }
+
+        } catch (e) {
+            console.error('Error en la petición de DNI (volunteer):', e)
+        }
+    }
+})
+
+watch(activeTab, async (newVal) => {
+    if (newVal === 'volunteer') {
+        await nextTick()
+        firstInputRefVolunteer.value?.focus()
+    } else {
+        clearVolunteerForm()
+    }
+})
+
+/* MODAL DE SUCCESS / ERROR */
+const modalVisible = ref(false)
+const modalEmail = ref('')
+const modalType = ref('success')
+const isLoading = ref(false)
+
+/* POST PARA ENVIAR FORMULARIO */
+async function handleSubmit() {
+    const documnetType = volunteerForm_.documentType
+    const documentNumber = volunteerForm_.documentNumber
+    const name = volunteerForm_.name
+    const email = volunteerForm_.email
+    const phone = volunteerForm_.phone
+    const type = volunteerForm_.type
+    const availability = volunteerForm_.availability
+    const experience = volunteerForm_.experience
+    const motivation = volunteerForm_.motivation
+
+    try {
+        const response = await $fetch('/api/sendForm?endpoint=volunteer-inboxes', {
+            method: 'POST',
+            body: {
+                documnetType: documnetType,
+                documentNumber: documentNumber,
+                name: name,
+                email: email,
+                phone: phone,
+                type: type,
+                availability: availability,
+                experience: experience,
+                motivation: motivation
+            },
+        })
+
+        if (response === 'success') {
+            isLoading.value = true
+
+            try {
+                const response = await $fetch('/api/submitContactEmail', {
+                    method: 'POST',
+                    body: {
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        subject: 'SUBJECT DE PRUEBA',
+                        message: 'MESSAGE DE PRUEBA'
+                    },
+                })
+
+                if (response === 'success') {
+                    clearVolunteerForm()
+                    modalEmail.value = email
+                    modalType.value = 'success'
+                } else {
+                    modalType.value = 'error'
+                }
+            } catch (error) {
+                clearVolunteerForm()
+                modalType.value = 'error'
+            } finally {
+                isLoading.value = false // desactivar loading
+                modalVisible.value = true // mostrar modal
+            }
+        }
+    } catch (error) {
+        clearVolunteerForm()
+        modalType.value = 'error'
+        modalVisible.value = true
+    }
+}
 </script>
 
 <template>
@@ -557,6 +696,9 @@ async function pay() {
                     </h1>
                     <h1 class="item" :class="{ active: activeTab === 'specific' }" @click="activeTab = 'specific'">
                         {{ goalsForm.selectedTitle }}
+                    </h1>
+                    <h1 class="item" :class="{ active: activeTab === 'volunteer' }" @click="activeTab = 'volunteer'">
+                        {{ volunteerForm.selectedTitle }}
                     </h1>
                 </div>
 
@@ -697,6 +839,145 @@ async function pay() {
                         </p>
                     </div>
                 </div>
+
+                <div class="volunteer__section" v-if="activeTab === 'volunteer'">
+                    <div class="volunteer">
+                        <h3 class="first__title">{{ volunteerForm.firstTitle }}</h3>
+                        <div class="card__container" :style="{
+                            '--bg-color-cardV': bgColorCardV ?? 'var(--background-color)',
+                            '--title-color-cardV': titleColorCardV ?? 'var(--title-color)',
+                            '--text-color-cardV': textColorCardV ?? 'var(--text-color)',
+                        }">
+                            <div class="card" v-for="(item, index) in volunteerForm.card" :key="index">
+                                <div class="card__icon">
+                                    <img :src="getResource(item.icon?.url).imageUrl" alt="">
+                                </div>
+                                <div class="card__content__volunteer">
+                                    <div class="card__header">
+                                        <h3 class="card__title__volunteer">{{ item.title }}</h3>
+                                        <p class="card__description__volunteer">{{ item.description }}</p>
+                                    </div>
+                                    <div class="card__container__characteristic">
+                                        <div class="card__characteristics" v-for="charct in item?.characteristics">
+                                            <h4>{{ charct.title }}</h4>
+                                            <p>{{ charct.description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form" :style="{
+                        '--bg-color-formV': bgColorFormV ?? 'var(--background-color)',
+                        '--title-color-formV': titleColorFormV ?? 'var(--title-color)',
+                        '--text-color-formV': textColorFormV ?? 'var(--text-color)',
+                    }">
+                        <h3 class="first__title">{{ volunteerForm.form?.title }}</h3>
+
+                        <form @submit.prevent="handleSubmit">
+                            <div class="data__form">
+                                <div class="form__row">
+                                    <div class="form__group">
+                                        <label for="documentType">Tipo de Documento</label>
+                                        <select id="documentType" v-model="volunteerForm_.documentType" required
+                                            disabled>
+                                            <option value="DNI">DNI</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form__group">
+                                        <label for="documentNumber">Número de Documento</label>
+                                        <input type="text" id="documentNumber" v-model="volunteerForm_.documentNumber"
+                                            ref="firstInputRefVolunteer" placeholder="12345678" required
+                                            inputmode="numeric" pattern="[0-9]*"
+                                            @input="volunteerForm_.documentNumber = volunteerForm_.documentNumber.replace(/\D/g, '')" />
+                                    </div>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="name">Nombre</label>
+                                    <input type="text" id="name" v-model="volunteerForm_.name"
+                                        placeholder="Tu Nombre Completo" required disabled />
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" v-model="volunteerForm_.email"
+                                        placeholder="correo_example@gmail.com" required />
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="phone">Celular (Opcional)</label>
+                                    <input type="tel" id="phone" v-model="volunteerForm_.phone"
+                                        placeholder="+51 987654321" inputmode="numeric" pattern="[0-9]*"
+                                        @input="volunteerForm_.phone = volunteerForm_.phone.replace(/\D/g, '')" />
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="type">Voluntariado</label>
+                                    <select v-model="volunteerForm_.type" required
+                                        :class="{ 'selected': volunteerForm_.type !== '' }">
+                                        <option disabled value="">Selecciona un Voluntariado</option>
+                                        <option v-for="volunteer in volunteerForm.card" :key="volunteer.id"
+                                            :value="volunteer.title">
+                                            {{ volunteer.title }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="availability">Disponibilidad</label>
+                                    <select v-model="volunteerForm_.availability" required
+                                        :class="{ 'selected': volunteerForm_.availability !== '' }">
+                                        <option disabled value="">Selecciona tu Disponibilidad</option>
+                                        <option value="2-4 horas semanales">2-4 horas semanales</option>
+                                        <option value="4-8 horas semanales">4-8 horas semanales</option>
+                                        <option value="Mas de 8 horas semanales">Mas de 8 horas semanales</option>
+                                    </select>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="experience">Experiencia</label>
+                                    <textarea id="experience" rows="5" maxlength="4000"
+                                        v-model="volunteerForm_.experience"
+                                        placeholder="Cuentanos sobre tu experiencia relevante para el voluntariado"
+                                        required></textarea>
+                                    <div class="char-counter">
+                                        {{ volunteerForm_.experience.length }} / 4000 caracteres
+                                    </div>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="motivation">Motivacion</label>
+                                    <textarea id="motivation" rows="5" maxlength="4000"
+                                        v-model="volunteerForm_.motivation"
+                                        placeholder="¿Por qué quieres ser voluntario/a en Ifrati" required></textarea>
+                                    <div class="char-counter">
+                                        {{ volunteerForm_.motivation.length }} / 4000 caracteres
+                                    </div>
+                                </div>
+
+                                <div class="form__group checkbox__group">
+                                    <label class="checkbox">
+                                        <input type="checkbox" v-model="volunteerForm_.termsAccepted" required />
+                                        <span>Acepto haber leído los <a href="/legal/Términos y condiciones"
+                                                target="_blank">términos y <br> condiciones</a></span>
+                                    </label>
+                                </div>
+
+                                <Button type="submit" :text="volunteerForm.form.button.text"
+                                    :style="volunteerForm.form.button.style"
+                                    :icon-url="getResource(volunteerForm.form.button.icon?.url).imageUrl"
+                                    extraClass="full__width" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <Loader :visible="isLoading" />
+
+                <ModalMessage :visible="modalVisible" :email="modalEmail" :type="modalType"
+                    @update:visible="modalVisible = $event" />
             </div>
         </div>
 
@@ -1451,27 +1732,35 @@ form {
 }
 
 label {
-    color: var(--text-color-form);
+    color: var(--text-color-formV);
 }
 
 input,
+textarea,
 select {
     border: 1px solid rgba(185, 185, 185, 0.6);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
     color: #888;
+    background-color: white;
+}
+
+select.selected {
+    color: var(--text-color-formV);
 }
 
 input::placeholder {
     color: #888;
 }
 
-input:valid:not(:placeholder-shown) {
-    color: var(--text-color-donate);
+input:valid:not(:placeholder-shown),
+textarea:valid:not(:placeholder-shown) {
+    color: var(--text-color-formV);
 }
 
 input:focus,
+textarea:focus,
 select:focus {
     outline: none;
     border: 1px solid var(--primary-color);
@@ -1479,6 +1768,46 @@ select:focus {
 
 textarea {
     resize: vertical;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    width: max-content;
+}
+
+.checkbox span,
+.checkbox a {
+    font-size: 0.9rem;
+    color: var(--text-color-contact);
+}
+
+.checkbox a {
+    color: var(--primary-color);
+}
+
+.checkbox a:hover {
+    filter: brightness(90%);
+}
+
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 4px;
+}
+
+br {
+    display: none;
 }
 
 .form__row {
@@ -1570,6 +1899,125 @@ textarea {
     padding-left: 10px !important;
 }
 
+/* VOLUNTARIADO */
+.volunteer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.volunteer__section {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    gap: 40px;
+}
+
+.first__title {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 500;
+    color: var(--title-color-form);
+}
+
+.card__title__volunteer {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    font-weight: 700;
+    color: var(--title-color-cardV);
+}
+
+.card__description__volunteer {
+    padding-top: 10px;
+    line-height: 1.3;
+    color: var(--text-color-cardV);
+}
+
+.card__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    background-color: var(--bg-color-cardV);
+    border-radius: 15px;
+}
+
+.card__icon {
+    max-width: 50px;
+    height: max-content;
+    background-color: rgba(126, 126, 126, 0.151);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+}
+
+.card__icon img {
+    object-fit: contain;
+    height: auto;
+}
+
+.card__container__characteristic {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.card__characteristics {
+    display: flex;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    gap: 5px;
+}
+
+.card__characteristics h4 {
+    color: var(--primary-color);
+    width: auto;
+}
+
+.card__characteristics p {
+    color: var(--text-color-cardV);
+}
+
+ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+}
+
+li {
+    line-height: 1.3;
+}
+
+li::marker {
+    color: var(--primary-color);
+    font-size: 1.2em;
+}
+
+li:not(:first-child) {
+    padding-top: 5px;
+}
+
+strong {
+    color: var(--primary-color);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form form {
+    border: 1px solid rgba(185, 185, 185, 0.3);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    background-color: var(--bg-color-formV);
+}
+
 @media (max-width: 1024px) {
     .content {
         width: 80%;
@@ -1592,6 +2040,10 @@ textarea {
     .card__content {
         padding: 15px;
     }
+
+    .volunteer__section {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 640px) {
@@ -1604,13 +2056,19 @@ textarea {
     }
 }
 
+@media (max-width: 520px) {
+    .form__row {
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 480px) {
 
     .form__container,
     .amount__frm,
     .impact__frm,
     .aditional__impact {
-        padding: 12px;
+        padding: 10px;
     }
 
     .amount__container {
@@ -1624,12 +2082,26 @@ textarea {
     .frequency {
         gap: 8px;
     }
+
+    .card__characteristics {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 400px) {
     .details__cards {
         flex-wrap: wrap;
         gap: 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .type {
+        gap: 5px;
+    }
+
+    .card {
+        flex-direction: column;
     }
 }
 </style>
