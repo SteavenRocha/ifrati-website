@@ -72,8 +72,9 @@ const form = reactive({
 })
 
 const modalVisible = ref(false)
-const modalMessage = ref('')
+const modalEmail = ref('')
 const modalType = ref('success') // 'success' o 'error'
+const isLoading = ref(false) // loader
 
 function clearForm() {
     form.name = ''
@@ -86,27 +87,56 @@ function clearForm() {
 
 /* POST PARA ENVIAR FORMULARIO */
 async function handleSubmit() {
+    const name = form.name
+    const email = form.email
+    const phone = form.phone
+    const subject = form.subject
+    const message = form.message
+
     try {
         const response = await $fetch('/api/sendForm?endpoint=inboxes', {
             method: 'POST',
             body: {
-                name: form.name,
-                email: form.email,
-                phone: form.phone,
-                subject: form.subject,
-                message: form.message,
+                name: name,
+                email: email,
+                phone: phone,
+                subject: subject,
+                message: message
             },
         })
 
         if (response === 'success') {
-            clearForm()
-            modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
-            modalType.value = 'success'
-            modalVisible.value = true
+            isLoading.value = true
+
+            try {
+                const response = await $fetch('/api/submitContactEmail', {
+                    method: 'POST',
+                    body: {
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        subject: subject,
+                        message: message
+                    },
+                })
+
+                if (response === 'success') {
+                    clearForm()
+                    modalEmail.value = email
+                    modalType.value = 'success'
+                } else {
+                    modalType.value = 'error'
+                }
+            } catch (error) {
+                clearForm()
+                modalType.value = 'error'
+            } finally {
+                isLoading.value = false // desactivar loading
+                modalVisible.value = true // mostrar modal
+            }
         }
     } catch (error) {
         clearForm()
-        modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
         modalType.value = 'error'
         modalVisible.value = true
     }
@@ -121,6 +151,14 @@ watch(() => form.subject, (newSubject) => {
         form.message = selected.defaultMessage
     } else {
         form.message = ''
+    }
+})
+
+watch(isLoading, (val) => {
+    if (val) {
+        document.body.style.overflow = 'hidden'
+    } else {
+        document.body.style.overflow = ''
     }
 })
 </script>
@@ -198,8 +236,25 @@ watch(() => form.subject, (newSubject) => {
                     </form>
                 </div>
 
-                <ModalMessage :visible="modalVisible" :message="modalMessage" :type="modalType"
+                <ModalMessage :visible="modalVisible" :email="modalEmail" :type="modalType"
                     @update:visible="modalVisible = $event" />
+
+                <div v-if="isLoading" class="loader__overlay">
+                    <div class="lds-spinner">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                </div>
 
                 <div class="contact__information__container">
                     <h1 class="sub__title">{{ contactInformation.text }}</h1>
@@ -439,6 +494,117 @@ input[type="checkbox"] {
 
 br {
     display: none;
+}
+
+.loader__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;
+    /* cursor: wait; */
+}
+
+.lds-spinner {
+    color: official;
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.lds-spinner div {
+    transform-origin: 40px 40px;
+    animation: lds-spinner 1.2s linear infinite;
+}
+
+.lds-spinner div:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 37px;
+    width: 6px;
+    height: 18px;
+    border-radius: 20%;
+    background: #fff;
+}
+
+.lds-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.1s;
+}
+
+.lds-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -1s;
+}
+
+.lds-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.9s;
+}
+
+.lds-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.8s;
+}
+
+.lds-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.7s;
+}
+
+.lds-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.6s;
+}
+
+.lds-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.5s;
+}
+
+.lds-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.4s;
+}
+
+.lds-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.3s;
+}
+
+.lds-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.2s;
+}
+
+.lds-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.1s;
+}
+
+.lds-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+}
+
+@keyframes lds-spinner {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
 }
 
 @media (max-width: 1024px) {

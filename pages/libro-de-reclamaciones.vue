@@ -248,6 +248,27 @@ isActive.value = statusHeaderUp.isActive
                     </div>
                 </div>
 
+                <div class="card important" :style="{
+                    /* COLORES DE LA SECCION */
+                    '--bg-color-compImport': bgColorCompImport ?? 'var(--background-color)',
+                    '--title-color-compImport': titleColorCompImport ?? 'var(--title-color)',
+                    '--text-color-compImport': textColorCompImport ?? 'var(--text-color)',
+                }">
+                    <div class="title__container">
+                        <div class="icon important__icon">
+                            <span v-if="svgHtmlImport" v-html="svgHtmlImport" />
+                        </div>
+                        <h1 class="title__important"> {{ titleCompanyImport }} </h1>
+                    </div>
+                    <div class="important__container">
+                        <ul>
+                            <li v-for="item in list" :key="item.id">
+                                {{ item.text }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
                 <div class="card form" :style="{
                     /* COLORES DE LA SECCION */
                     '--bg-color-form': bgColorForm ?? 'var(--background-color)',
@@ -405,26 +426,6 @@ isActive.value = statusHeaderUp.isActive
                 <ModalMessage :visible="modalVisible" :message="modalMessage" :type="modalType"
                     @update:visible="modalVisible = $event" />
 
-                <div class="card important" :style="{
-                    /* COLORES DE LA SECCION */
-                    '--bg-color-compImport': bgColorCompImport ?? 'var(--background-color)',
-                    '--title-color-compImport': titleColorCompImport ?? 'var(--title-color)',
-                    '--text-color-compImport': textColorCompImport ?? 'var(--text-color)',
-                }">
-                    <div class="title__container">
-                        <div class="icon important__icon">
-                            <span v-if="svgHtmlImport" v-html="svgHtmlImport" />
-                        </div>
-                        <h1 class="title__important"> {{ titleCompanyImport }} </h1>
-                    </div>
-                    <div class="important__container">
-                        <ul>
-                            <li v-for="item in list" :key="item.id">
-                                {{ item.text }}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

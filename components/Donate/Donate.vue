@@ -202,6 +202,7 @@ const form = reactive({
 })*/
 
 function clearForm() {
+    form.documentNumber = ''
     form.name = ''
     form.email = ''
     form.phone = ''
