@@ -107,14 +107,14 @@ const stylesChoose = choose?.sectionStyle ?? {} // STYLES CHOOSE
 
 /********************* FAQS SECTION *********************/
 /* CONFIGURACION GLOBAL DEL FAQ SECTION */
-const faq = data?.value?.data?.sections?.[7] ?? {}
+/* const faq = data?.value?.data?.sections?.[7] ?? {} */
 
 /* DATOS DEL HERO SECTION */
-const titleFaq = faq.title ?? '' // TITLE
+/* const titleFaq = faq.title ?? '' // TITLE
 const descriptionFaq = faq?.description ?? '' // DESCRIPTION
 const pillFaq = faq?.pill ?? {} // PILL
 const questions = faq?.questions ?? [] // QUESTIONS
-const styleFaq = faq?.sectionStyle ?? {} // STYLES
+const styleFaq = faq?.sectionStyle ?? {} // STYLES */
 
 /********************* Contact SECTION *********************/
 /* CONFIGURACION GLOBAL DEL CONTACT SECTION */
@@ -152,8 +152,8 @@ const styleContact = contact?.sectionStyle ?? {} // STYLES
     <Choose :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont"
       :chooseStyles="chooseStyles" :styles="stylesChoose" />
 
-    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
-
+   <!--  <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+ -->
     <Contact :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
       :contactInformation="contactInformation" :style="styleContact" />
 

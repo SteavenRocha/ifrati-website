@@ -1,14 +1,25 @@
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const token = config.strapiApiTokenWrite
+    const query = getQuery(event)
+    const action = query.action
 
-    const body = await readBody(event)
-
-    if (!body) {
-        return { error: 'Falta el body' }
+    if (!action) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Falta el parámetro "action"',
+        })
     }
 
-    const url = `${config.public.strapiApiUrl}/api/email/submitContactEmail`
+    const body = await readBody(event)
+    if (!body) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Falta el body del request',
+        })
+    }
+
+    const url = `${config.public.strapiApiUrl}/api/email/${action}`
 
     try {
         await $fetch(url, {
@@ -20,7 +31,7 @@ export default defineEventHandler(async (event) => {
             body: body,
         })
 
-        return 'success'
+        return { status: 'success' }
     } catch (error: any) {
         console.error('[SEND EMAIL] ERROR FETCHING:', error?.response || error)
         throw createError({

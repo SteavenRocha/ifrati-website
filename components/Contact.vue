@@ -109,7 +109,7 @@ async function handleSubmit() {
             isLoading.value = true
 
             try {
-                const response = await $fetch('/api/submitContactEmail', {
+                const response = await $fetch('/api/submitEmail?action=submitContactEmail', {
                     method: 'POST',
                     body: {
                         name: name,
@@ -120,7 +120,7 @@ async function handleSubmit() {
                     },
                 })
 
-                if (response === 'success') {
+                if (response?.status === 'success') {
                     clearForm()
                     modalEmail.value = email
                     modalType.value = 'success'

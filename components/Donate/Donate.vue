@@ -458,6 +458,15 @@ async function pay() {
 
                 if (response && !response.error) {
                     console.log('✅ Autorización obtenida:', response);
+
+                    const transactionData = {
+                        state: response.authorization.dataMap.ACTION_DESCRIPTION,
+                        number: response.authorization.order.purchaseNumber,
+                        card: response.authorization.dataMap.CARD,
+                    }
+
+                    await submitDonationEmail(transactionData);
+
                     resolve(true);
                 } else {
                     console.warn('⚠️ Respuesta inválida al autorizar:', response);
@@ -477,6 +486,86 @@ async function pay() {
             resolve(false);
         });
     });
+}
+
+async function submitDonationEmail(transactionData) {
+    const donationType_ = donationType.value;
+
+    if (donationType_ === 'general') {
+        const type = 'Donación General'
+        const amount = Number(selectedAmount.value).toFixed(2);
+        const title = selectedDonation.value.impact.title
+        const description = selectedDonation.value.impact.description
+        const sanitizedDetailsCard = selectedDonation.value.detailsCard.map(item => ({
+            title: item.title,
+            description: item.description
+        }));
+
+        const emailBody = {
+            type: type,
+            name: form.name,
+            email: form.email,
+            amount: amount,
+            title: title,
+            description: description,
+            aditional: sanitizedDetailsCard,
+            transaction: transactionData
+        };
+
+        try {
+            const response = await $fetch('/api/submitEmail?action=submitGeneralDonationEmail', {
+                method: 'POST',
+                body: emailBody,
+            })
+
+            if (response?.status === 'success') {
+                console.log("correo enviado con exito", response)
+            } else {
+                console.log("error al envair correo", response)
+            }
+        } catch (error) {
+            console.log("error al envair correo", response)
+        }
+    } else {
+        const amount = Number(selectedAmount.value).toFixed(2)
+        /* const percentage = getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal) */
+        const collected = selectedGoal.value.totalCollected || 0
+        const goal = selectedGoal.value.goal
+
+        const newCollected = collected + Number(amount)
+        const newPercentage = getProgress(newCollected, goal)
+
+        /* console.log(amount, percentage, collected, goal, newCollected, newPercentage) */
+
+        const type = 'Donacion para una meta especifica'
+
+        const emailBody = {
+            type: type,
+            name: form.name,
+            email: form.email,
+            amount: amount,
+            title: selectedGoal.value.title,
+            percentage: newPercentage,
+            collected: newCollected,
+            goal: goal,
+            transaction: transactionData
+        };
+
+        try {
+            const response = await $fetch('/api/submitEmail?action=submitGoalDonationEmail', {
+                method: 'POST',
+                body: emailBody,
+            })
+
+            if (response?.status === 'success') {
+                console.log("correo enviado con exito", response)
+            } else {
+                console.log("error al envair correo", response)
+            }
+        } catch (error) {
+            console.log("error al envair correo", response)
+        }
+    }
 }
 
 /* async function submitDonation() {
@@ -635,7 +724,7 @@ async function handleSubmit() {
             isLoading.value = true
 
             try {
-                const response = await $fetch('/api/submitContactEmail', {
+                const response = await $fetch('/api/submitEmail?action=submitContactEmail', {
                     method: 'POST',
                     body: {
                         name: name,
@@ -646,7 +735,7 @@ async function handleSubmit() {
                     },
                 })
 
-                if (response === 'success') {
+                if (response.status === 'success') {
                     clearVolunteerForm()
                     modalEmail.value = email
                     modalType.value = 'success'
