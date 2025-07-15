@@ -986,7 +986,7 @@ async function handleSubmit() {
                                 <div class="form__group">
                                     <label for="name">Nombre</label>
                                     <input type="text" id="name" v-model="volunteerForm_.name"
-                                        placeholder="Tu Nombre Completo" required disabled />
+                                        placeholder="Nombre Completo" required disabled />
                                 </div>
 
                                 <div class="form__group">

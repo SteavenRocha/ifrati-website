@@ -187,7 +187,7 @@ watch(() => form.subject, (newSubject) => {
                     <form @submit.prevent="handleSubmit" class="contact__form">
                         <div class="form__group">
                             <label for="name">Nombres</label>
-                            <input type="text" id="name" v-model="form.name" placeholder="Tu Nombre Completo"
+                            <input type="text" id="name" v-model="form.name" placeholder="Nombre Completo"
                                 required />
                         </div>
 
@@ -217,7 +217,7 @@ watch(() => form.subject, (newSubject) => {
                         <div class="form__group">
                             <label for="message">Mensaje</label>
                             <textarea id="message" rows="5" maxlength="4000" v-model="form.message"
-                                placeholder="Detalla tu mensaje los mas posible" required></textarea>
+                                placeholder="Cuéntanos con detalle en qué podemos ayudarte" required></textarea>
                             <div class="char-counter">
                                 {{ form.message.length }} / 4000 caracteres
                             </div>
