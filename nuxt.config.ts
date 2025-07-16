@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const isDev = process.env.DEVELOPMENT === 'true'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-04-21',
   devtools: { enabled: false },
@@ -18,8 +20,15 @@ export default defineNuxtConfig({
     strapiApiTokenWrite: process.env.STRAPI_API_TOKEN_WRITE,
     public: {
       strapiApiUrl: process.env.STRAPI_API_URL,
-      niubizUrlJs: process.env.NIUBIZ_URL_JS,
-      niubizUrlCss: process.env.NIUBIZ_URL_CSS,
+
+      /* NIUBIZ */
+      niubizUrlJs: isDev
+        ? process.env.NIUBIZ_URL_JS_DEV
+        : process.env.NIUBIZ_URL_JS_PRD,
+
+      niubizUrlCss: isDev
+        ? process.env.NIUBIZ_URL_CSS_DEV
+        : process.env.NIUBIZ_URL_CSS_PRD,
     },
   },
 })
