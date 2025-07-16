@@ -290,7 +290,7 @@ async function submitSessionInfo() {
             method: 'POST',
             params: {
                 amount: amount,
-                channel: channel
+               /*  channel: channel */
             }
         })
 
