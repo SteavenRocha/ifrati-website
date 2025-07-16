@@ -1,6 +1,6 @@
 <template>
-    <div v-if="visible" class="loader__overlay">
-        <div class="lds-spinner">
+    <div v-if="visible" class="loader__overlay" :class="customStyle ? customStyle : ''">
+        <div class="lds-spinner" :class="customStyle ? customStyle : ''">
             <div v-for="n in 12" :key="n"></div>
         </div>
     </div>
@@ -11,6 +11,10 @@ const props = defineProps({
     visible: {
         type: Boolean,
         default: false
+    },
+    customStyle: {
+        type: String,
+        default: null,
     }
 })
 
@@ -35,6 +39,14 @@ watch(() => props.visible, (val) => {
     pointer-events: all;
 }
 
+.loader__overlay.form__style {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    backdrop-filter: none;
+}
+
 .lds-spinner {
     display: inline-block;
     position: relative;
@@ -57,6 +69,10 @@ watch(() => props.visible, (val) => {
     height: 18px;
     border-radius: 20%;
     background: #fff;
+}
+
+.lds-spinner.form__style div:after {
+    background: #000000;
 }
 
 .lds-spinner div:nth-child(1) {

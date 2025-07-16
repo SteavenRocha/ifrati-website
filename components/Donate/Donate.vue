@@ -168,6 +168,7 @@ const firstInputRef = ref(null);
 const step = ref('form');
 /* META SELECCIONADA */
 const selectedGoal = ref(null);
+const firstTermsAccepted = ref(false) // PARA LOS TERMINOS DE LOS PRIMEROS FORMULARIOS TANTO GENERAL COMO ESPECIFICO
 
 watch(showModal, async (newVal) => {
     document.body.style.overflow = newVal ? 'hidden' : ''
@@ -188,6 +189,7 @@ watch(showModal, async (newVal) => {
         donationType.value = null
         selectedAmountId.value = props.donationForm.donationDetails[0]?.id
         otherAmount.value = ''
+        firstTermsAccepted.value = false
     }
 })
 
@@ -241,6 +243,16 @@ const handleContinue = async (type) => {
     }
 }
 
+// FUNCION PARA ABRIR LOS FORMUALRIOS RESPECTIVOS, CON LOS TERMINOS ACEPTADOS
+function handleDonationSubmit(donationFormType) {
+    if (donationFormType === 'general') {
+        donationType.value = 'general'
+        showModal.value = true
+    } else {
+        handleContinue('form')
+    }
+}
+
 // NIUBIZ
 // OBTENER DATOS POR DNI
 watch(() => form.documentNumber, async (newDocumentNumber) => {
@@ -283,7 +295,6 @@ async function submitSessionInfo() {
         })
 
         if (response && !response.error) {
-            console.log('Sesión obtenida:', response)
 
             const configuration = {
                 callbackurl: '',
@@ -300,8 +311,6 @@ async function submitSessionInfo() {
             console.log(configuration)
 
             payform.setConfiguration(configuration)
-
-            loading.value = false
 
         } else {
             console.warn('Respuesta no valida:', response)
@@ -331,12 +340,14 @@ async function submitSessionInfo() {
     }
 }) */
 
+const credito = ref(false)
+
 async function initPayform() {
-    resetPayform()
+    resetPayform() // ELIMINAR PENDIENTE
 
     var elementStyles = {
         base: {
-            color: '#3A3A3C',
+            color: 'black',
             fontWeight: 500,
             fontFamily: "'Montserrat', sans-serif",
             fontSize: '16px',
@@ -365,39 +376,122 @@ async function initPayform() {
         return
     }
 
-    // card-number
-    payform.createElement('card-number', {
+    const cardNumber = payform.createElement('card-number', {
         style: elementStyles,
-        placeholder: 'Número de tarjeta'
-    }, 'txtNumeroTarjeta').then(element => {
-        window.cardNumber = element
-        element.on('change', function (data) {
-            // ...
-        })
-    })
+        placeholder: 'Número de Tarjeta'
+    }, 'txtNumeroTarjeta')
 
-    // card-expiry
-    payform.createElement('card-expiry', {
+    const cardExpiry = payform.createElement('card-expiry', {
         style: elementStyles,
-        placeholder: 'MM/YY'
-    }, 'txtFechaVencimiento').then(element => {
-        window.cardExpiry = element
-        element.on('change', function (data) {
-            // ...
-        })
-    })
+        placeholder: 'MM / YY'
+    }, 'txtFechaVencimiento')
 
-    // card-cvc
-    payform.createElement('card-cvc', {
+    const cardCvv = payform.createElement('card-cvc', {
         style: elementStyles,
         placeholder: 'CVC'
-    }, 'txtCvv').then(element => {
-        window.cardCvc = element
-        element.on('change', function (data) {
-            // ...
+    }, 'txtCvv')
+
+    cardNumber.then(element => {
+        // BIN
+        element.on('bin', data => {
+            console.log('BIN:', data)
+        })
+
+        // DCC
+        /*  element.on('dcc', data => {
+             if (data) {
+                 const confirmText = `Usted tiene la opción de pagar su factura en: PEN ${amount.value} o ${data.currencyCodeAlpha} ${data.amount}...
+                                     Tasa de cambio: ${data.exchangeRate}
+                                     MARGEN FX: ${data.markup}`
+ 
+                 dcc.value = confirm(confirmText)
+             }
+         }) */
+
+        element.on('lastFourDigits', (data) => {
+            console.log('lastFourDigits:', data)
+        })
+
+        // INSTALLMENTS
+        element.on('installments', (data) => {
+            const cuotasContainer = document.getElementById('cuotas')
+
+            if (data && channel === 'web' && cuotasContainer) {
+                credito.value = true
+                cuotasContainer.style.display = 'block'
+
+                if (!document.getElementById('selectCuotas')) {
+                    const select = document.createElement('select')
+                    select.id = 'selectCuotas'
+
+                    const optionDefault = document.createElement('option')
+                    optionDefault.value = optionDefault.textContent = 'Sin cuotas'
+                    select.appendChild(optionDefault)
+
+                    data.forEach((item) => {
+                        const option = document.createElement('option')
+                        option.value = option.textContent = item
+                        select.appendChild(option)
+                    })
+
+                    cuotasContainer.appendChild(select)
+                }
+            } else {
+                credito.value = false
+                const cuotas = document.getElementById('selectCuotas')
+                if (cuotas && cuotas.parentNode) {
+                    cuotas.parentNode.removeChild(cuotas)
+                }
+                cuotasContainer.style.display = 'none'
+            }
+        })
+
+        // CHANGE
+        element.on('change', data => {
+            const msjNro = document.getElementById('msjNroTarjeta')
+            const msjFec = document.getElementById('msjFechaVencimiento')
+            const msjCvv = document.getElementById('msjCvv')
+
+            if (msjNro) msjNro.style.display = 'none'
+            if (msjFec) msjFec.style.display = 'none'
+            if (msjCvv) msjCvv.style.display = 'none'
+
+            data?.forEach((d) => {
+                if (d.code === 'invalid_number' && msjNro) {
+                    msjNro.style.display = 'block'
+                    msjNro.innerText = d.message
+                }
+                if (d.code === 'invalid_expiry' && msjFec) {
+                    msjFec.style.display = 'block'
+                    msjFec.innerText = d.message
+                }
+                if (d.code === 'invalid_cvc' && msjCvv) {
+                    msjCvv.style.display = 'block'
+                    msjCvv.innerText = d.message
+                }
+            })
         })
     })
+
+    /* await waitForConsoleMessage('Finished') */
+    loading.value = false
 }
+
+/* function waitForConsoleMessage(targetMessage = 'Finished') {
+    return new Promise((resolve) => {
+        const originalLog = console.log
+
+        console.log = function (...args) {
+            // Detecta el mensaje "Finished"
+            if (args.length > 0 && typeof args[0] === 'string' && args[0].includes(targetMessage)) {
+                console.log = originalLog // restaurar console.log
+                resolve(args)
+            }
+            // Sigue ejecutando el console.log original
+            originalLog.apply(console, args)
+        }
+    })
+} */
 
 function resetPayform() {
     const tarjeta = document.getElementById('txtNumeroTarjeta')
@@ -694,7 +788,7 @@ const isLoading = ref(false)
 
 /* POST PARA ENVIAR FORMULARIO */
 async function handleSubmit() {
-    const documnetType = volunteerForm_.documentType
+    const documentType = volunteerForm_.documentType
     const documentNumber = volunteerForm_.documentNumber
     const name = volunteerForm_.name
     const email = volunteerForm_.email
@@ -708,7 +802,7 @@ async function handleSubmit() {
         const response = await $fetch('/api/sendForm?endpoint=volunteer-inboxes', {
             method: 'POST',
             body: {
-                documnetType: documnetType,
+                documentType: documentType,
                 documentNumber: documentNumber,
                 name: name,
                 email: email,
@@ -723,16 +817,22 @@ async function handleSubmit() {
         if (response === 'success') {
             isLoading.value = true
 
+            const volunteerBody = {
+                documentType: documentType,
+                documentNumber: documentNumber,
+                name: name,
+                email: email,
+                phone: phone,
+                type: type,
+                availability: availability,
+                experience: experience,
+                motivation: motivation
+            };
+
             try {
-                const response = await $fetch('/api/submitEmail?action=submitContactEmail', {
+                const response = await $fetch('/api/submitEmail?action=submitVolunteerEmail', {
                     method: 'POST',
-                    body: {
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        subject: 'SUBJECT DE PRUEBA',
-                        message: 'MESSAGE DE PRUEBA'
-                    },
+                    body: volunteerBody
                 })
 
                 if (response.status === 'success') {
@@ -819,10 +919,23 @@ async function handleSubmit() {
                                 </button>
                             </div>
                         </div>
-                        <div class="button__container">
-                            <button @click="donationType = 'general'; showModal = true">Donar</button>
-                            <p class="button__text">Tu donación es deducible fiscalmente</p>
-                        </div>
+
+                        <form @submit.prevent="handleDonationSubmit(activeTab)">
+                            <div class="button__container">
+                                <div class="form__group checkbox__group">
+                                    <label class="checkbox terms">
+                                        <input type="checkbox" required v-model="firstTermsAccepted" />
+                                        <span>
+                                            Acepto haber leído los
+                                            <a href="/legal/Términos y condiciones" target="_blank">términos y
+                                                <br />condiciones</a>
+                                        </span>
+                                    </label>
+                                </div>
+                                <button type="submit">Donar</button>
+                                <p class="button__text">Tu donación es deducible fiscalmente</p>
+                            </div>
+                        </form>
                     </div>
 
                     <!-- Mostrar mensaje personalizado si hay un monto personalizado -->
@@ -956,6 +1069,7 @@ async function handleSubmit() {
                             </div>
                         </div>
                     </div>
+
                     <div class="form" :style="{
                         '--bg-color-formV': bgColorFormV ?? 'var(--background-color)',
                         '--title-color-formV': titleColorFormV ?? 'var(--title-color)',
@@ -1077,8 +1191,8 @@ async function handleSubmit() {
             '--title-color-form': titleColorForm ?? 'var(--title-color)',
             '--text-color-form': textColorForm ?? 'var(--text-color)',
         }">
-            <span @click="showModal = false"><svg xmlns="http://www.w3.org/2000/svg" width="118.64" height="128"
-                    viewBox="0 0 1216 1312">
+            <span class="close" @click="showModal = false"><svg xmlns="http://www.w3.org/2000/svg" width="118.64"
+                    height="128" viewBox="0 0 1216 1312">
                     <path fill="currentColor"
                         d="M1202 1066q0 40-28 68l-136 136q-28 28-68 28t-68-28L608 976l-294 294q-28 28-68 28t-68-28L42 1134q-28-28-28-68t28-68l294-294L42 410q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294l294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68L880 704l294 294q28 28 28 68" />
                 </svg></span>
@@ -1160,10 +1274,32 @@ async function handleSubmit() {
                                 </button>
                             </div>
                         </div>
-                        <div class="button__container">
+
+                        <form @submit.prevent="handleDonationSubmit(activeTab)">
+                            <div class="button__container">
+                                <div class="form__group checkbox__group">
+                                    <label class="checkbox terms">
+                                        <input type="checkbox" required v-model="firstTermsAccepted" />
+                                        <span>
+                                            Acepto haber leído los
+                                            <a href="/legal/Términos y condiciones" target="_blank">términos y
+                                                <br />condiciones</a>
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <div class="button__container__modal">
+                                    <button class="modal__button cancel" type="button"
+                                        @click="showModal = false">Cancelar</button>
+                                    <button class="modal__button" type="submit">Continuar</button>
+                                </div>
+                                <p class="button__text">Tu donación es deducible fiscalmente</p>
+                            </div>
+                        </form>
+                        <!--  <div class="button__container">
                             <button @click="handleContinue('form')">Donar</button>
                             <p class="button__text">Tu donación es deducible fiscalmente</p>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -1220,10 +1356,10 @@ async function handleSubmit() {
                 <div v-if="step === 'pay'">
 
                     <div v-if="loading" class="loader__container">
-                        <p>Cargando sesión de pago...</p>
+                        <Loader :visible="loading" customStyle="form__style" />
                     </div>
 
-                    <div v-else class="get__data__container">
+                    <div v-show="!loading" class="get__data__container">
                         <h1 class="title__modal">Datos de la tarjeta</h1>
 
                         <form @submit.prevent="handleContinue('review')">
@@ -1245,9 +1381,24 @@ async function handleSubmit() {
                                 <input type="text" id="cvv" v-model="cardForm.cvv" placeholder="123" maxlength="4"
                                     inputmode="numeric" pattern="\d{3,4}" required />
                             </div> -->
-                                <div id="txtNumeroTarjeta"></div>
-                                <div id="txtFechaVencimiento"></div>
-                                <div id="txtCvv"></div>
+                                <div class="row">
+                                    <div id="txtNumeroTarjeta"></div>
+                                    <small id="msjNroTarjeta"></small>
+                                </div>
+
+                                <div class="content__card__data">
+                                    <div class="row">
+                                        <div id="txtFechaVencimiento"></div>
+                                        <small id="msjFechaVencimiento"></small>
+                                    </div>
+                                    <div class="row">
+                                        <div id="txtCvv"></div>
+                                        <small id="msjCvv"></small>
+                                    </div>
+                                </div>
+
+                                <div id="cuotas" style="display: none;"></div>
+
                             </div>
 
                             <div class="button__container__modal">
@@ -1787,7 +1938,7 @@ form {
     gap: 30px;
 }
 
-.modal span {
+.close {
     position: fixed;
     top: 30px;
     right: 50px;
@@ -1799,7 +1950,7 @@ form {
     transition: all .3s ease;
 }
 
-.modal span:hover {
+.close:hover {
     color: var(--primary-color);
     scale: 1.2;
 }
@@ -1816,12 +1967,16 @@ form {
 .loader__container {
     display: flex;
     background-color: white;
-    padding: 30px;
     border-radius: 15px;
+    height: 308px;
 }
 
 label {
     color: var(--text-color-formV);
+}
+
+.terms {
+    color: var(--text-color-form);
 }
 
 input,
@@ -1976,12 +2131,29 @@ br {
 
 #txtNumeroTarjeta,
 #txtFechaVencimiento,
-#txtCvv {
+#txtCvv,
+#cuotas {
     border: 1px solid rgba(185, 185, 185, 0.6);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
     color: #888;
+    overflow: hidden;
+}
+
+.content__card__data {
+    display: flex;
+    gap: 20px;
+}
+
+.row:not(:first-of-type) {
+    max-width: 50%;
+}
+
+small {
+    padding-top: 5px;
+    color: #E25950;
+    font-size: 14px;
 }
 
 #txtCvv {
@@ -2131,7 +2303,7 @@ strong {
     }
 
     .volunteer__section {
-        flex-direction: column;
+        flex-direction: column-reverse;
     }
 }
 
