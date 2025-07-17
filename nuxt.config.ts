@@ -20,15 +20,16 @@ export default defineNuxtConfig({
     strapiApiTokenWrite: process.env.STRAPI_API_TOKEN_WRITE,
     public: {
       strapiApiUrl: process.env.STRAPI_API_URL,
+      nuxtApiUrl: process.env.NUXT_API_URL,
 
       /* NIUBIZ */
       niubizUrlJs: isDev
-        ? process.env.NIUBIZ_URL_JS_DEV
-        : process.env.NIUBIZ_URL_JS_PRD,
+        ? process.env.DEV_NIUBIZ_URL_JS
+        : process.env.PRD_NIUBIZ_URL_JS,
 
       niubizUrlCss: isDev
-        ? process.env.NIUBIZ_URL_CSS_DEV
-        : process.env.NIUBIZ_URL_CSS_PRD,
+        ? process.env.DEV_NIUBIZ_URL_CSS
+        : process.env.PRD_NIUBIZ_URL_CSS,
     },
   },
 })

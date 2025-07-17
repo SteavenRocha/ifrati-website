@@ -1,5 +1,6 @@
 <script setup>
 const config = useRuntimeConfig()
+import { departments } from '@/utils/departments'
 
 useHead({
     link: [
@@ -184,6 +185,7 @@ watch(showModal, async (newVal) => {
         }
     } else {
         clearForm()
+        clearDataMapform()
         step.value = 'form'
         selectedGoal.value = null
         donationType.value = null
@@ -197,8 +199,17 @@ const form = reactive({
     documentType: 'DNI',
     documentNumber: '',
     name: '',
+    lastName: '',
     email: '',
     phone: ''
+})
+
+const dataMapform = reactive({
+    country: 'PE',
+    city: '',
+    address: '',
+    postal: '',
+    department: ''
 })
 
 /* const cardForm = reactive({
@@ -210,15 +221,29 @@ const form = reactive({
 function clearForm() {
     form.documentNumber = ''
     form.name = ''
+    form.lastName = ''
     form.email = ''
     form.phone = ''
 }
 
+function clearDataMapform() {
+    dataMapform.city = '',
+        dataMapform.address = '',
+        dataMapform.postal = '',
+        dataMapform.department = ''
+}
+
 const handleContinue = async (type) => {
     switch (type) {
-        case 'anonymous':
+        case 'form':
             clearForm()
-            step.value = 'pay';
+            step.value = 'form'
+            await nextTick()
+            firstInputRef.value?.focus()
+            break
+        case 'dataMap':
+            /*clearForm() */
+            step.value = 'dataMap';
             break
         case 'pay':
             step.value = 'pay';
@@ -227,17 +252,11 @@ const handleContinue = async (type) => {
             await initPayform()
             break
         case 'review':
-            const ok = await pay();
-            if (ok) {
-                step.value = 'review';
-            }
+            /* LOADER - HASTA QUE SE PROCESE EL PAGO */
+            showModal.value = false;
+            isLoading.value = true;
+            await pay();
             break;
-        case 'form':
-            clearForm()
-            step.value = 'form'
-            await nextTick()
-            firstInputRef.value?.focus()
-            break
         default:
             console.warn('Tipo no reconocido en handleContinue:', type)
     }
@@ -263,8 +282,9 @@ watch(() => form.documentNumber, async (newDocumentNumber) => {
                 params: { dni: newDocumentNumber }
             })
 
-            if (response?.nombreCompleto) {
-                form.name = response.nombreCompleto
+            if (response?.nombres || response?.apellidoPaterno || response?.apellidoMaterno) {
+                form.name = response.nombres
+                form.lastName = response.apellidoPaterno + ' ' + response.apellidoMaterno
             }
 
         } catch (e) {
@@ -274,12 +294,9 @@ watch(() => form.documentNumber, async (newDocumentNumber) => {
 })
 
 // DONACION - REVIEW
-const channel = 'web'
 /* const amount = Number(selectedAmount.value).toFixed(2) */
-const correo = ''
-const id = ''
-
 const loading = ref(true)
+let purchaseNumber = ''
 
 async function submitSessionInfo() {
     try {
@@ -288,21 +305,36 @@ async function submitSessionInfo() {
 
         const response = await $fetch('/api/getSessionInfo', {
             method: 'POST',
-            params: {
+            body: {
                 amount: amount,
-               /*  channel: channel */
+                mdd: {
+                    email: form.email,
+                    dni: form.documentNumber,
+                    type: 'Invitado',
+                    days: '1',
+                },
+                cardDataMap: {
+                    city: dataMapform.city,
+                    country: dataMapform.country,
+                    address: dataMapform.address,
+                    postalCode: dataMapform.postal,
+                    state: dataMapform.department,
+                    phoneNumber: form.phone
+                }
             }
         })
 
         if (response && !response.error) {
 
+            purchaseNumber = response.purchaseNumber // ASIGNAR PURCHARSENUMBER
+
             const configuration = {
-                callbackurl: '',
+                callbackurl: `${config.public.nuxtApiUrl}/api/paymentResult?id=${purchaseNumber}&amount=${amount}&city=${dataMapform.city}&state=${dataMapform.department}&country=${dataMapform.country}&postalCode=${dataMapform.postal}`,
                 sessionkey: response.sessionKey,
-                channel,
+                channel: response.channel,
                 merchantid: response.merchantId,
-                purchasenumber: 2020100901,
-                amount,
+                purchasenumber: purchaseNumber,
+                amount: response.decimalAmount,
                 language: 'es',
                 font: 'https://fonts.googleapis.com/css?family=Montserrat:400&display=swap',
                 // recurrencemaxamount: '8.5'
@@ -340,11 +372,27 @@ async function submitSessionInfo() {
     }
 }) */
 
-const credito = ref(false)
+/* const credito = ref(false) */
+
+/* REFRESCAR LA PAGINA */
+const router = useRouter()
+
+function handleClose() {
+
+    showModal.value = false;
+
+    if (step.value === "pay") {
+        router.go(0)
+    }
+}
+
+/* VARIABLES GLOBALES DE LOS CAMPOS DE LA CARD */
+let cardNumber
+let cardExpiry
+let cardCvv
 
 async function initPayform() {
-    resetPayform() // ELIMINAR PENDIENTE
-
+    /*     resetPayform() // ELIMINAR PENDIENTE */
     var elementStyles = {
         base: {
             color: 'black',
@@ -376,17 +424,17 @@ async function initPayform() {
         return
     }
 
-    const cardNumber = payform.createElement('card-number', {
+    cardNumber = payform.createElement('card-number', {
         style: elementStyles,
         placeholder: 'Número de Tarjeta'
     }, 'txtNumeroTarjeta')
 
-    const cardExpiry = payform.createElement('card-expiry', {
+    cardExpiry = payform.createElement('card-expiry', {
         style: elementStyles,
         placeholder: 'MM / YY'
     }, 'txtFechaVencimiento')
 
-    const cardCvv = payform.createElement('card-cvc', {
+    cardCvv = payform.createElement('card-cvc', {
         style: elementStyles,
         placeholder: 'CVC'
     }, 'txtCvv')
@@ -395,6 +443,10 @@ async function initPayform() {
         // BIN
         element.on('bin', data => {
             console.log('BIN:', data)
+        })
+
+        element.on('lastFourDigits', (data) => {
+            console.log('lastFourDigits:', data)
         })
 
         // DCC
@@ -406,45 +458,41 @@ async function initPayform() {
  
                  dcc.value = confirm(confirmText)
              }
-         }) */
-
-        element.on('lastFourDigits', (data) => {
-            console.log('lastFourDigits:', data)
-        })
+        }) */
 
         // INSTALLMENTS
-        element.on('installments', (data) => {
-            const cuotasContainer = document.getElementById('cuotas')
-
-            if (data && channel === 'web' && cuotasContainer) {
-                credito.value = true
-                cuotasContainer.style.display = 'block'
-
-                if (!document.getElementById('selectCuotas')) {
-                    const select = document.createElement('select')
-                    select.id = 'selectCuotas'
-
-                    const optionDefault = document.createElement('option')
-                    optionDefault.value = optionDefault.textContent = 'Sin cuotas'
-                    select.appendChild(optionDefault)
-
-                    data.forEach((item) => {
-                        const option = document.createElement('option')
-                        option.value = option.textContent = item
-                        select.appendChild(option)
-                    })
-
-                    cuotasContainer.appendChild(select)
-                }
-            } else {
-                credito.value = false
-                const cuotas = document.getElementById('selectCuotas')
-                if (cuotas && cuotas.parentNode) {
-                    cuotas.parentNode.removeChild(cuotas)
-                }
-                cuotasContainer.style.display = 'none'
-            }
-        })
+        /*  element.on('installments', (data) => {
+             const cuotasContainer = document.getElementById('cuotas')
+ 
+             if (data && channel === 'web' && cuotasContainer) {
+                 credito.value = true
+                 cuotasContainer.style.display = 'block'
+ 
+                 if (!document.getElementById('selectCuotas')) {
+                     const select = document.createElement('select')
+                     select.id = 'selectCuotas'
+ 
+                     const optionDefault = document.createElement('option')
+                     optionDefault.value = optionDefault.textContent = 'Sin cuotas'
+                     select.appendChild(optionDefault)
+ 
+                     data.forEach((item) => {
+                         const option = document.createElement('option')
+                         option.value = option.textContent = item
+                         select.appendChild(option)
+                     })
+ 
+                     cuotasContainer.appendChild(select)
+                 }
+             } else {
+                 credito.value = false
+                 const cuotas = document.getElementById('selectCuotas')
+                 if (cuotas && cuotas.parentNode) {
+                     cuotas.parentNode.removeChild(cuotas)
+                 }
+                 cuotasContainer.style.display = 'none'
+             }
+         }) */
 
         // CHANGE
         element.on('change', data => {
@@ -473,6 +521,18 @@ async function initPayform() {
         })
     })
 
+    /* cardCvv.then(element => {
+        element.on('change', function (data) {
+            console.log('CHANGE CVV2: ', data);
+        })
+    });
+
+    cardExpiry.then(element => {
+        element.on('change', function (data) {
+            console.log('CHANGE F.V: ', data);
+        })
+    }); */
+
     /* await waitForConsoleMessage('Finished') */
     loading.value = false
 }
@@ -493,7 +553,7 @@ async function initPayform() {
     })
 } */
 
-function resetPayform() {
+/* function resetPayform() {
     const tarjeta = document.getElementById('txtNumeroTarjeta')
     const fecha = document.getElementById('txtFechaVencimiento')
     const cvv = document.getElementById('txtCvv')
@@ -505,37 +565,44 @@ function resetPayform() {
     window.cardNumber = null
     window.cardExpiry = null
     window.cardCvc = null
-}
+} */
 
-async function pay() {
+/* LOADER PARA DONACIONES Y ENVIO DE EMAIL */
+const isLoading = ref(false)
+
+/* ************************* */
+/* // OPCION SIN CALLBACKURL */
+/* ************************* */
+/* async function pay() {
     // Validación de elementos de tarjeta
-    if (!window.cardNumber || !window.cardExpiry || !window.cardCvc) {
+    if (!cardNumber || !cardExpiry || !cardCvv) {
         console.error('❌ Campos de tarjeta no están definidos');
-        alert('Hubo un problema al cargar el formulario de tarjeta. Recarga la página.');
         return false;
     }
 
     // Datos del titular de tarjeta
     const data = {
-        name: 'Juan',
-        lastName: 'Perez',
-        email: 'jperez@test.com',
-        alias: 'donacion-prueba-01'
+        name: form.name,
+        lastName: form.lastName,
+        email: form.email,
+        phoneNumber: form.phone,
+        installment: 1,
+        alias: 'DONACIONWEB'
     };
 
     return new Promise((resolve) => {
-        window.payform.createToken(
-            [window.cardNumber, window.cardExpiry, window.cardCvc],
+        payform.createToken(
+            [cardNumber, cardExpiry, cardCvv],
             data
         ).then(async (tokenResponse) => {
-            if (!tokenResponse?.transactionToken) {
+            if (!tokenResponse) {
                 console.warn('⚠️ Token no generado:', tokenResponse);
-                alert('No se pudo generar el token de pago. Verifica los datos e inténtalo de nuevo.');
                 resolve(false);
                 return;
             }
 
-            console.log('✅ Token generado:', tokenResponse.transactionToken);
+            console.log('✅ Token generado:', tokenResponse);
+            console.log('✅ purcharseNumber:', purchaseNumber);
 
             // Obtener autorización
             try {
@@ -543,43 +610,87 @@ async function pay() {
 
                 const response = await $fetch('/api/getAuthorization', {
                     method: 'POST',
-                    params: {
+                    body: {
                         amount: amount,
-                        channel: channel,
-                        tokenId: tokenResponse.transactionToken
-                    }
+                        purchaseNumber: purchaseNumber,
+                        tokenId: tokenResponse.transactionToken,
+                        locationDataMap: {
+                            urlAddress: "https://ifrati.org.pe",
+                            city: dataMapform.city,
+                            state: dataMapform.department,
+                            country: dataMapform.country,
+                            postalCode: dataMapform.postal,
+                        }
+                    },
                 });
 
                 if (response && !response.error) {
+
                     console.log('✅ Autorización obtenida:', response);
 
-                    const transactionData = {
-                        state: response.authorization.dataMap.ACTION_DESCRIPTION,
-                        number: response.authorization.order.purchaseNumber,
-                        card: response.authorization.dataMap.CARD,
-                    }
+                    isLoading.value = false;
 
-                    await submitDonationEmail(transactionData);
+                    //const transactionData = {
+                    //    state: response.authorization.dataMap.ACTION_DESCRIPTION,
+                    //    number: response.authorization.order.purchaseNumber,
+                    //    card: response.authorization.dataMap.CARD,
+                    //}
+
+                    //await submitDonationEmail(transactionData);
 
                     resolve(true);
                 } else {
-                    console.warn('⚠️ Respuesta inválida al autorizar:', response);
-                    alert('La transacción no pudo ser autorizada.');
+                    console.warn('⚠️ Respuesta inválida al autorizar:', response.details);
+                    isLoading.value = false;
                     resolve(false);
                 }
 
             } catch (authError) {
                 console.error('❌ Error al obtener autorización:', authError);
-                alert('Error al procesar la autorización. Inténtalo más tarde.');
                 resolve(false);
             }
 
         }).catch((tokenError) => {
             console.error('❌ Error al generar token:', tokenError);
-            alert('Por favor, completa todos los campos correctamente.');
             resolve(false);
         });
     });
+} */
+
+/* ************************* */
+/* // OPCION con CALLBACKURL */
+/* ************************* */
+async function pay() {
+    // Validación de elementos de tarjeta
+    if (!cardNumber || !cardExpiry || !cardCvv) {
+        console.error('❌ Campos de tarjeta no están definidos');
+        return false;
+    }
+
+    // Datos del titular de tarjeta
+    const data = {
+        name: form.name,
+        lastName: form.lastName,
+        email: form.email,
+        phoneNumber: form.phone,
+        installment: 1,
+        alias: 'DONACIONWEB'
+    };
+
+    try {
+        // Esta función ya redirige automáticamente si configuraste callbackurl
+        payform.createToken(
+            [cardNumber, cardExpiry, cardCvv],
+            data
+        );
+
+        // Puedes mostrar un loader o algo mientras redirige
+        /* isLoading.value = true; */
+
+    } catch (tokenError) {
+        console.error('❌ Error al generar token:', tokenError);
+        isLoading.value = false;
+    }
 }
 
 async function submitDonationEmail(transactionData) {
@@ -784,7 +895,7 @@ watch(activeTab, async (newVal) => {
 const modalVisible = ref(false)
 const modalEmail = ref('')
 const modalType = ref('success')
-const isLoading = ref(false)
+/* const isLoading = ref(false) */
 
 /* POST PARA ENVIAR FORMULARIO */
 async function handleSubmit() {
@@ -1110,7 +1221,7 @@ async function handleSubmit() {
                                 </div>
 
                                 <div class="form__group">
-                                    <label for="phone">Celular (Opcional)</label>
+                                    <label for="phone">Celular</label>
                                     <input type="tel" id="phone" v-model="volunteerForm_.phone"
                                         placeholder="+51 987654321" inputmode="numeric" pattern="[0-9]*"
                                         @input="volunteerForm_.phone = volunteerForm_.phone.replace(/\D/g, '')" />
@@ -1177,22 +1288,22 @@ async function handleSubmit() {
                     </div>
                 </div>
 
-                <Loader :visible="isLoading" />
-
                 <ModalMessage :visible="modalVisible" :email="modalEmail" :type="modalType"
                     @update:visible="modalVisible = $event" />
             </div>
         </div>
 
+        <Loader :visible="isLoading" />
+
         <!-- SECCION DE MODALES -->
         <!-- Modal para pedir datos -->
-        <div v-if="showModal" class="modal" :style="{
+        <div v-show="showModal" class="modal" :style="{
             '--bg-color-form': bgColorForm ?? 'var(--background-color)',
             '--title-color-form': titleColorForm ?? 'var(--title-color)',
             '--text-color-form': textColorForm ?? 'var(--text-color)',
         }">
-            <span class="close" @click="showModal = false"><svg xmlns="http://www.w3.org/2000/svg" width="118.64"
-                    height="128" viewBox="0 0 1216 1312">
+            <span class="close" @click="handleClose"><svg xmlns="http://www.w3.org/2000/svg" width="118.64" height="128"
+                    viewBox="0 0 1216 1312">
                     <path fill="currentColor"
                         d="M1202 1066q0 40-28 68l-136 136q-28 28-68 28t-68-28L608 976l-294 294q-28 28-68 28t-68-28L42 1134q-28-28-28-68t28-68l294-294L42 410q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294l294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68L880 704l294 294q28 28 28 68" />
                 </svg></span>
@@ -1304,9 +1415,9 @@ async function handleSubmit() {
                 </div>
 
                 <div v-if="step === 'form'" class="get__data__container">
-                    <h1 class="title__modal">Introduce tus datos para continuar</h1>
+                    <h1 class="title__modal">Información de facturación</h1>
 
-                    <form @submit.prevent="handleContinue('pay')">
+                    <form @submit.prevent="handleContinue('dataMap')">
                         <div class="data__form">
                             <div class="form__row">
                                 <div class="form__group">
@@ -1320,15 +1431,23 @@ async function handleSubmit() {
                                     <label for="documentNumber">Número de Documento</label>
                                     <input type="text" id="documentNumber" v-model="form.documentNumber"
                                         ref="firstInputRef" placeholder="12345678" required inputmode="numeric"
-                                        pattern="[0-9]*"
+                                        pattern="[0-9]*" maxlength="8" minlength="8"
                                         @input="form.documentNumber = form.documentNumber.replace(/\D/g, '')" />
                                 </div>
                             </div>
 
-                            <div class="form__group">
-                                <label for="name">Nombre</label>
-                                <input type="text" id="name" v-model="form.name" placeholder="Tu Nombre Completo"
-                                    required disabled />
+                            <div class="form__row">
+                                <div class="form__group">
+                                    <label for="name">Nombres</label>
+                                    <input type="text" id="name" v-model="form.name" placeholder="Nombre Completo"
+                                        required disabled />
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="lastName">Apellidos</label>
+                                    <input type="text" id="lastName" v-model="form.lastName" placeholder="Apellidos"
+                                        required disabled />
+                                </div>
                             </div>
 
                             <div class="form__group">
@@ -1338,10 +1457,13 @@ async function handleSubmit() {
                             </div>
 
                             <div class="form__group">
-                                <label for="phone">Celular (Opcional)</label>
-                                <input type="tel" id="phone" v-model="form.phone" placeholder="+51 987654321"
-                                    inputmode="numeric" pattern="[0-9]*"
-                                    @input="form.phone = form.phone.replace(/\D/g, '')" />
+                                <label for="phone">Celular</label>
+                                <div class="phone__input__wrapper">
+                                    <span class="phone__prefix">+51</span>
+                                    <input type="tel" id="phone" v-model="form.phone" placeholder="987654321"
+                                        inputmode="numeric" pattern="[0-9]*" required maxlength="9" minlength="9"
+                                        @input="form.phone = form.phone.replace(/\D/g, '')" />
+                                </div>
                             </div>
                         </div>
 
@@ -1353,7 +1475,61 @@ async function handleSubmit() {
                     </form>
                 </div>
 
-                <div v-if="step === 'pay'">
+                <div v-if="step === 'dataMap'" class="get__data__container">
+                    <h1 class="title__modal">Información de facturación</h1>
+
+                    <form @submit.prevent="handleContinue('pay')">
+                        <div class="data__form">
+                            <div class="form__row">
+                                <div class="form__group">
+                                    <label for="country">País</label>
+                                    <select id="country" v-model="dataMapform.country" required disabled>
+                                        <option value="PE">PERÚ</option>
+                                    </select>
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="department">Departamento</label>
+                                    <select v-model="dataMapform.department" id="department" required>
+                                        <option value="">Selecciona un departamento</option>
+                                        <option v-for="d in departments" :key="d.code" :value="d.code">
+                                            {{ d.name }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form__row">
+                                <div class="form__group">
+                                    <label for="city">Distrito / Ciudad</label>
+                                    <input type="text" id="city" v-model="dataMapform.city"
+                                        placeholder="Ingresa tu distrito / ciudad" required />
+                                </div>
+
+                                <div class="form__group">
+                                    <label for="postal">Codigo postal</label>
+                                    <input type="text" id="postal" v-model="dataMapform.postal"
+                                        placeholder="Ingresa tu codigo postal" required />
+                                </div>
+                            </div>
+
+                            <div class="form__group">
+                                <label for="address">Dirección</label>
+                                <input type="text" id="address" v-model="dataMapform.address"
+                                    placeholder="Ingresa tu dirección" required />
+                            </div>
+
+                        </div>
+
+                        <div class="button__container__modal">
+                            <button class="modal__button cancel" type="button"
+                                @click="showModal = false">Cancelar</button>
+                            <button class="modal__button" type="submit">Continuar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div v-show="step === 'pay'">
 
                     <div v-if="loading" class="loader__container">
                         <Loader :visible="loading" customStyle="form__style" />
@@ -1397,27 +1573,21 @@ async function handleSubmit() {
                                     </div>
                                 </div>
 
-                                <div id="cuotas" style="display: none;"></div>
+                                <!--  <div id="cuotas" style="display: none;"></div> -->
 
                             </div>
 
                             <div class="button__container__modal">
+                                <button class="modal__button cancel" type="button"
+                                    @click="handleClose">Cancelar</button>
                                 <button class="modal__button" type="submit">Continuar</button>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <!-- Paso 2: Vista anónima -->
-                <div v-else-if="step === 'anonymous'" class="get__data__container">
-                    {{ selectedFrequency }}
-                    <p>Monto seleccionado: S/ {{ selectedAmount.toFixed(2) }}</p>
-                    <h1 class="title__modal">Completar donación</h1>
-                    <button class="modal__button" @click="submitDonation">Donar</button>
-                </div>
-
                 <!-- Paso 3: Vista con revisión de datos -->
-                <div v-else-if="step === 'review'" class="get__data__container">
+                <!-- <div v-else-if="step === 'review'" class="get__data__container">
                     {{ selectedFrequency }}
                     <p>Monto seleccionado: S/ {{ selectedAmount.toFixed(2) }}</p>
                     <h1 class="title__modal">Completar donación</h1>
@@ -1425,7 +1595,7 @@ async function handleSubmit() {
                     <p><strong>Email:</strong> {{ form.email }}</p>
                     <p><strong>Celular:</strong> {{ form.phone }}</p>
                     <button class="modal__button" @click="submitDonation">Donar</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
@@ -2065,9 +2235,30 @@ br {
     gap: 5px;
 }
 
+.phone__input__wrapper {
+    display: flex;
+}
+
+.phone__prefix {
+    width: auto;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid rgba(185, 185, 185, 0.6);
+    border-right: none;
+    padding: 10px;
+    color: #888;
+    background-color: #0000000e;
+}
+
 .button__container__modal {
     display: flex;
     gap: 20px;
+}
+
+#phone {
+    border-radius: 0 10px 10px 0;
 }
 
 .modal__button {
@@ -2131,14 +2322,13 @@ br {
 
 #txtNumeroTarjeta,
 #txtFechaVencimiento,
-#txtCvv,
-#cuotas {
+#txtCvv {
     border: 1px solid rgba(185, 185, 185, 0.6);
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
     color: #888;
-    overflow: hidden;
+    /*  overflow: hidden; */
 }
 
 .content__card__data {
@@ -2146,9 +2336,9 @@ br {
     gap: 20px;
 }
 
-.row:not(:first-of-type) {
+/* .row:not(:first-of-type) {
     max-width: 50%;
-}
+} */
 
 small {
     padding-top: 5px;
@@ -2346,6 +2536,10 @@ strong {
 
     .card__characteristics {
         flex-direction: column;
+    }
+
+    br {
+        display: block;
     }
 }
 

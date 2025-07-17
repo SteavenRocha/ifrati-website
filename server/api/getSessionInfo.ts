@@ -1,23 +1,27 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
-  const query = getQuery(event)
+  const body = await readBody(event)
 
-  const amount = query.amount
-/*   const channel = query.channel */
+  const { amount, mdd, cardDataMap } = body
 
-  if (!amount) {
+  if (!amount || !mdd || !cardDataMap ) {
     return {
-      error: 'Faltan parámetros requeridos: amount',
+      error: 'Faltan parámetros requeridos',
     }
   }
 
-  const url = `${config.public.strapiApiUrl}/api/niubiz/getSessionInfo?amount=${amount}`
+  const url = `${config.public.strapiApiUrl}/api/niubiz/getSessionInfo`
 
   try {
     const result = await $fetch(url, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${config.strapiApiTokenWrite}`,
+      },
+      body: {
+        amount,
+        mdd,
+        cardDataMap
       },
     })
 

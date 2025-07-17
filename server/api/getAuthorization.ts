@@ -1,18 +1,16 @@
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
-    const query = getQuery(event)
+    const body = await readBody(event)
 
-    const amount = query.amount
-    const channel = query.channel
-    const tokenId = query.tokenId
+    const { amount, purchaseNumber, tokenId, locationDataMap } = body
 
-    if (!amount || !channel || !tokenId) {
+    if (!amount || !purchaseNumber || !tokenId || !locationDataMap) {
         return {
-            error: 'Faltan parámetros requeridos: amount, channel y/o tokenId',
+            error: 'Faltan parámetros requeridos',
         }
     }
 
-    const url = `${config.public.strapiApiUrl}/api/niubiz/getAuthorization?amount=${amount}&channel=${channel}&tokenId=${tokenId}`
+    const url = `${config.public.strapiApiUrl}/api/niubiz/getAuthorization`
 
     try {
         const result = await $fetch(url, {
@@ -20,14 +18,24 @@ export default defineEventHandler(async (event) => {
             headers: {
                 Authorization: `Bearer ${config.strapiApiTokenWrite}`,
             },
+            body: {
+                amount,
+                purchaseNumber,
+                tokenId,
+                locationDataMap
+            },
         })
 
         return result
     } catch (error: any) {
-        console.error('[POST AUTHORIZATION INFO] Error:', error?.response || error)
-        throw createError({
-            statusCode: 500,
-            statusMessage: 'Error al obtener la autorización',
-        })
+        const fullError = error?.response?._data || error?.data || error
+
+        console.error('[POST AUTHORIZATION INFO] Error completo:', fullError)
+
+        return {
+            error: true,
+            message: 'Error al obtener authorization',
+            details: fullError,
+        }
     }
 })
