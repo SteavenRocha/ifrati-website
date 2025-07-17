@@ -3,15 +3,15 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
 
   const amount = query.amount
-  const channel = query.channel
+/*   const channel = query.channel */
 
-  if (!amount || !channel) {
+  if (!amount) {
     return {
-      error: 'Faltan parámetros requeridos: amount y/o channel',
+      error: 'Faltan parámetros requeridos: amount',
     }
   }
 
-  const url = `${config.public.strapiApiUrl}/api/niubiz/getSessionInfo?amount=${amount}&channel=${channel}`
+  const url = `${config.public.strapiApiUrl}/api/niubiz/getSessionInfo?amount=${amount}`
 
   try {
     const result = await $fetch(url, {
