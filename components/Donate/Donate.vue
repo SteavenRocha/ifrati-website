@@ -164,6 +164,7 @@ const textColorCard = props.goalsForm?.cardStyle?.textColor ?? null
 /* MODALES */
 /* MODAL PARA PEDIR DATOS */
 const donationType = ref(null) // 'general' o 'meta'
+const productDescription = ref(null)
 const showModal = ref(false);
 const firstInputRef = ref(null);
 const step = ref('form');
@@ -177,10 +178,12 @@ watch(showModal, async (newVal) => {
     if (newVal) {
         if (donationType.value === 'general') {
             selectedGoal.value = null
+            productDescription.value = 'DONACIÓN SOLIDARIA'
             await nextTick()
             firstInputRef.value?.focus()
         } else if (donationType.value === 'meta') {
             step.value = 'amount'
+            productDescription.value = 'META ESPECÍFICA'
             otherAmount.value = ''
         }
     } else {
@@ -192,6 +195,7 @@ watch(showModal, async (newVal) => {
         selectedAmountId.value = props.donationForm.donationDetails[0]?.id
         otherAmount.value = ''
         firstTermsAccepted.value = false
+        productDescription.value = null
     }
 })
 
@@ -329,12 +333,12 @@ async function submitSessionInfo() {
             purchaseNumber = response.purchaseNumber // ASIGNAR PURCHARSENUMBER
 
             const configuration = {
-                callbackurl: `${config.public.nuxtApiUrl}/api/paymentResult?id=${purchaseNumber}&amount=${amount}&city=${dataMapform.city}&state=${dataMapform.department}&country=${dataMapform.country}&postalCode=${dataMapform.postal}`,
+                callbackurl: `${config.public.nuxtApiUrl}/api/paymentResult?id=${purchaseNumber}`,
                 sessionkey: response.sessionKey,
                 channel: response.channel,
                 merchantid: response.merchantId,
                 purchasenumber: purchaseNumber,
-                amount: response.decimalAmount,
+                amount: response.amount,
                 language: 'es',
                 font: 'https://fonts.googleapis.com/css?family=Montserrat:400&display=swap',
                 // recurrencemaxamount: '8.5'
@@ -684,12 +688,74 @@ async function pay() {
             data
         );
 
+        submitDonation()
         // Puedes mostrar un loader o algo mientras redirige
         /* isLoading.value = true; */
 
     } catch (tokenError) {
         console.error('❌ Error al generar token:', tokenError);
         isLoading.value = false;
+    }
+}
+
+async function submitDonation() {
+    try {
+        const response = await $fetch('/api/sendForm?endpoint=donations', {
+            method: 'POST',
+            body: {
+                transactionStatus: null,
+                purchaseNumber: purchaseNumber,
+                productDescription: productDescription.value,
+                donationType: donationType.value.toUpperCase(),
+                frequency: 'UNICA',
+                type: 'Invitado',
+                documentType: form.documentType,
+                documentNumber: form.documentNumber,
+                name: form.name,
+                lastName: form.lastName,
+                email: form.email,
+                phone: form.phone,
+                goal: selectedGoal.value ? selectedGoal.value.documentId : null,
+                amount: selectedAmount.value,
+                currency: 'PEN',
+                country: dataMapform.country,
+                state: dataMapform.department,
+                city: dataMapform.city,
+                address: dataMapform.address,
+                postalCode: dataMapform.postal,
+                card: null,
+                brand: null,
+                transactionDate: null,
+                actionDescription: null
+            },
+        })
+
+        if (response === 'success' && !response.error) {
+            console.log("donacion registrada:", response)
+        }
+
+        /* if (response === 'success' && selectedGoal.value) {
+
+            const newTotalCollected = selectedAmount.value + selectedGoal.value.totalCollected
+            const id = selectedGoal.value.documentId
+            try {
+                const response = await $fetch(`/api/sendForm?endpoint=goals/${id}`, {
+                    method: 'PUT',
+                    body: {
+                        totalCollected: newTotalCollected,
+                    },
+                })
+                if (response === 'success') {
+                    
+                }
+            } catch (error) {
+                
+            }
+        } else {
+
+        } */
+    } catch (error) {
+        console.error('Error al enviar:', error)
     }
 }
 
@@ -772,60 +838,6 @@ async function submitDonationEmail(transactionData) {
         }
     }
 }
-
-/* async function submitDonation() {
-    try {
-        const response = await $fetch('/api/sendForm?endpoint=donations', {
-            method: 'POST',
-            body: {
-                donor: form.name || 'Anónimo',
-                email: form.email || null,
-                phone: form.phone || null,
-                frequency: selectedFrequency.value,
-                amount: selectedAmount.value,
-                donationType: donationType.value,
-                donationForm: step.value === 'anonymous' ? 'anonymous' : 'personal',
-                goal: selectedGoal.value ? selectedGoal.value.documentId : null,
-            },
-        })
-
-        if (response === 'success' && selectedGoal.value) {
-
-            const newTotalCollected = selectedAmount.value + selectedGoal.value.totalCollected
-            const id = selectedGoal.value.documentId
-            try {
-                const response = await $fetch(`/api/sendForm?endpoint=goals/${id}`, {
-                    method: 'PUT',
-                    body: {
-                        totalCollected: newTotalCollected,
-                    },
-                })
-                if (response === 'success') {
-                    clearForm()
-                    showModal.value = false
-                    //modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!'
-                    // modalType.value = 'success'
-                    // modalVisible.value = true 
-                }
-            } catch (error) {
-                clearForm()
-                showModal.value = false
-                //modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
-                 //modalType.value = 'error'
-                 //modalVisible.value = true
-            }
-        } else {
-            clearForm()
-            showModal.value = false
-        }
-    } catch (error) {
-        clearForm()
-        showModal.value = false
-        // modalMessage.value = 'Error al enviar el mensaje, intentelo mas tarde'
-        // modalType.value = 'error'
-        // modalVisible.value = true
-    }
-} */
 
 /* VOLUNTARIADO */
 /* CARD STYLES */

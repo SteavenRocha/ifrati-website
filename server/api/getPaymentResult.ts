@@ -2,15 +2,15 @@ export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const query = getQuery(event)
 
-  const dni = query.dni
+  const id = query.id
 
-  if (!dni) {
+  if (!id) {
     return {
-      error: 'Faltan parámetros requeridos: DNI',
+      error: 'Faltan parámetros requeridos: id',
     }
   }
 
-  const url = `${config.public.strapiApiUrl}/api/niubiz/getDataDni?dni=${dni}`
+  const url = `${config.public.strapiApiUrl}/api/donations?filters[purchaseNumber][$eq]=${id}`
 
   try {
     const result = await $fetch(url, {
@@ -22,10 +22,10 @@ export default defineEventHandler(async (event) => {
 
     return result
   } catch (error: any) {
-    console.error('[GET DATA DNI INFO] Error:', error?.response || error)
+    console.error('[GET PAYMENT RESULT INFO] Error:', error?.response || error)
     throw createError({
       statusCode: 500,
-      statusMessage: 'Error al obtener datos del DNI',
+      statusMessage: 'Error al obtener datos del Payment',
     })
   }
 })
