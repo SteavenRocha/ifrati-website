@@ -14,12 +14,12 @@ export default defineEventHandler(async (event) => {
         return sendRedirect(event, errorRedirect)
     }
 
-    /* OBTENEMOS EL REGISTRO DE LA "NUEVA" DONACION*/
-    const url = `${config.public.strapiApiUrl}/api/donations?filters[purchaseNumber][$eq]=${id}`
+    /* OBTENEMOS EL REGISTRO DE LA "NUEVA" DONACION */
+    const url = `${config.public.strapiApiUrl}/api/donations?filters[purchaseNumber][$eq]=${id}&populate=goal`
 
     try {
         const response: any = await $fetch(url, {
-            method: 'GET', // Usa el método detectado
+            method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
@@ -93,6 +93,38 @@ export default defineEventHandler(async (event) => {
                             return sendRedirect(event, `${redirectUrl}&status=Authorized`)
                         } else if (response && !response.error && donationType === 'META') {  // REGISTRAR MONTO A LA META
                             console.log("Siguiente paso registrar el monto de la meta", response)
+
+                            // DATOS DE LA META
+                            const documentIdGoal = item.goal.documentId
+                            const totalCollected = item.goal.totalCollected
+
+                            const url = `${config.public.strapiApiUrl}/api/goals/${documentIdGoal}`
+                            const newTotalCollected = amount + totalCollected
+
+                            try {
+                                const response: any = await $fetch(url, {
+                                    method: 'PUT',
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                        'Content-Type': 'application/json',
+                                    }, body:
+                                    {
+                                        data: {
+                                            totalCollected: Number(newTotalCollected).toFixed(2)
+                                        }
+                                    },
+                                })
+                                /* if (response) {
+
+                                } */
+                            } catch (error: any) {
+                                console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+                                throw createError({
+                                    statusCode: 500,
+                                    statusMessage: 'Error al enviar datos del totalColleted al backend',
+                                })
+                            }
+
                             return sendRedirect(event, `${redirectUrl}&status=Authorized`)
                         }
                     } catch (error: any) {
@@ -109,7 +141,7 @@ export default defineEventHandler(async (event) => {
                     const errorRedirect = `${redirectUrl}&status=error&reason=${reason}`
                     return sendRedirect(event, errorRedirect)
 
-                    /* REGISTRAMOS OBJECIONES DE LA DONACION*/
+                    /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
                 }
             } catch (error: any) {
                 const fullError = error?.response?._data || error?.data || error
@@ -118,6 +150,8 @@ export default defineEventHandler(async (event) => {
                 const reason = encodeURIComponent(fullError?.error?.data?.ACTION_DESCRIPTION || 'Error inesperado')
                 const errorRedirect = `${redirectUrl}&status=error&reason=${reason}`
                 return sendRedirect(event, errorRedirect)
+
+                /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
             }
         }
     } catch (error: any) {

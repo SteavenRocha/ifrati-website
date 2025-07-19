@@ -13,6 +13,7 @@
     "@fontsource-variable/merriweather-sans": "^5.2.5",
     "@fontsource-variable/roboto": "^5.2.5",
     "@pinia/nuxt": "^0.11.0",
+    "@vueuse/core": "^13.5.0",
     "github-markdown-css": "^5.8.1",
     "marked": "^15.0.11",
     "nuxt": "^3.16.2",

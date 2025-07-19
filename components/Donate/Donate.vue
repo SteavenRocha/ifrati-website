@@ -1,6 +1,7 @@
 <script setup>
 const config = useRuntimeConfig()
 import { departments } from '@/utils/departments'
+import { useStorage } from '@vueuse/core'
 
 useHead({
     link: [
@@ -83,12 +84,6 @@ const selectedDonation = computed(() =>
     props.donationForm.donationDetails.find(d => d.id === selectedAmountId.value)
 )
 
-watch(otherAmount, (newVal) => {
-    if (newVal !== '') {
-        selectedAmountId.value = null
-    }
-})
-
 // Computed para obtener el monto final
 const selectedAmount = computed(() => {
     if (otherAmount.value !== '') {
@@ -156,6 +151,11 @@ const getProgress = (collected, goal) => {
     return Math.min(100, Math.round((total / goal) * 100))
 }
 
+/* const newGetProgress = (donationAmount, goal) => {
+    if (!goal || goal === 0) return 0
+    return (donationAmount / goalgoalAmount) * 100
+} */
+
 /* CARD STYLES */
 const bgColorCard = props.goalsForm?.cardStyle?.backgroundColor ?? null
 const titleColorCard = props.goalsForm?.cardStyle?.titleColor ?? null
@@ -171,9 +171,15 @@ const step = ref('form');
 /* META SELECCIONADA */
 const selectedGoal = ref(null);
 const firstTermsAccepted = ref(false) // PARA LOS TERMINOS DE LOS PRIMEROS FORMULARIOS TANTO GENERAL COMO ESPECIFICO
+const percentage = ref(null);
+const percentageProgress = ref(null);
 
 watch(showModal, async (newVal) => {
     document.body.style.overflow = newVal ? 'hidden' : ''
+
+    if (otherAmount.value) {
+        selectedAmountId.value = null
+    }
 
     if (newVal) {
         if (donationType.value === 'general') {
@@ -185,6 +191,21 @@ watch(showModal, async (newVal) => {
             step.value = 'amount'
             productDescription.value = 'META ESPECÍFICA'
             otherAmount.value = ''
+            percentage.value = getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal)
+            percentageProgress.value = getProgress(selectedAmount.value, selectedGoal.value.goal)
+
+            watch(otherAmount, (newVal) => {
+                if (newVal !== '' && selectedGoal.value && selectedGoal.value.goal) {
+                    selectedAmountId.value = props.donationForm.donationDetails[0]?.id
+                    percentageProgress.value = getProgress(selectedAmount.value, selectedGoal.value.goal)
+                }
+            })
+
+            watch(selectedDonation, (newVal) => {
+                if (newVal !== '' && selectedGoal.value && selectedGoal.value.goal) {
+                    percentageProgress.value = getProgress(selectedAmount.value, selectedGoal.value.goal)
+                }
+            })
         }
     } else {
         clearForm()
@@ -661,8 +682,28 @@ const isLoading = ref(false)
     });
 } */
 
+// USO DEL LOCALSTORAGE PARA ALMACENAR DATOS DE LA DONACION
+const theDefault = {
+    donationType: null,
+    img: null,
+    impact: null,
+    description: null,
+    sanitizedDetails: null,
+    aditionalImpactTitle: null,
+    aditionalImpactDescription: null,
+    metaTitle: null,
+    metaDescription: null,
+    metaImg: null,
+    metaProgress: null,
+    metaCollected: null,
+    metaGoal: null
+}
+
+const donationInfo = useStorage('donationInfo', theDefault)
+/* donationInfo.value = null */
+
 /* ************************* */
-/* // OPCION con CALLBACKURL */
+/* // OPCION CON CALLBACKURL */
 /* ************************* */
 async function pay() {
     // Validación de elementos de tarjeta
@@ -689,6 +730,53 @@ async function pay() {
         );
 
         submitDonation()
+
+        if (donationType.value === 'general') {
+            if (selectedDonation.value && !otherAmount.value) {
+                // ENVIA DATOS DEL IMPACTO POR EL LOCALSTORAGE
+                const sanitizedDetails = selectedDonation.value.detailsCard.map(item => ({
+                    title: item.title,
+                    description: item.description
+                }));
+
+                donationInfo.value = {
+                    donationType: 0,
+                    img: getResource(selectedDonation.value.impact.resource?.url).imageUrl,
+                    impact: selectedDonation.value.impact.title,
+                    description: selectedDonation.value.impact.description,
+                    sanitizedDetails: sanitizedDetails,
+                    aditionalImpactTitle: selectedDonation.value.aditionalImpact.title,
+                    aditionalImpactDescription: selectedDonation.value.aditionalImpact.description,
+                }
+            } else {
+                donationInfo.value = {
+                    donationType: 1,
+                    img: null,
+                    impact: null,
+                    description: null,
+                    sanitizedDetails: null,
+                    aditionalImpactTitle: null,
+                    aditionalImpactDescription: null,
+                }
+            }
+        } else {
+            donationInfo.value = {
+                donationType: 2,
+                img: null,
+                impact: null,
+                description: null,
+                sanitizedDetails: null,
+                aditionalImpactTitle: null,
+                aditionalImpactDescription: null,
+                customDonation: null,
+                metaTitle: selectedGoal.value.title,
+                metaDescription: selectedGoal.value.description,
+                metaImg: getResource(selectedGoal.value.image?.url).imageUrl,
+                metaProgress: getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal),
+                metaCollected: selectedGoal.value.totalCollected,
+                metaGoal: selectedGoal.value.goal,
+            }
+        }
         // Puedes mostrar un loader o algo mientras redirige
         /* isLoading.value = true; */
 
@@ -900,6 +988,7 @@ watch(activeTab, async (newVal) => {
         firstInputRefVolunteer.value?.focus()
     } else {
         clearVolunteerForm()
+        selectedAmountId.value = props.donationForm.donationDetails[0]?.id
     }
 })
 
@@ -1282,7 +1371,9 @@ async function handleSubmit() {
                                         {{ volunteerForm_.motivation.length }} / 4000 caracteres
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="button__container__volunteer">
                                 <div class="form__group checkbox__group">
                                     <label class="checkbox">
                                         <input type="checkbox" v-model="volunteerForm_.termsAccepted" required />
@@ -1290,7 +1381,6 @@ async function handleSubmit() {
                                                 target="_blank">términos y <br> condiciones</a></span>
                                     </label>
                                 </div>
-
                                 <Button type="submit" :text="volunteerForm.form.button.text"
                                     :style="volunteerForm.form.button.style"
                                     :icon-url="getResource(volunteerForm.form.button.icon?.url).imageUrl"
@@ -1353,8 +1443,10 @@ async function handleSubmit() {
                                         </div>
                                     </div>
                                     <div class="progress__bar">
-                                        <div class="progress__fill"
-                                            :style="{ width: getProgress(selectedGoal.totalCollected, selectedGoal.goal) + '%' }">
+                                        <div class="progress__fill" :style="{ width: percentage + '%' }">
+                                        </div>
+                                        <div class="possible__amount"
+                                            :style="{ width: percentage + percentageProgress + '%' }">
                                         </div>
                                     </div>
                                 </div>
@@ -1826,6 +1918,12 @@ section {
     filter: brightness(90%);
 }
 
+.button__container__volunteer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .button__text {
     width: auto;
     font-size: .8rem;
@@ -2057,6 +2155,7 @@ section {
 }
 
 .progress__bar {
+    position: relative;
     width: 100%;
     height: 10px;
     background-color: #e0e0e0;
@@ -2066,9 +2165,21 @@ section {
 }
 
 .progress__fill {
+    position: absolute;
     height: 100%;
     background-color: var(--primary-color);
     transition: width 0.3s ease-in-out;
+    z-index: 1;
+}
+
+.possible__amount {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: rgba(172, 128, 93, 0.815);
+    transition: width 0.6s ease-in-out;
+    z-index: 0;
 }
 
 .modal {
@@ -2479,6 +2590,10 @@ strong {
     padding: 30px;
     border-radius: var(--border-radius);
     background-color: var(--bg-color-formV);
+    height: 1190.97px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 @media (max-width: 1024px) {

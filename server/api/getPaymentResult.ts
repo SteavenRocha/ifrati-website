@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const url = `${config.public.strapiApiUrl}/api/donations?filters[purchaseNumber][$eq]=${id}`
+  const url = `${config.public.strapiApiUrl}/api/donations?filters[purchaseNumber][$eq]=${id}&populate=goal`
 
   try {
     const result = await $fetch(url, {
