@@ -847,86 +847,6 @@ async function submitDonation() {
     }
 }
 
-async function submitDonationEmail(transactionData) {
-    const donationType_ = donationType.value;
-
-    if (donationType_ === 'general') {
-        const type = 'Donación General'
-        const amount = Number(selectedAmount.value).toFixed(2);
-        const title = selectedDonation.value.impact.title
-        const description = selectedDonation.value.impact.description
-        const sanitizedDetailsCard = selectedDonation.value.detailsCard.map(item => ({
-            title: item.title,
-            description: item.description
-        }));
-
-        const emailBody = {
-            type: type,
-            name: form.name,
-            email: form.email,
-            amount: amount,
-            title: title,
-            description: description,
-            aditional: sanitizedDetailsCard,
-            transaction: transactionData
-        };
-
-        try {
-            const response = await $fetch('/api/submitEmail?action=submitGeneralDonationEmail', {
-                method: 'POST',
-                body: emailBody,
-            })
-
-            if (response?.status === 'success') {
-                console.log("correo enviado con exito", response)
-            } else {
-                console.log("error al envair correo", response)
-            }
-        } catch (error) {
-            console.log("error al envair correo", response)
-        }
-    } else {
-        const amount = Number(selectedAmount.value).toFixed(2)
-        /* const percentage = getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal) */
-        const collected = selectedGoal.value.totalCollected || 0
-        const goal = selectedGoal.value.goal
-
-        const newCollected = collected + Number(amount)
-        const newPercentage = getProgress(newCollected, goal)
-
-        /* console.log(amount, percentage, collected, goal, newCollected, newPercentage) */
-
-        const type = 'Donacion para una meta especifica'
-
-        const emailBody = {
-            type: type,
-            name: form.name,
-            email: form.email,
-            amount: amount,
-            title: selectedGoal.value.title,
-            percentage: newPercentage,
-            collected: newCollected,
-            goal: goal,
-            transaction: transactionData
-        };
-
-        try {
-            const response = await $fetch('/api/submitEmail?action=submitGoalDonationEmail', {
-                method: 'POST',
-                body: emailBody,
-            })
-
-            if (response?.status === 'success') {
-                console.log("correo enviado con exito", response)
-            } else {
-                console.log("error al envair correo", response)
-            }
-        } catch (error) {
-            console.log("error al envair correo", response)
-        }
-    }
-}
-
 /* VOLUNTARIADO */
 /* CARD STYLES */
 const bgColorCardV = props.volunteerForm?.cardStyle?.backgroundColor ?? null
@@ -1323,7 +1243,7 @@ async function handleSubmit() {
 
                                 <div class="form__group">
                                     <label for="phone">Celular</label>
-                                    <input type="tel" id="phone" v-model="volunteerForm_.phone"
+                                    <input type="tel" id="phone" v-model="volunteerForm_.phone" class="volunteer__form"
                                         placeholder="+51 987654321" inputmode="numeric" pattern="[0-9]*"
                                         @input="volunteerForm_.phone = volunteerForm_.phone.replace(/\D/g, '')" />
                                 </div>
@@ -1565,8 +1485,8 @@ async function handleSubmit() {
                                 <div class="phone__input__wrapper">
                                     <span class="phone__prefix">+51</span>
                                     <input type="tel" id="phone" v-model="form.phone" placeholder="987654321"
-                                        inputmode="numeric" pattern="[0-9]*" required maxlength="9" minlength="9"
-                                        @input="form.phone = form.phone.replace(/\D/g, '')" />
+                                        class="phone" inputmode="numeric" pattern="[0-9]*" required maxlength="9"
+                                        minlength="9" @input="form.phone = form.phone.replace(/\D/g, '')" />
                                 </div>
                             </div>
                         </div>
@@ -2380,8 +2300,12 @@ br {
     gap: 20px;
 }
 
-#phone {
+.phone {
     border-radius: 0 10px 10px 0;
+}
+
+.volunteer__form {
+    border-radius: 10px;
 }
 
 .modal__button {

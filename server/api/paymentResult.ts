@@ -69,6 +69,7 @@ export default defineEventHandler(async (event) => {
                     const transactionStatus = response.authorization.dataMap.STATUS
                     const brand = response.authorization.dataMap.BRAND
                     const card = response.authorization.dataMap.CARD
+                    const actionDescription = response.authorization.dataMap.ACTION_DESCRIPTION
                     const transactionDate = response.authorization.dataMap.TRANSACTION_DATE
 
                     try {
@@ -83,7 +84,8 @@ export default defineEventHandler(async (event) => {
                                     transactionStatus,
                                     brand,
                                     card,
-                                    transactionDate
+                                    transactionDate,
+                                    actionDescription
                                 }
                             },
                         })
@@ -91,6 +93,7 @@ export default defineEventHandler(async (event) => {
                         if (response && !response.error && donationType === 'GENERAL') {  // PROCESO TERMINADO
                             console.log("datos de la tarjeta enviados correctamente, para donación general", response)
                             return sendRedirect(event, `${redirectUrl}&status=Authorized`)
+
                         } else if (response && !response.error && donationType === 'META') {  // REGISTRAR MONTO A LA META
                             console.log("Siguiente paso registrar el monto de la meta", response)
 
@@ -102,7 +105,7 @@ export default defineEventHandler(async (event) => {
                             const newTotalCollected = amount + totalCollected
 
                             try {
-                                const response: any = await $fetch(url, {
+                                await $fetch(url, {
                                     method: 'PUT',
                                     headers: {
                                         Authorization: `Bearer ${token}`,
@@ -114,9 +117,6 @@ export default defineEventHandler(async (event) => {
                                         }
                                     },
                                 })
-                                /* if (response) {
-
-                                } */
                             } catch (error: any) {
                                 console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
                                 throw createError({
@@ -134,24 +134,48 @@ export default defineEventHandler(async (event) => {
                             statusMessage: 'Error al enviar datos de la tarjeta al backend',
                         })
                     }
-                } else {
-                    console.warn('❌ Autorización fallida:', response)
-
-                    const reason = encodeURIComponent(response?.authorization?.dataMap?.ACTION_DESCRIPTION || 'Error desconocido')
-                    const errorRedirect = `${redirectUrl}&status=error&reason=${reason}`
-                    return sendRedirect(event, errorRedirect)
-
-                    /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
                 }
             } catch (error: any) {
+                /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
                 const fullError = error?.response?._data || error?.data || error
                 console.error('[POST AUTHORIZATION INFO] Error completo:', fullError)
 
-                const reason = encodeURIComponent(fullError?.error?.data?.ACTION_DESCRIPTION || 'Error inesperado')
+                const url = `${config.public.strapiApiUrl}/api/donations/${documentId}`
+                const reason = encodeURIComponent('Unauthorized')
                 const errorRedirect = `${redirectUrl}&status=error&reason=${reason}`
-                return sendRedirect(event, errorRedirect)
 
-                /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
+                const transactionStatus = fullError?.error?.data?.STATUS
+                const brand = fullError?.error?.data?.BRAND
+                const card = fullError?.error?.data?.CARD
+                const transactionDate = fullError?.error?.data?.TRANSACTION_DATE
+                const actionDescription = fullError?.error?.data?.ACTION_DESCRIPTION
+
+                try {
+                    await $fetch(url, {
+                        method: 'PUT',
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json',
+                        }, body:
+                        {
+                            data: {
+                                transactionStatus,
+                                brand,
+                                card,
+                                transactionDate,
+                                actionDescription
+                            }
+                        },
+                    })
+                } catch (error: any) {
+                    console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+                    throw createError({
+                        statusCode: 500,
+                        statusMessage: 'Error al enviar datos de la tarjeta al backend en operacion Unauthorised',
+                    })
+                }
+
+                return sendRedirect(event, errorRedirect)
             }
         }
     } catch (error: any) {

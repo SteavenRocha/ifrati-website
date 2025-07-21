@@ -170,6 +170,7 @@ section {
 .pillars {
     display: flex;
     flex-direction: column;
+    overflow: hidden;
     gap: 20px;
 }
 

@@ -256,6 +256,7 @@ section {
     overflow: hidden;
     /*  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
     border: 1px solid rgba(185, 185, 185, 0.3);
+    overflow: clip;
 }
 
 .choose__content {
