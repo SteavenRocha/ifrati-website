@@ -369,7 +369,7 @@ async function submitSessionInfo() {
                 // recurrencemaxamount: '8.5'
             }
 
-          /*   console.log(configuration) */
+            /*   console.log(configuration) */
 
             payform.setConfiguration(configuration)
 
@@ -470,13 +470,13 @@ async function initPayform() {
 
     cardNumber.then(element => {
         // BIN
-      /*   element.on('bin', data => {
-            console.log('BIN:', data)
-        })
-
-        element.on('lastFourDigits', (data) => {
-            console.log('lastFourDigits:', data)
-        }) */
+        /*   element.on('bin', data => {
+              console.log('BIN:', data)
+          })
+  
+          element.on('lastFourDigits', (data) => {
+              console.log('lastFourDigits:', data)
+          }) */
 
         // DCC
         /*  element.on('dcc', data => {
@@ -706,14 +706,21 @@ const theDefault = {
 const donationInfo = useStorage('donationInfo', theDefault)
 /* donationInfo.value = null */
 
+const general__modal = ref(null)
+
 /* ************************* */
 /* // OPCION CON CALLBACKURL */
 /* ************************* */
 async function pay() {
     // Validación de elementos de tarjeta
     if (!cardNumber || !cardExpiry || !cardCvv) {
-        console.error('❌ Campos de tarjeta no están definidos');
+        /*  console.error('❌ Campos de tarjeta no están definidos'); */
         return false;
+    }
+
+    if (general__modal.value) {
+        isLoading.value = true;
+        general__modal.value.classList.add('opacity__modal')
     }
 
     // Datos del titular de tarjeta
@@ -783,13 +790,19 @@ async function pay() {
         }
 
         showModal.value = false;
-        isLoading.value = true;
+        /* isLoading.value = true; */
+        if (general__modal.value) {
+            general__modal.value.classList.remove('opacity__modal')
+        }
         // Puedes mostrar un loader o algo mientras redirige
         /* isLoading.value = true; */
 
     } catch (tokenError) {
         console.error('❌ Error al generar token:', tokenError);
         isLoading.value = false;
+        if (general__modal.value) {
+            general__modal.value.classList.remove('opacity__modal')
+        }
     }
 }
 
@@ -1327,7 +1340,7 @@ async function handleSubmit() {
 
         <!-- SECCION DE MODALES -->
         <!-- Modal para pedir datos -->
-        <div v-show="showModal" class="modal" :style="{
+        <div v-show="showModal" ref="general__modal" class="modal" :style="{
             '--bg-color-form': bgColorForm ?? 'var(--background-color)',
             '--title-color-form': titleColorForm ?? 'var(--title-color)',
             '--text-color-form': textColorForm ?? 'var(--text-color)',
@@ -2123,6 +2136,12 @@ section {
     z-index: 9999;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+.opacity__modal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
 .title__group {

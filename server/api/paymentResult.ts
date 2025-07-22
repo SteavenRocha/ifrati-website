@@ -118,7 +118,7 @@ export default defineEventHandler(async (event) => {
                                     },
                                 })
                             } catch (error: any) {
-                                console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+                               /*  console.error('[SEND FORM] ERROR FETCHING:', error?.response || error) */
                                 throw createError({
                                     statusCode: 500,
                                     statusMessage: 'Error al enviar datos del totalColleted al backend',
@@ -128,7 +128,7 @@ export default defineEventHandler(async (event) => {
                             return sendRedirect(event, `${redirectUrl}&status=Authorized`)
                         }
                     } catch (error: any) {
-                        console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+                       /*  console.error('[SEND FORM] ERROR FETCHING:', error?.response || error) */
                         throw createError({
                             statusCode: 500,
                             statusMessage: 'Error al enviar datos de la tarjeta al backend',
@@ -138,7 +138,7 @@ export default defineEventHandler(async (event) => {
             } catch (error: any) {
                 /* REGISTRAMOS OBJECIONES DE DONACIÓN FALLIDA PARA LA DONACION */
                 const fullError = error?.response?._data || error?.data || error
-                console.error('[POST AUTHORIZATION INFO] Error completo:', fullError)
+                /* console.error('[POST AUTHORIZATION INFO] Error completo:', fullError) */
 
                 const url = `${config.public.strapiApiUrl}/api/donations/${documentId}`
                 const reason = encodeURIComponent('Unauthorized')
@@ -168,7 +168,7 @@ export default defineEventHandler(async (event) => {
                         },
                     })
                 } catch (error: any) {
-                    console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+                    /* console.error('[SEND FORM] ERROR FETCHING:', error?.response || error) */
                     throw createError({
                         statusCode: 500,
                         statusMessage: 'Error al enviar datos de la tarjeta al backend en operacion Unauthorised',
@@ -179,7 +179,7 @@ export default defineEventHandler(async (event) => {
             }
         }
     } catch (error: any) {
-        console.error('[SEND FORM] ERROR FETCHING:', error?.response || error)
+        /* console.error('[SEND FORM] ERROR FETCHING:', error?.response || error) */
         throw createError({
             statusCode: 500,
             statusMessage: 'Error al enviar datos al backend',
