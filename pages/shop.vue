@@ -3,6 +3,11 @@ import Hero from '~/components/About/Hero.vue';
 import Faq from '~/components/Faq.vue';
 
 const { data } = await useApi('shop-page')
+
+useHead({
+    title: data.value.data.title,
+})
+
 // TODAS LAS CATEGORIAS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
 const dataCategories = await useApi('product-categories?sort[0]=category:asc')
 // TODAS LOS PRODUCTOS FILTRADOS ASCEDENTEMENTE POR FECHA DE PUBLICACION CON ESTADO TRUE

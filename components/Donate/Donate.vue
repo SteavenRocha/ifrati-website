@@ -76,7 +76,7 @@ const textColorCta = props.goalsForm?.cta?.ctaStyle?.textColor ?? null
 // ESTADOS
 const activeTab = ref('general') // 'general' o 'specific'
 const selectedAmountId = ref(props.donationForm.donationDetails[0]?.id)
-const selectedFrequency = ref('mensual')
+/* const selectedFrequency = ref('mensual') */
 const otherAmount = ref('')
 
 // Computed para obtener el amount seleccionado
@@ -92,6 +92,12 @@ const selectedAmount = computed(() => {
     }
     const selected = props.donationForm.donationDetails.find(d => d.id === selectedAmountId.value)
     return selected?.amount || 0
+})
+
+watch(otherAmount, async (newVal) => {
+    if (newVal <= 0) {
+        otherAmount.value = ''
+    }
 })
 
 const svgHtmlMap = reactive({})
@@ -278,8 +284,6 @@ const handleContinue = async (type) => {
             break
         case 'review':
             /* LOADER - HASTA QUE SE PROCESE EL PAGO */
-            showModal.value = false;
-            isLoading.value = true;
             await pay();
             break;
         default:
@@ -724,12 +728,12 @@ async function pay() {
 
     try {
         // Esta función ya redirige automáticamente si configuraste callbackurl
-        payform.createToken(
+        await submitDonation()
+
+        await payform.createToken(
             [cardNumber, cardExpiry, cardCvv],
             data
         );
-
-        submitDonation()
 
         if (donationType.value === 'general') {
             if (selectedDonation.value && !otherAmount.value) {
@@ -777,6 +781,9 @@ async function pay() {
                 metaGoal: selectedGoal.value.goal,
             }
         }
+
+        showModal.value = false;
+        isLoading.value = true;
         // Puedes mostrar un loader o algo mientras redirige
         /* isLoading.value = true; */
 
@@ -908,6 +915,7 @@ watch(activeTab, async (newVal) => {
         firstInputRefVolunteer.value?.focus()
     } else {
         clearVolunteerForm()
+        firstTermsAccepted.value = false
         selectedAmountId.value = props.donationForm.donationDetails[0]?.id
     }
 })
@@ -1032,7 +1040,7 @@ async function handleSubmit() {
                                     :key="amount.id"
                                     :class="{ selected: selectedAmountId === amount.id && otherAmount === '' }"
                                     @click="() => { selectedAmountId = amount.id; otherAmount = '' }">
-                                    <div class="amount">{{ amount.amount }}PEN</div>
+                                    <div class="amount">{{ amount.amount }} PEN</div>
                                 </div>
                             </div>
                             <div class="another__amount">
@@ -1040,7 +1048,7 @@ async function handleSubmit() {
                                     <input type="number" placeholder="PEN Otra cantidad" v-model="otherAmount" />
                                 </div>
                             </div>
-                            <div class="frequency">
+                            <!-- <div class="frequency">
                                 <button :class="{ active: selectedFrequency === 'mensual' }"
                                     @click="selectedFrequency = 'mensual'">
                                     Mensual
@@ -1049,7 +1057,7 @@ async function handleSubmit() {
                                     @click="selectedFrequency = 'unica'">
                                     Única
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
 
                         <form @submit.prevent="handleDonationSubmit(activeTab)">
@@ -1390,7 +1398,7 @@ async function handleSubmit() {
                                     :key="amount.id"
                                     :class="{ selected: selectedAmountId === amount.id && otherAmount === '' }"
                                     @click="() => { selectedAmountId = amount.id; otherAmount = '' }">
-                                    <div class="amount">{{ amount.amount }}PEN</div>
+                                    <div class="amount">{{ amount.amount }} PEN</div>
                                 </div>
                             </div>
                             <div class="another__amount">
@@ -1398,7 +1406,7 @@ async function handleSubmit() {
                                     <input type="number" placeholder="PEN Otra cantidad" v-model="otherAmount" />
                                 </div>
                             </div>
-                            <div class="frequency">
+                            <!--  <div class="frequency">
                                 <button :class="{ active: selectedFrequency === 'mensual' }"
                                     @click="selectedFrequency = 'mensual'">
                                     Mensual
@@ -1407,7 +1415,7 @@ async function handleSubmit() {
                                     @click="selectedFrequency = 'unica'">
                                     Única
                                 </button>
-                            </div>
+                            </div> -->
                         </div>
 
                         <form @submit.prevent="handleDonationSubmit(activeTab)">
@@ -1464,13 +1472,13 @@ async function handleSubmit() {
                                 <div class="form__group">
                                     <label for="name">Nombres</label>
                                     <input type="text" id="name" v-model="form.name" placeholder="Nombre Completo"
-                                        required disabled />
+                                        required />
                                 </div>
 
                                 <div class="form__group">
                                     <label for="lastName">Apellidos</label>
                                     <input type="text" id="lastName" v-model="form.lastName" placeholder="Apellidos"
-                                        required disabled />
+                                        required />
                                 </div>
                             </div>
 
@@ -1786,7 +1794,7 @@ section {
     outline: none;
 }
 
-.frequency {
+/* .frequency {
     display: flex;
     gap: 15px;
 }
@@ -1814,7 +1822,7 @@ section {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
-}
+} */
 
 .button__container {
     display: flex;
@@ -2153,8 +2161,8 @@ form {
 
 .close {
     position: fixed;
-    top: 30px;
-    right: 50px;
+    top: 20px;
+    right: 25px;
     width: 50px;
     color: white;
     font-weight: bolder;
@@ -2199,7 +2207,7 @@ select {
     border-radius: 10px;
     padding: 15px;
     box-sizing: border-box;
-    color: #888;
+    color: var(--text-color);
     background-color: white;
 }
 

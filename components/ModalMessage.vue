@@ -3,9 +3,9 @@
     <div v-if="type === 'success'" class="modal-content" :class="type">
 
       <div class="close-button" @click="close">
-        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 100 100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="118.64" height="128" viewBox="0 0 1216 1312">
           <path fill="currentColor"
-            d="M84.7 68.75 65.96 50 84.7 31.25a1.99 1.99 0 0 0 0-2.82L71.57 15.3a1.99 1.99 0 0 0-2.82 0L50 34.05 31.25 15.3a2.05 2.05 0 0 0-2.81 0L15.3 28.42a1.99 1.99 0 0 0 0 2.82L34.05 50 15.29 68.75a2 2 0 0 0 0 2.82L28.43 84.7a1.99 1.99 0 0 0 2.81 0L50 65.95 68.75 84.7a1.98 1.98 0 0 0 2.82 0l13.14-13.13a1.99 1.99 0 0 0 0-2.82" />
+            d="M1202 1066q0 40-28 68l-136 136q-28 28-68 28t-68-28L608 976l-294 294q-28 28-68 28t-68-28L42 1134q-28-28-28-68t28-68l294-294L42 410q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294l294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68L880 704l294 294q28 28 28 68" />
         </svg>
       </div>
 
@@ -35,21 +35,21 @@
         </div>
       </div>
 
-      <div class="aditional">
+      <!-- <div class="aditional">
         <ul>
           <li>Te estaremos respondiendo en un plazo máximo de <strong>24-48 horas hábiles</strong></li>
           <li>Si no ves nuestro correo, revisa tu carpeta de spam</li>
           <li>Para consultas urgentes, puedes llamarnos al <strong>(555) 123-4567</strong></li>
         </ul>
-      </div>
+      </div> -->
     </div>
 
     <div v-else="type === 'error'" class="modal-content" :class="type">
 
       <div class="close-button" @click="close">
-        <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 100 100">
+        <svg xmlns="http://www.w3.org/2000/svg" width="118.64" height="128" viewBox="0 0 1216 1312">
           <path fill="currentColor"
-            d="M84.7 68.75 65.96 50 84.7 31.25a1.99 1.99 0 0 0 0-2.82L71.57 15.3a1.99 1.99 0 0 0-2.82 0L50 34.05 31.25 15.3a2.05 2.05 0 0 0-2.81 0L15.3 28.42a1.99 1.99 0 0 0 0 2.82L34.05 50 15.29 68.75a2 2 0 0 0 0 2.82L28.43 84.7a1.99 1.99 0 0 0 2.81 0L50 65.95 68.75 84.7a1.98 1.98 0 0 0 2.82 0l13.14-13.13a1.99 1.99 0 0 0 0-2.82" />
+            d="M1202 1066q0 40-28 68l-136 136q-28 28-68 28t-68-28L608 976l-294 294q-28 28-68 28t-68-28L42 1134q-28-28-28-68t28-68l294-294L42 410q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294l294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68L880 704l294 294q28 28 28 68" />
         </svg>
       </div>
 
@@ -84,13 +84,13 @@
         </div>
       </div>
 
-      <div class="aditional">
+      <!--  <div class="aditional">
         <ul>
           <li>Verifica que todos los campos estén completos</li>
           <li>Revisa tu conexión a internet</li>
           <li>Intenta nuevamente en unos minutos</li>
         </ul>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -156,15 +156,15 @@ button {
 
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   background: transparent;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
   color: #525252d2;
   transition: color 0.2s, scale 0.2s;
-  width: 40px;
+  width: 30px;
 }
 
 .close-button:hover {

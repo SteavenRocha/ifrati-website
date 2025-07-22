@@ -1,6 +1,10 @@
 <script setup>
 import { useStorage } from '@vueuse/core'
 
+useHead({
+  title: "IFRATI - Payment Result",
+})
+
 const config = useRuntimeConfig()
 const route = useRoute()
 const id = route.query.id

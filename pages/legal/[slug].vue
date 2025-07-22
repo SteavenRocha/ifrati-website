@@ -17,6 +17,10 @@ if (!currentPage) {
     throw createError({ statusCode: 404, message: 'Página no encontrada' })
 }
 
+useHead({
+    title: 'IFRATI - Legal',
+})
+
 // Función para transformar la fecha al formato "16 de mayo del 2025"
 function formatDateToSpanish(dateString) {
     const [year, month, day] = dateString.split('T')[0].split('-')
@@ -114,5 +118,17 @@ section {
 ::v-deep(h5),
 ::v-deep(h6) {
     color: var(--title-color);
+}
+
+@media (max-width: 1024px) {
+    .content {
+        padding: 70px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .content {
+        padding: 70px 0px;
+    }
 }
 </style>

@@ -9,6 +9,10 @@ import Choose from '~/components/Home/Choose.vue';
 
 const { data } = await useApi('home-page')
 
+useHead({
+    title: data.value.data.title,
+})
+
 /********************* HERO SECTION *********************/
 /* CONFIGURACION GLOBAL DEL HERO SECTION */
 const hero = data?.value?.data?.sections?.[0]?.hero ?? {}

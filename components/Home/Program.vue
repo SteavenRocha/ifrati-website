@@ -315,7 +315,7 @@ video {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
+    width: 70%;
     height: 70vh;
     border-radius: 10px;
     object-fit: cover;
@@ -323,8 +323,8 @@ video {
 
 .popup__video span {
     position: absolute;
-    top: 30px;
-    right: 5%;
+    top: 20px;
+    right: 25px;
     width: 50px;
     color: white;
     font-weight: bolder;
@@ -513,6 +513,7 @@ h3 {
     .popup__video video,
     .popup__video iframe {
         height: 50vh;
+        width: 80%;
     }
 }
 

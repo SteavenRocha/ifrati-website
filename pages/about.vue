@@ -8,6 +8,10 @@ import Team from '~/components/About/Team.vue';
 
 const { data } = await useApi('about-page')
 
+useHead({
+    title: data.value.data.title,
+})
+
 /********************* HERO SECTION *********************/
 /* CONFIGURACION GLOBAL DEL HERO SECTION */
 const hero = data?.value?.data?.sections?.[0] ?? {}

@@ -5,6 +5,10 @@ import Important from '~/components/Donate/Important.vue';
 
 const { data } = await useApi('donate-page')
 
+useHead({
+    title: data.value.data.title,
+})
+
 /********************* HERO SECTION *********************/
 /* CONFIGURACION GLOBAL DEL HERO SECTION */
 const hero = data?.value?.data?.sections?.[0] ?? {}

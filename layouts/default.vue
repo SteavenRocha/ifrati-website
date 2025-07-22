@@ -10,6 +10,16 @@ if (!data.value) {
   })
 }
 
+useHead({
+  link: [
+    {
+      rel: 'icon',
+      type: 'image/png',
+      href: getResource(data.value.data.globalSettings.favicon?.url).imageUrl
+    }
+  ]
+})
+
 const style = data.value?.data?.styleSettings
 const pillStyle = data.value?.data?.pillSettings
 

@@ -14,6 +14,12 @@ if (!companyInformation) {
 
 const { data } = await useApi('complaints-book')
 
+useHead({
+    title: data.value.data.title,
+})
+
+const isLoading = ref(false)
+
 const title = data?.value?.data?.header?.title ?? ''
 const description = data?.value?.data?.header?.description ?? '' // DESCRIPTION
 const pill = data?.value?.data?.header?.pill ?? {} // PILL
@@ -115,7 +121,7 @@ const form = reactive({
 })
 
 const modalVisible = ref(false)
-const modalMessage = ref('')
+const modalEmail = ref('')
 const modalType = ref('success') // 'success' o 'error'
 
 function clearForm() {
@@ -136,8 +142,10 @@ function clearForm() {
 
 /* POST PARA ENVIAR FORMULARIO */
 async function handleSubmit() {
+    isLoading.value = true;
+
     try {
-        const response = await $fetch('/api/sendForm?endpoint=complaints-book-inboxes', {
+        const submitResponse = await $fetch('/api/sendForm?endpoint=complaints-book-inboxes', {
             method: 'POST',
             body: {
                 documentType: form.documentType,
@@ -152,24 +160,76 @@ async function handleSubmit() {
                 claimType: form.claimType,
                 claimDetail: form.claimDetail,
                 consumerRequest: form.consumerRequest,
-                // termsAccepted: form.termsAccepted (si lo usas)
             },
         });
 
-        if (response === 'success') {
-            clearForm();
-            modalMessage.value = '¡Gracias por contactarnos! Hemos recibido tu mensaje y te responderemos pronto. ¡Esperamos poder ayudarte!';
-            modalType.value = 'success';
+        if (submitResponse === 'success') {
+            try {
+                const emailResponse = await $fetch('/api/submitEmail?action=submitBookEmail', {
+                    method: 'POST',
+                    body: {
+                        documentType: form.documentType,
+                        documentNumber: form.documentNumber,
+                        lastName: form.lastName,
+                        firstName: form.firstName,
+                        address: form.address,
+                        phone: form.phone,
+                        email: form.email,
+                        productType: form.productType,
+                        description: form.description,
+                        claimType: form.claimType,
+                        claimDetail: form.claimDetail,
+                        consumerRequest: form.consumerRequest,
+                    },
+                });
+
+                if (emailResponse?.status === 'success') {
+                    modalEmail.value = form.email;
+                    modalType.value = 'success';
+                } else {
+                    modalType.value = 'error';
+                }
+            } catch (error) {
+                console.error('[SEND EMAIL] Error:', error);
+                modalType.value = 'error';
+            } finally {
+                modalVisible.value = true;
+                isLoading.value = false;
+                clearForm();
+            }
+        } else {
+            modalType.value = 'error';
             modalVisible.value = true;
+            isLoading.value = false;
         }
     } catch (error) {
-        clearForm();
-        modalMessage.value = 'Error al enviar el mensaje, inténtelo más tarde.';
+        console.error('[SEND FORM] Error:', error);
         modalType.value = 'error';
         modalVisible.value = true;
-        console.error("Error al enviar formulario:", error);
+        isLoading.value = false;
+        clearForm();
     }
 }
+
+// OBTENER DATOS POR DNI
+watch(() => form.documentNumber, async (newDocumentNumber) => {
+    if (newDocumentNumber.length === 8) {
+        try {
+            const response = await $fetch('/api/getDataDni', {
+                method: 'GET',
+                params: { dni: newDocumentNumber }
+            })
+
+            if (response?.nombres || response?.apellidoPaterno || response?.apellidoMaterno) {
+                form.firstName = response.nombres
+                form.lastName = response.apellidoPaterno + ' ' + response.apellidoMaterno
+            }
+
+        } catch (e) {
+            console.error('Error en la petición de DNI:', e)
+        }
+    }
+})
 
 isActive.value = statusHeaderUp.isActive
 </script>
@@ -283,7 +343,7 @@ isActive.value = statusHeaderUp.isActive
                     <div class="form__container">
                         <form @submit.prevent="handleSubmit">
                             <!-- Datos del consumidor -->
-                            <div class="form__section">
+                            <div class="form__section responsive">
                                 <h2 class="form__subtitle">{{ titlesForm[0].text }}</h2>
 
                                 <!-- Campos personales -->
@@ -293,7 +353,6 @@ isActive.value = statusHeaderUp.isActive
                                         :class="{ 'selected': form.documentType !== '' }">
                                         <option disabled value="">Seleccione</option>
                                         <option value="DNI">DNI</option>
-                                        <option value="RUC">RUC</option>
                                     </select>
                                 </div>
 
@@ -305,15 +364,15 @@ isActive.value = statusHeaderUp.isActive
                                 </div>
 
                                 <div class="form__group half">
-                                    <label for="lastName">Apellidos *</label>
-                                    <input type="text" id="lastName" v-model="form.lastName"
-                                        placeholder="Ingrese sus apellidos" required />
-                                </div>
-
-                                <div class="form__group half">
                                     <label for="firstName">Nombres *</label>
                                     <input type="text" id="firstName" v-model="form.firstName"
                                         placeholder="Ingrese sus nombres" required />
+                                </div>
+
+                                <div class="form__group half">
+                                    <label for="lastName">Apellidos *</label>
+                                    <input type="text" id="lastName" v-model="form.lastName"
+                                        placeholder="Ingrese sus apellidos" required />
                                 </div>
 
                                 <div class="form__group">
@@ -326,7 +385,8 @@ isActive.value = statusHeaderUp.isActive
                                     <label for="phone">Celular *</label>
                                     <input type="tel" id="phone" v-model="form.phone"
                                         placeholder="Ingrese su número de celular" required inputmode="numeric"
-                                        pattern="[0-9]*" @input="form.phone = form.phone.replace(/\D/g, '')" />
+                                        pattern="[0-9]*" maxlength="9" minlength="9"
+                                        @input="form.phone = form.phone.replace(/\D/g, '')" />
                                 </div>
 
                                 <div class="form__group half">
@@ -423,8 +483,10 @@ isActive.value = statusHeaderUp.isActive
                     </div>
                 </div>
 
-                <ModalMessage :visible="modalVisible" :message="modalMessage" :type="modalType"
+                <ModalMessage :visible="modalVisible" :email="modalEmail" :type="modalType"
                     @update:visible="modalVisible = $event" />
+
+                <Loader :visible="isLoading" />
 
             </div>
         </div>
@@ -725,5 +787,43 @@ input[type="checkbox"] {
     font-size: 0.875rem;
     color: #666;
     margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+    .container {
+        width: 80%;
+    }
+
+    .centered__texts {
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        width: 100%;
+    }
+
+    form {
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .information__container {
+        flex-direction: column;
+    }
+
+    .cards__container {
+        gap: 30px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .form__group.half {
+        grid-column: span 2;
+    }
 }
 </style>

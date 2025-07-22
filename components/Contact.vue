@@ -187,8 +187,7 @@ watch(() => form.subject, (newSubject) => {
                     <form @submit.prevent="handleSubmit" class="contact__form">
                         <div class="form__group">
                             <label for="name">Nombres</label>
-                            <input type="text" id="name" v-model="form.name" placeholder="Nombre Completo"
-                                required />
+                            <input type="text" id="name" v-model="form.name" placeholder="Nombre Completo" required />
                         </div>
 
                         <div class="form__group">
@@ -200,7 +199,7 @@ watch(() => form.subject, (newSubject) => {
                         <div class="form__group">
                             <label for="phone">Celular (Opcional)</label>
                             <input type="tel" id="phone" v-model="form.phone" placeholder="+51 987654321"
-                                inputmode="numeric" pattern="[0-9]*"
+                                inputmode="numeric" pattern="[0-9]*" maxlength="9" minlength="9"
                                 @input="form.phone = form.phone.replace(/\D/g, '')" />
                         </div>
 

@@ -310,7 +310,7 @@ ul {
 }
 
 .side__image {
-    max-height: 100%;
+    max-height: 636.66px;
 }
 
 .fade-slide-enter-active,
