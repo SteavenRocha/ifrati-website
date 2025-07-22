@@ -79,7 +79,7 @@ const { data: result, error } = await useAsyncData('paymentResult', async () => 
     params: { id }
   })
 
-  console.log('✅ Datos recibidos:', response)
+  /* console.log('✅ Datos recibidos:', response) */
   return response
 })
 
@@ -136,7 +136,7 @@ onMounted(() => {
   percentage.value = getProgress(transaction.value.goal?.totalCollected, donationInfoParsed.value.metaGoal);
   percentageProgress.value = getProgress(transaction.value.amount, donationInfoParsed.value.metaGoal);
 
-  console.log(percentage.value, percentageProgress.value)
+ /*  console.log(percentage.value, percentageProgress.value) */
 })
 
 const formattedDate = computed(() => {
@@ -177,12 +177,12 @@ async function submitDonationEmail(donationType, transactionData, impactData) {
       })
 
       if (response?.status === 'success') {
-        console.log("correo enviado con exito", response)
+        console.log("correo enviado con exito")
       } else {
-        console.log("error al envair correo", response)
+        console.log("error al envair correo")
       }
     } catch (error) {
-      console.log("error al envair correo, error catch", response)
+      console.log("error al envair correo, error catch")
     }
   } else {
     const type = 'Donación Meta especifica'
@@ -200,12 +200,12 @@ async function submitDonationEmail(donationType, transactionData, impactData) {
       })
 
       if (response?.status === 'success') {
-        console.log("correo enviado con exito", response)
+        console.log("correo enviado con exito")
       } else {
-        console.log("error al envair correo", response)
+        console.log("error al envair correo")
       }
     } catch (error) {
-      console.log("error al envair correo, error catch", response)
+      console.log("error al envair correo, error catch")
     }
   }
 }

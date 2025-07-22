@@ -369,7 +369,7 @@ async function submitSessionInfo() {
                 // recurrencemaxamount: '8.5'
             }
 
-            console.log(configuration)
+          /*   console.log(configuration) */
 
             payform.setConfiguration(configuration)
 
@@ -470,13 +470,13 @@ async function initPayform() {
 
     cardNumber.then(element => {
         // BIN
-        element.on('bin', data => {
+      /*   element.on('bin', data => {
             console.log('BIN:', data)
         })
 
         element.on('lastFourDigits', (data) => {
             console.log('lastFourDigits:', data)
-        })
+        }) */
 
         // DCC
         /*  element.on('dcc', data => {
@@ -826,7 +826,7 @@ async function submitDonation() {
         })
 
         if (response === 'success' && !response.error) {
-            console.log("donacion registrada:", response)
+            console.log("donacion registrada:")
         }
 
         /* if (response === 'success' && selectedGoal.value) {

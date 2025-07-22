@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
 
                 if (response && !response.error) {
                     // CASO EXITOSO - REGISTRAMOS DATA DE LA CARD
-                    console.log('✅ Autorización obtenida:', response)
+                   /*  console.log('✅ Autorización obtenida:', response) */
 
                     const url = `${config.public.strapiApiUrl}/api/donations/${documentId}`
 
@@ -91,11 +91,11 @@ export default defineEventHandler(async (event) => {
                         })
 
                         if (response && !response.error && donationType === 'GENERAL') {  // PROCESO TERMINADO
-                            console.log("datos de la tarjeta enviados correctamente, para donación general", response)
+                           /*  console.log("datos de la tarjeta enviados correctamente, para donación general", response) */
                             return sendRedirect(event, `${redirectUrl}&status=Authorized`)
 
                         } else if (response && !response.error && donationType === 'META') {  // REGISTRAR MONTO A LA META
-                            console.log("Siguiente paso registrar el monto de la meta", response)
+                          /*   console.log("Siguiente paso registrar el monto de la meta", response) */
 
                             // DATOS DE LA META
                             const documentIdGoal = item.goal.documentId
