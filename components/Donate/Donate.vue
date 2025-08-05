@@ -1,7 +1,10 @@
 <script setup>
 const config = useRuntimeConfig()
-import { departments } from '@/utils/departments'
+/* import { departments } from '@/utils/departments' */
 import { useStorage } from '@vueuse/core'
+
+const countries = ref([])
+const departments = ref([])
 
 useHead({
     link: [
@@ -137,6 +140,11 @@ onMounted(() => {
     window.addEventListener('resize', updateVisibleCards)
 })
 
+onMounted(async () => {
+    const res = await fetch('/data/countries.json')
+    countries.value = await res.json()
+})
+
 onBeforeUnmount(() => {
     window.removeEventListener('resize', updateVisibleCards)
 })
@@ -236,12 +244,49 @@ const form = reactive({
 })
 
 const dataMapform = reactive({
-    country: 'PE',
+    country: '',
     city: '',
     address: '',
     postal: '',
     department: ''
 })
+
+watch(() => dataMapform.country, async (selectedIso2) => {
+    if (!selectedIso2) {
+        departments.value = []
+        return
+    }
+
+    const country = countries.value.find(c => c.iso2 === selectedIso2)
+    if (!country) {
+        departments.value = []
+        return
+    }
+
+    const iso2 = country.iso2
+
+    // Solo ahora se carga states.json
+    const resDepartments = await fetch('/data/states.json')
+    const allDepartments = await resDepartments.json()
+
+    departments.value = allDepartments.filter(
+        dep => dep.country_code === iso2
+    )
+
+    // opcional: resetear campo de departamento
+    dataMapform.department = ''
+})
+
+/* watch(
+  () => [dataMapform.country, dataMapform.department],
+  ([newCountry, newDepartment]) => {
+    const country = countries.value.find(c => c.iso2 === newCountry)
+    const countryName = country?.name || 'No definido'
+
+    console.log(`País seleccionado: ${countryName} (${newCountry})`)
+    console.log(`Departamento seleccionado: ${newDepartment || 'No definido'}`)
+  }
+) */
 
 /* const cardForm = reactive({
     cardNumber: '',
@@ -258,7 +303,8 @@ function clearForm() {
 }
 
 function clearDataMapform() {
-    dataMapform.city = '',
+    dataMapform.country = '',
+        dataMapform.city = '',
         dataMapform.address = '',
         dataMapform.postal = '',
         dataMapform.department = ''
@@ -735,12 +781,12 @@ async function pay() {
 
     try {
         // Esta función ya redirige automáticamente si configuraste callbackurl
-        await submitDonation()
-
         await payform.createToken(
             [cardNumber, cardExpiry, cardCvv],
             data
         );
+
+        await submitDonation()
 
         if (donationType.value === 'general') {
             if (selectedDonation.value && !otherAmount.value) {
@@ -1372,7 +1418,7 @@ async function handleSubmit() {
                                     <div class="progress__content">
                                         <p class="progress">{{ getProgress(selectedGoal.totalCollected,
                                             selectedGoal.goal)
-                                        }}%
+                                            }}%
                                             completado</p>
                                         <div class="collected__content">
                                             <p class="collected__text">
@@ -1528,8 +1574,11 @@ async function handleSubmit() {
                             <div class="form__row">
                                 <div class="form__group">
                                     <label for="country">País</label>
-                                    <select id="country" v-model="dataMapform.country" required disabled>
-                                        <option value="PE">PERÚ</option>
+                                    <select id="country" v-model="dataMapform.country" required>
+                                        <option value="" disabled selected>Selecciona un país</option>
+                                        <option v-for="country in countries" :key="country.iso2" :value="country.iso2">
+                                            {{ country.name }}
+                                        </option>
                                     </select>
                                 </div>
 
@@ -1537,7 +1586,7 @@ async function handleSubmit() {
                                     <label for="department">Departamento</label>
                                     <select v-model="dataMapform.department" id="department" required>
                                         <option value="">Selecciona un departamento</option>
-                                        <option v-for="d in departments" :key="d.code" :value="d.code">
+                                        <option v-for="d in departments" :key="d.iso2" :value="d.iso2">
                                             {{ d.name }}
                                         </option>
                                     </select>
