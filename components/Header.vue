@@ -1,4 +1,5 @@
 <script setup>
+const route = useRoute()
 
 const { data } = await useApi('header-configuration')
 const statusHeaderUp = statusHeaderUpStore()
@@ -85,7 +86,7 @@ watch(isMenuOpen, () => {
             <div class="secondary__content">
                 <div class="social"></div>
                 <div class="data">
-                    <a v-for="item in itemsData" :key="item.id" :href="item.href" target="_blank">
+                    <a v-for="item in itemsData" :key="item.id" :href="item.href.replace('+', '')" target="_blank">
                         <span v-if="item.svgHtml" v-html="item.svgHtml" />
                         {{ item.text }}
                     </a>
@@ -102,7 +103,9 @@ watch(isMenuOpen, () => {
                 <nav>
                     <ul :class="['nav__links', { open: isMenuOpen }]">
                         <li v-for="link in links" :key="link.id">
-                            <a :href="link.href">{{ link.text }}</a>
+                            <a :href="link.href" :class="{ active: route.path === link.href }">
+                                {{ link.text }}
+                            </a>
                         </li>
                     </ul>
                 </nav>
@@ -278,9 +281,20 @@ header ul li a {
         color 0.3s;
 }
 
-header ul li a:hover {
+.nav__links a:hover {
+    color: var(--primary-color);
+    opacity: 0.85;
+}
+
+.nav__links a.active {
     color: var(--primary-color);
     border-bottom: 3px solid var(--primary-color);
+}
+
+.nav__links a.active:hover {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    opacity: 0.85;
 }
 
 .menu-overlay {
@@ -299,7 +313,6 @@ header ul li a:hover {
     opacity: 0;
     pointer-events: none;
 }
-
 
 /* MENU BUTTON */
 .burger {

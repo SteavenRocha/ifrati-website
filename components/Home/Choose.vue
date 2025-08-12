@@ -232,6 +232,7 @@ section {
     align-items: start;
     gap: 30px;
     max-width: 1150px;
+    overflow: clip ;
 }
 
 .left__content {
@@ -253,7 +254,7 @@ section {
 .rigth__content {
     width: 100%;
     border-radius: 15px;
-    overflow: hidden;
+   /*  overflow: hidden; */
     /*  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); */
     border: 1px solid rgba(185, 185, 185, 0.3);
     overflow: clip;

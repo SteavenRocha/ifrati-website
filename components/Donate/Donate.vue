@@ -1132,7 +1132,7 @@ async function handleSubmit() {
                                     </label>
                                 </div>
                                 <button type="submit">Donar</button>
-                                <p class="button__text">Tu donación es deducible fiscalmente</p>
+                                <!-- <p class="button__text">Tu donación es deducible fiscalmente</p> -->
                             </div>
                         </form>
                     </div>
@@ -1495,7 +1495,7 @@ async function handleSubmit() {
                                         @click="showModal = false">Cancelar</button>
                                     <button class="modal__button" type="submit">Continuar</button>
                                 </div>
-                                <p class="button__text">Tu donación es deducible fiscalmente</p>
+                                <!-- <p class="button__text">Tu donación es deducible fiscalmente</p> -->
                             </div>
                         </form>
                         <!--  <div class="button__container">
@@ -1914,12 +1914,12 @@ section {
     gap: 10px;
 }
 
-.button__text {
+/* .button__text {
     width: auto;
     font-size: .8rem;
     font-weight: 400;
     color: var(--text-color-form);
-}
+} */
 
 .image {
     position: relative;

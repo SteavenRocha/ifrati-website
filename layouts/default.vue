@@ -27,6 +27,9 @@ const pillStyle = data.value?.data?.pillSettings
 const companyInformation = data.value?.data?.companyInformation
 provide('companyInformation', companyInformation)
 
+/* WHATSAPP INFORMATION */
+const whatsapp = data.value?.data?.companyInformation?.floatingWhatsApp
+
 if (style) {
   useHead({
     /* link: [
@@ -69,6 +72,10 @@ if (style) {
       <slot />
     </main>
     <Footer />
+
+    <!-- Botón flotante WhatsApp -->
+    <FloatingWhatsApp :icon="whatsapp.icon.url" :number="whatsapp.number" :href="whatsapp.href"
+      :message="whatsapp.message" />
   </div>
 </template>
 

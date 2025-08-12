@@ -5,14 +5,28 @@ import Faq from '~/components/Faq.vue';
 const { data } = await useApi('shop-page')
 
 useHead({
-    title: data.value.data.title,
+  title: data.value.data.title,
 })
 
 // TODAS LAS CATEGORIAS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
-const dataCategories = await useApi('product-categories?sort[0]=category:asc')
-// TODAS LOS PRODUCTOS FILTRADOS ASCEDENTEMENTE POR FECHA DE PUBLICACION CON ESTADO TRUE
-/* const dataProduct = await useApi('products?filters[state][$eq]=true&sort[0]=createdAt:asc&populate[product_categories][fields][0]=category&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText&pagination[pageSize]=2&pagination[page]=1&total[page]')
-const dataProductFilter = await useApi('api/products?filters[state][$eq]=true&filters[product_categories][category][$eq]=Artesanal&sort[0]=createdAt:asc&populate[product_categories][fields][0]=category&populate[image][fields][0]=url&populate[image][fields][1]=alternativeText') */
+const { data: dataCategories } = await useFetch('/api/getData', {
+  params: {
+    path: 'product-categories?filters[state][$eq]=true&sort=category:asc'
+  }
+})
+
+// Estado para la categoría seleccionada
+const currentPage = ref(1)
+const pageSize = ref(12)
+const selectedCategory = ref('all')
+
+// TODOS LOS PRODCUTOS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
+const { data: dataProducts } = await useFetch('/api/getData', {
+  params: {
+    path: `products?sort[0]=createdAt:desc&filters[state][$eq]=true&populate[image][fields][0]=url&populate[product_categories][fields][0]=category&pagination[pageSize]=${pageSize.value}&pagination[page]=${currentPage.value}`
+  }
+})
+
 /********************* HERO SECTION *********************/
 /* CONFIGURACION GLOBAL DEL HERO SECTION */
 const hero = data?.value?.data?.sections?.[0] ?? {}
@@ -29,7 +43,17 @@ const shop = data?.value?.data?.sections?.[1] ?? {}
 /* DATOS DEL SHOP SECTION */
 const titleShop = shop.title ?? '' // TITLE
 const subTitleShop = shop.subTitle ?? '' // SUBTITLE
-const whatsappLink = shop.whatsappLink ?? '' // SUBTITLE
+const whatsappLink = shop.whatsappLink ?? ''
+const message = shop.message ?? ''
+
+function getTextFormated(initialText, whatsappNumber) {
+  return initialText
+    ?.replace(
+      /<a>(.*?)<\/a>/gi,
+      `<a class="whatsappNumber" href="${whatsappNumber}" target="_blank">$1</a>`
+    )
+}
+
 /* STYLOS DEL SHOP */
 const shopBgColor = shop.sectionStyle?.backgroundColor ?? null
 const shopTitleColor = shop.sectionStyle?.titleColor ?? null
@@ -41,54 +65,49 @@ const cardTitleColor = shop.cardStyle?.titleColor ?? null
 const cardTextColor = shop.cardStyle?.textColor ?? null
 
 /********************* CATEGORIES / PRODUCTS *********************/
-const categories = dataCategories?.data ?? []
+const categories = dataCategories?.value.data ?? []
 /* const products = dataProduct?.data ?? [] */
 
-// Estado para la categoría seleccionada
-const currentPage = ref(1)
-const pageSize = ref(15)
-const selectedCategory = ref('all')
-
-const products = ref([])  // productos actuales
-const totalPages = ref(1) // total páginas que devuelve la API
+const products = ref([])
+products.value = dataProducts.value.data
+const totalPages = ref(0)
+totalPages.value = dataProducts.value.meta?.pagination?.pageCount ?? 1
 const totalProducts = ref(0)
+totalProducts.value = dataProducts.value.meta?.pagination?.total ?? 0
 
 function buildQuery() {
-  let base = `products?filters[product_categories][publishedAt][$notNull]=true`
+  let base = `products?sort[0]=createdAt:desc&filters[state][$eq]=true&populate[image][fields][0]=url&populate[product_categories][fields][0]=category`
 
   // Filtro por categoría seleccionada
   if (selectedCategory.value !== 'all') {
     base += `&filters[product_categories][category][$eq]=${encodeURIComponent(selectedCategory.value)}`
   }
 
-  // Orden por fecha de creación
-  base += `&sort[0]=createdAt:desc`
-
   // Paginación
   base += `&pagination[pageSize]=${pageSize.value}&pagination[page]=${currentPage.value}`
-
-  // Populate para categoría (nombre y estado) e imagen
-  base += `&populate[product_categories][fields][0]=category`
-  /* base += `&populate[product_categories][fields][1]=state` */
-  base += `&populate[image][fields][0]=url`
-  base += `&populate[image][fields][1]=alternativeText`
 
   return base
 }
 
 async function fetchProducts() {
   const query = buildQuery()
-  const response = await useApi(query)
-  if (response?.data) {
-    products.value = response.data.value ?? []
-    totalPages.value = response.data.value.meta?.pagination?.pageCount ?? 1
-    totalProducts.value = response.data.value.meta?.pagination?.total ?? 0
+  // TODOS LOS PRODUCTOS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
+  const dataProducts = await $fetch('/api/getData', {
+    params: {
+      path: query
+    }
+  })
+
+  if (dataProducts) {
+    products.value = dataProducts.data ?? []
+    totalPages.value = dataProducts.meta?.pagination?.pageCount ?? 1
+    totalProducts.value = dataProducts.meta?.pagination?.total ?? 0
   }
 }
 
 watch([currentPage, pageSize, selectedCategory], () => {
   fetchProducts()
-}, { immediate: true })
+})
 
 function goToPage(page) {
   if (page < 1 || page > totalPages.value) return
@@ -101,7 +120,7 @@ function selectCategory(category) {
   currentPage.value = 1
 }
 
-const productsPerPage = computed(() => products.value.data.length)
+const productsPerPage = computed(() => products.value.length)
 
 /********************* FAQS SECTION *********************/
 /* CONFIGURACION GLOBAL DEL FAQ SECTION */
@@ -146,7 +165,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                 @click="selectCategory('all')">
                 Todos
               </button>
-              <button class="category" v-for="item in categories.data" :key="item.id"
+              <button class="category" v-for="item in categories" :key="item.id"
                 :class="{ active: selectedCategory === item.category }" @click="selectCategory(item.category)">
                 {{ item.category }}
               </button>
@@ -162,7 +181,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                 '--title-color-card': cardTitleColor ?? 'var(--title-color)',
                 '--text-color-card': cardTextColor ?? 'var(--text-color)',
               }">
-                <div class="card" v-for="product in products.data" :key="product.id">
+                <div class="card" v-for="product in products" :key="product.id">
                   <div class="product__image">
                     <img :src="getResource(product.image?.url).imageUrl" alt="">
                     <p class="tag" :class="{
@@ -183,7 +202,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                       </div>
                       <p class="product__description">{{ product.description }}</p>
                     </div>
-                    <div class="icon__content">
+                    <!-- <div class="icon__content">
                       <a class="icon"
                         :href="`${whatsappLink}?text=Hola,%20estoy%20interesado%20por%20este%20producto:%20*${encodeURIComponent(product.title)}*%0ACon%20este%20precio:%20*S/%20${product.price}*%0AQuisiera%20más%20información,%20por%20favor.`"
                         target="_blank" rel="noopener noreferrer">
@@ -197,7 +216,7 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                         </svg>
                       </a>
                       <p>Pedir producto</p>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -224,6 +243,10 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
               </div>
             </div>
           </div>
+        </div>
+
+        <div class="description">
+          <p v-html="getTextFormated(message, whatsappLink.replace('+', ''))"></p>
         </div>
       </div>
     </section>
@@ -362,7 +385,7 @@ button {
   border: 1px solid rgba(185, 185, 185, 0.3);
   border-radius: var(--border-radius-card);
   overflow: hidden;
-  max-width: calc(100% / 3);
+  max-width: calc((100% / 3) - 20px);
   transition: box-shadow .6s ease;
   background-color: var(--bg-color-card);
 }
@@ -474,6 +497,7 @@ button {
 }
 
 .button.number {
+  border: none;
   border-radius: 10px;
   width: 30px;
   height: 30px;
@@ -492,7 +516,35 @@ button svg {
   width: 30px;
 }
 
-.icon__content {
+.description {
+  background-color: #ffffff;
+  border: 1px solid rgb(161, 161, 161);
+  padding: 50px;
+  text-align: center;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.description p {
+  width: 60%;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+:deep(.description .whatsappNumber) {
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--primary-color);
+}
+
+:deep(.description .whatsappNumber:hover) {
+  filter: brightness(90%);
+}
+
+/* .icon__content {
   display: flex;
   overflow: hidden;
   padding: 6px;
@@ -506,9 +558,9 @@ button svg {
   transition: all 0.4s ease;
   color: rgb(0, 0, 0);
   border: 1px solid rgba(185, 185, 185, 0.3);
-}
+} */
 
-.icon {
+/* .icon {
   min-width: 25px;
   max-width: 25px;
   max-height: 25px;
@@ -516,26 +568,26 @@ button svg {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
-.icon__content p {
+/* .icon__content p {
   white-space: nowrap;
   font-weight: 500;
   opacity: 0;
   transition: opacity .3s ease;
   font-weight: 400;
   font-size: .9rem;
-}
+} */
 
-.icon__content:hover {
+/* .icon__content:hover {
   max-width: 160px;
   background-color: var(--primary-color);
   color: white;
-}
+} */
 
-.icon__content:hover p {
+/* .icon__content:hover p {
   opacity: 1;
-}
+} */
 
 svg {
   width: 30px;
@@ -558,6 +610,10 @@ svg {
   .categories__container {
     width: 300px;
   }
+
+  .description p {
+    width: 100%;
+  }
 }
 
 @media (max-width: 950px) {
@@ -571,6 +627,14 @@ svg {
   .container {
     width: 100%;
   }
+
+  .description p {
+    font-size: 1rem;
+  }
+
+  :deep(.description .whatsappNumber) {
+    font-size: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -581,6 +645,10 @@ svg {
   .card {
     flex: 1 1 100%;
     max-width: 100%;
+  }
+
+  .description {
+    padding: 30px;
   }
 }
 </style>

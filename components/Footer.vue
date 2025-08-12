@@ -21,7 +21,7 @@ const quickLinks = data.value?.data?.footer?.quickLinks ?? null
 const contactLinks = data.value?.data?.footer?.contactLinks ?? null
 const legalLinks = data.value?.data?.footer?.legalLinks ?? null
 
-// ============ OBTENER SVG POR ÍTEM ============ //
+// ============ OBTENER CONTACT LINK POR ÍTEM ============ //
 // Obtener SVG plano para los contactLinks
 const processedContactLinks = reactive([])
 
@@ -82,7 +82,7 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                             </div>
                         </div>
                         <!-- Contact Links -->
-                        <div v-if="contactLinks" class="item">
+                        <!--  <div v-if="contactLinks" class="item">
                             <h1 class="title__item">{{ contactLinks?.title }}</h1>
                             <div class="links">
                                 <a v-for="link in processedContactLinks" :key="link.id" :href="link.href"
@@ -91,7 +91,36 @@ const formattedDisclaimer = ref(getTextFormated(disclaimer))
                                     {{ link.text }}
                                 </a>
                             </div>
+                        </div> -->
+
+                        <!-- Contact Links -->
+                        <div v-if="contactLinks" class="item">
+                            <h1 class="title__item">{{ contactLinks?.title }}</h1>
+                            <div class="links">
+
+                                <!-- WhatsApp -->
+                                <a class="contact__link whatsapp" :href="processedContactLinks[0].href.replace('+', '')" target="_blank">
+                                    <span class="icon" v-if="processedContactLinks[0]"
+                                        v-html="processedContactLinks[0].svgHtml"></span>
+                                    {{ processedContactLinks[0].text || 'WhatsApp' }}
+                                </a>
+
+                                <!-- Correo -->
+                                <a class="contact__link email" :href="`mailto:${processedContactLinks[1].text}`">
+                                    <span class="icon" v-if="processedContactLinks[1]"
+                                        v-html="processedContactLinks[1].svgHtml"></span>
+                                    {{ processedContactLinks[1]?.text || 'Email' }}
+                                </a>
+
+                                <!-- Dirección -->
+                                <a class="contact__link address" :href="processedContactLinks[2].href" target="_blank">
+                                    <span class="icon" v-if="processedContactLinks[2]"
+                                        v-html="processedContactLinks[2].svgHtml"></span>
+                                    {{ processedContactLinks[2].text || 'Direccion' }}
+                                </a>
+                            </div>
                         </div>
+
                         <!-- Legal Links -->
                         <div v-if="legalLinks" class="item">
                             <h1 class="title__item">{{ legalLinks.title }}</h1>

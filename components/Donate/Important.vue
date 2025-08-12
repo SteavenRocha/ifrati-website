@@ -76,7 +76,7 @@ const textColorCard = props.card?.cardStyle?.textColor ?? null
                         <p class="card__description">{{ cardItem.description }}</p>
                     </div>
 
-                    <div class="list__card">
+                    <div class="list__card" v-if="cardItem.listCard">
                         <ul>
                             <li v-for="item in cardItem.listCard" :key="item.id">
                                 <div class="bullet__item">
@@ -162,6 +162,8 @@ section {
     line-height: 1.3;
     font-size: clamp(1rem, 3vw, 1rem);
     color: var(--text-color-card);
+    display: flex;
+    align-items: center;
 }
 
 .bullet__item {
