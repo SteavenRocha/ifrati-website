@@ -8,6 +8,12 @@ useHead({
   title: data.value.data.title,
 })
 
+const sections = data?.value?.data?.sections ?? []
+
+const hero = sections.find(s => s.__component === 'shop-blocks.hero-section') ?? {}
+const faq = sections.find(s => s.__component === 'blocks.faq-section') ?? {}
+const cta = sections.find(s => s.__component === 'about-blocks.cta-section') ?? {}
+
 // TODAS LAS CATEGORIAS FILTRADAS ASCEDENTEMENTE POR NOMBRE CON ESTADO TRUE
 const { data: dataCategories } = await useFetch('/api/getData', {
   params: {
@@ -28,9 +34,6 @@ const { data: dataProducts } = await useFetch('/api/getData', {
 })
 
 /********************* HERO SECTION *********************/
-/* CONFIGURACION GLOBAL DEL HERO SECTION */
-const hero = data?.value?.data?.sections?.[0] ?? {}
-
 /* DATOS DEL HERO SECTION */
 const title = hero.title ?? '' // TITLE
 const description = hero?.description ?? '' // DESCRIPTION
@@ -123,9 +126,6 @@ function selectCategory(category) {
 const productsPerPage = computed(() => products.value.length)
 
 /********************* FAQS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL FAQ SECTION */
-const faq = data?.value?.data?.sections?.[2] ?? {}
-
 /* DATOS DEL HERO SECTION */
 const titleFaq = faq.title ?? '' // TITLE
 const descriptionFaq = faq?.description ?? '' // DESCRIPTION
@@ -134,9 +134,6 @@ const questions = faq?.questions ?? [] // QUESTIONS
 const styleFaq = faq?.sectionStyle ?? {} // STYLES
 
 /********************* CTA SECTION *********************/
-/* CONFIGURACION GLOBAL DEL CTA SECTION */
-const cta = data?.value?.data?.sections?.[3] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleCta = cta?.title ?? '' // TITLE
 const descriptionCta = cta?.description ?? '' // DESCRIPTION
@@ -251,9 +248,9 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
       </div>
     </section>
 
-    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+    <Faq v-if="faq && Object.keys(faq).length" :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
 
-    <Cta :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
+    <Cta v-if="cta && Object.keys(cta).length" :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
   </div>
 </template>
 

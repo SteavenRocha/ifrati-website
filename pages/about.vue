@@ -12,19 +12,22 @@ useHead({
     title: data.value.data.title,
 })
 
-/********************* HERO SECTION *********************/
-/* CONFIGURACION GLOBAL DEL HERO SECTION */
-const hero = data?.value?.data?.sections?.[0] ?? {}
+const sections = data?.value?.data?.sections ?? []
 
+const hero = sections.find(s => s.__component === 'about-blocks.hero-section') ?? {}
+const mission = sections.find(s => s.__component === 'about-blocks.mission-section') ?? {}
+const vision = sections.find(s => s.__component === 'about-blocks.vision-section') ?? {}
+const values = sections.find(s => s.__component === 'about-blocks.values-section') ?? {}
+const team = sections.find(s => s.__component === 'about-blocks.team-section') ?? {}
+const cta = sections.find(s => s.__component === 'about-blocks.cta-section') ?? {}
+
+/********************* HERO SECTION *********************/
 /* DATOS DEL HERO SECTION */
 const title = hero.title ?? '' // TITLE
 const description = hero?.description ?? '' // DESCRIPTION
 const style = hero?.heroStyle ?? {} // STYLES
 
 /********************* MISSION SECTION *********************/
-/* CONFIGURACION GLOBAL DEL MISSION SECTION */
-const mission = data?.value?.data?.sections?.[1] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleMission = mission?.title ?? '' // TITLE
 const descriptionMission = mission?.description ?? '' // DESCRIPTION
@@ -33,9 +36,6 @@ const sideImageMission = mission?.sideImage ?? {} // SIDEIMAGE
 const styleMission = mission?.sectionStyle ?? {} // STYLES
 
 /********************* VISION SECTION *********************/
-/* CONFIGURACION GLOBAL DEL VISION SECTION */
-const vision = data?.value?.data?.sections?.[2] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleVision = vision?.title ?? '' // TITLE
 const descriptionVision = vision?.description ?? '' // DESCRIPTION
@@ -44,9 +44,6 @@ const sideImageVision = vision?.sideImage ?? {} // SIDEIMAGE
 const styleVision = vision?.sectionStyle ?? {} // STYLES
 
 /********************* VALUES SECTION *********************/
-/* CONFIGURACION GLOBAL DEL VALUES SECTION */
-const values = data?.value?.data?.sections?.[3] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleValues = values?.title ?? '' // TITLE
 const descriptionValues = values?.description ?? '' // DESCRIPTION
@@ -55,9 +52,6 @@ const cardValues = values?.cardSection ?? {} // CARD
 const styleValues = values?.sectionStyle ?? {} // STYLES
 
 /********************* TEAM SECTION *********************/
-/* CONFIGURACION GLOBAL DEL TEAM SECTION */
-const team = data?.value?.data?.sections?.[4] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleTeam = team?.title ?? '' // TITLE
 const descriptionTeam = team?.description ?? '' // DESCRIPTION
@@ -66,9 +60,6 @@ const cardTeam = team?.cardSection ?? {} // CARD
 const styleTeam = team?.sectionStyle ?? {} // STYLES
 
 /********************* CTA SECTION *********************/
-/* CONFIGURACION GLOBAL DEL CTA SECTION */
-const cta = data?.value?.data?.sections?.[5] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleCta = cta?.title ?? '' // TITLE
 const descriptionCta = cta?.description ?? '' // DESCRIPTION
@@ -79,20 +70,20 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
 
 <template>
   <div>
-    <Hero :title="title" :description="description" :style="style" />
+    <Hero v-if="hero" :title="title" :description="description" :style="style" />
 
-    <Mission :title="titleMission" :description="descriptionMission" :pill="pillMission" :sideImage="sideImageMission"
+    <Mission v-if="mission && Object.keys(mission).length" :title="titleMission" :description="descriptionMission" :pill="pillMission" :sideImage="sideImageMission"
       :style="styleMission" />
 
-    <Vision :title="titleVision" :description="descriptionVision" :pill="pillVisionn" :sideImage="sideImageVision"
+    <Vision v-if="vision && Object.keys(vision).length" :title="titleVision" :description="descriptionVision" :pill="pillVisionn" :sideImage="sideImageVision"
       :style="styleVision" />
 
-    <Values :title="titleValues" :description="descriptionValues" :pill="pillValues" :card="cardValues"
+    <Values v-if="values && Object.keys(values).length" :title="titleValues" :description="descriptionValues" :pill="pillValues" :card="cardValues"
       :style="styleValues" />
 
-    <Team :title="titleTeam" :description="descriptionTeam" :pill="pillTeam" :card="cardTeam" :style="styleTeam" />
+    <Team v-if="team && Object.keys(team).length" :title="titleTeam" :description="descriptionTeam" :pill="pillTeam" :card="cardTeam" :style="styleTeam" />
 
-    <Cta :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
+    <Cta v-if="cta && Object.keys(cta).length" :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
   </div>
 </template>
 

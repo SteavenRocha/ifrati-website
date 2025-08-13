@@ -10,31 +10,38 @@ import Choose from '~/components/Home/Choose.vue';
 const { data } = await useApi('home-page')
 
 useHead({
-    title: data.value.data.title,
+  title: data.value.data.title,
 })
 
+const sections = data?.value?.data?.sections ?? []
+
+const hero = sections.find(s => s.__component === 'blocks.hero-section') ?? {}
+const about = sections.find(s => s.__component === 'blocks.about-section') ?? {}
+const program = sections.find(s => s.__component === 'blocks.program-section') ?? {}
+const testimonies = sections.find(s => s.__component === 'blocks.testimonials-section') ?? {}
+const brands = sections.find(s => s.__component === 'blocks.brands-section') ?? {}
+const donate = sections.find(s => s.__component === 'blocks.donate-section') ?? {}
+const choose = sections.find(s => s.__component === 'blocks.choose-section') ?? {}
+const faq = sections.find(s => s.__component === 'blocks.faq-section') ?? {}
+const contact = sections.find(s => s.__component === 'blocks.contact-section') ?? {}
+
 /********************* HERO SECTION *********************/
-/* CONFIGURACION GLOBAL DEL HERO SECTION */
-const hero = data?.value?.data?.sections?.[0]?.hero ?? {}
 /* CONFIGURACION GLOBAL DEL SOCIAL PROOF SECTION */
 const social = data?.value?.data?.sections?.[0]?.socialProof ?? {}
 
 /* DATOS DEL HERO SECTION */
-const style = hero?.style ?? '' // STYLE
-const title = hero.title ?? '' // TITLE
-const description = hero?.description ?? '' // DESCRIPTION
-const sideImage = hero?.sideImage ?? {} // SIDEIMAGE
-const buttons = hero?.buttons ?? [] // BUTTONS
-const styles = hero?.heroStyle ?? {} // STYLES
+const style = hero?.hero?.style ?? '' // STYLE
+const title = hero?.hero?.title ?? '' // TITLE
+const description = hero?.hero?.description ?? '' // DESCRIPTION
+const sideImage = hero?.hero?.sideImage ?? {} // SIDEIMAGE
+const buttons = hero?.hero?.buttons ?? [] // BUTTONS
+const styles = hero?.hero?.heroStyle ?? {} // STYLES
 
 /* DATOS DEL SOCIAL PROOF SECTION */
 const statistics = social?.statistics ?? [] // STATISTICS
 const socialStyles = social?.statisticsStyle ?? {} // STYLES SOCIAL PROOF
 
 /********************* ABOUT SECTION *********************/
-/* CONFIGURACION GLOBAL DEL ABOUT SECTION */
-const about = data?.value?.data?.sections?.[1] ?? {}
-
 /* DATOS DEL ABOUT SECTION */
 const titleAbout = about?.title ?? '' // TITLE
 const descriptionAbout = about?.description ?? '' // DESCRIPTION
@@ -44,9 +51,6 @@ const sideImageAbout = about?.sideImage ?? {} // SIDEIMAGE
 const stylesAbout = about?.sectionStyle ?? {} // STYLES
 
 /********************* PROGRAM SECTION *********************/
-/* CONFIGURACION GLOBAL DEL ABOUT SECTION */
-const program = data?.value?.data?.sections?.[2] ?? {}
-
 /* DATOS DEL PROGRAM SECTION */
 const titleProgram = program?.program?.title ?? '' // TITLE
 const descriptionProgram = program?.program?.description ?? '' // DESCRIPTION
@@ -63,9 +67,6 @@ const cards = program?.howHelp?.cardSection ?? {} // CARDS
 const stylesHowHelp = program?.howHelp?.sectionStyle ?? {} // STYLES HOW HELP
 
 /********************* TESTIMONIES SECTION *********************/
-/* CONFIGURACION GLOBAL DEL TESTIMONIES SECTION */
-const testimonies = data?.value?.data?.sections?.[3] ?? {}
-
 /* DATOS DEL PROGRAM SECTION */
 const titleTestimonies = testimonies?.title ?? '' // TITLE
 const descriptionTestimonies = testimonies?.description ?? '' // DESCRIPTION
@@ -74,9 +75,6 @@ const testimoniesCard = testimonies?.testimonialsSection ?? {} // DESCRIPTION
 const stylesTestimonies = testimonies?.sectionStyle ?? {} // STYLES TESTIMONIES
 
 /********************* BRANDS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL BRANDS SECTION */
-const brands = data?.value?.data?.sections?.[4] ?? {}
-
 /* DATOS DEL PROGRAM SECTION */
 const titleBrand = brands?.title ?? '' // TITLE
 const pillBrand = brands?.pill ?? {} // PILL
@@ -84,9 +82,6 @@ const stylesBrands = brands?.sectionStyle ?? {} // STYLES TESTIMONIES
 const brandsImgs = brands ?? [] // BRANDS
 
 /********************* DONATE SECTION *********************/
-/* CONFIGURACION GLOBAL DEL DONATE SECTION */
-const donate = data?.value?.data?.sections?.[5] ?? {}
-
 /* DATOS DEL PROGRAM SECTION */
 const titleDonate = donate?.title ?? '' // TITLE
 const pillDonate = donate?.pill ?? {} // PILL
@@ -98,9 +93,6 @@ const buttonsDonate = donate.buttons ?? [] // BUTTONS
 const stylesDonate = donate?.sectionStyle ?? {} // STYLES DONATE
 
 /********************* CHOOSE SECTION *********************/
-/* CONFIGURACION GLOBAL DEL CHOOSE SECTION */
-const choose = data?.value?.data?.sections?.[6] ?? {}
-
 /* DATOS DEL PROGRAM SECTION */
 const titleChoose = choose?.title ?? '' // TITLE
 const pillChoose = choose?.pill ?? {} // PILL
@@ -110,20 +102,14 @@ const chooseStyles = choose.chooseStyles ?? [] // CARDS CHOOSE STYLES
 const stylesChoose = choose?.sectionStyle ?? {} // STYLES CHOOSE
 
 /********************* FAQS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL FAQ SECTION */
-/* const faq = data?.value?.data?.sections?.[7] ?? {} */
-
 /* DATOS DEL HERO SECTION */
-/* const titleFaq = faq.title ?? '' // TITLE
+const titleFaq = faq.title ?? '' // TITLE
 const descriptionFaq = faq?.description ?? '' // DESCRIPTION
 const pillFaq = faq?.pill ?? {} // PILL
 const questions = faq?.questions ?? [] // QUESTIONS
-const styleFaq = faq?.sectionStyle ?? {} // STYLES */
+const styleFaq = faq?.sectionStyle ?? {} // STYLES
 
 /********************* Contact SECTION *********************/
-/* CONFIGURACION GLOBAL DEL CONTACT SECTION */
-const contact = data?.value?.data?.sections?.[8] ?? {}
-
 /* DATOS DEL CONTACT SECTION */
 const titleContact = contact.title ?? '' // TITLE
 const descriptionContact = contact?.description ?? '' // DESCRIPTION
@@ -135,30 +121,30 @@ const styleContact = contact?.sectionStyle ?? {} // STYLES
 
 <template>
   <div>
-    <Hero :style="style" :title="title" :description="description" :sideImage="sideImage" :buttons="buttons"
+    <Hero v-if="hero" :style="style" :title="title" :description="description" :sideImage="sideImage" :buttons="buttons"
       :styles="styles" :statistics="statistics" :socialStyles="socialStyles" />
 
-    <About :title="titleAbout" :description="descriptionAbout" :pill="pillAbout" :button="buttonAbout"
+    <About v-if="about && Object.keys(about).length" :title="titleAbout" :description="descriptionAbout" :pill="pillAbout" :button="buttonAbout"
       :sideImage="sideImageAbout" :styles="stylesAbout" />
 
-    <Program :title="titleProgram" :description="descriptionProgram" :pill="pillProgram" :button="buttonProgram"
+    <Program v-if="program && Object.keys(program).length" :title="titleProgram" :description="descriptionProgram" :pill="pillProgram" :button="buttonProgram"
       :video="video" :styles="stylesProgram" :titleHowHelp="titleHowHelp" :descriptionHowHelp="descriptionHowHelp"
       :pillHowHelp="pillHowHelp" :cards="cards" :stylesHowHelp="stylesHowHelp" />
 
-    <Testimonies :title="titleTestimonies" :description="descriptionTestimonies" :pill="pillTestimonies"
+    <Testimonies v-if="testimonies && Object.keys(testimonies).length" :title="titleTestimonies" :description="descriptionTestimonies" :pill="pillTestimonies"
       :card="testimoniesCard" :styles="stylesTestimonies" />
 
-    <Brands :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
+    <Brands v-if="brands && Object.keys(brands).length" :title="titleBrand" :pill="pillBrand" :styles="stylesBrands" :brands="brandsImgs" />
 
-    <Donate :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :number="numberDonate"
+    <Donate v-if="donate && Object.keys(donate).length" :title="titleDonate" :description="descriptionDonate" :pill="pillDonate" :number="numberDonate"
       :secondDescription="secondDescriptionDonate" :donors="donors" :styles="stylesDonate" :buttons="buttonsDonate" />
 
-    <Choose :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont"
+    <Choose v-if="choose && Object.keys(choose).length" :title="titleChoose" :description="descriptionChoose" :pill="pillChoose" :choose="chooseCont"
       :chooseStyles="chooseStyles" :styles="stylesChoose" />
 
-   <!--  <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
- -->
-    <Contact :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
+    <Faq v-if="faq && Object.keys(faq).length" :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+
+    <Contact v-if="contact && Object.keys(contact).length" :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
       :contactInformation="contactInformation" :style="styleContact" />
 
   </div>
