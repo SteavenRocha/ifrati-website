@@ -9,22 +9,27 @@ import Participate from '~/components/Program/Participate.vue';
 const { data } = await useApi('program-page')
 
 useHead({
-    title: data.value.data.title,
+  title: data.value.data.title,
 })
 
-/********************* HERO SECTION *********************/
-/* CONFIGURACION GLOBAL DEL HERO SECTION */
-const hero = data?.value?.data?.sections?.[0] ?? {}
+const sections = data?.value?.data?.sections ?? []
 
+const hero = sections.find(s => s.__component === 'program-blocks.hero-section') ?? {}
+const purpose = sections.find(s => s.__component === 'program-blocks.purpose-section') ?? null
+const pillars = sections.find(s => s.__component === 'program-blocks.pillars-section') ?? {}
+const requirements = sections.find(s => s.__component === 'program-blocks.requirements-section') ?? {}
+const results = sections.find(s => s.__component === 'program-blocks.results-section') ?? {}
+const participate = sections.find(s => s.__component === 'program-blocks.participate-section') ?? {}
+const faq = sections.find(s => s.__component === 'blocks.faq-section') ?? {}
+const contact = sections.find(s => s.__component === 'blocks.contact-section') ?? {}
+
+/********************* HERO SECTION *********************/
 /* DATOS DEL HERO SECTION */
 const title = hero.title ?? '' // TITLE
 const description = hero?.description ?? '' // DESCRIPTION
 const style = hero?.heroStyle ?? {} // STYLES
 
 /********************* PURPOSE SECTION *********************/
-/* CONFIGURACION GLOBAL DEL PURPOSE SECTION */
-const purpose = data?.value?.data?.sections?.[1] ?? {}
-
 /* DATOS DEL PURPOSE SECTION */
 const titlePurpose = purpose?.title ?? '' // TITLE
 const descriptionPurpose = purpose?.description ?? '' // DESCRIPTION
@@ -33,9 +38,6 @@ const sideImagePurpose = purpose?.sideImage ?? {} // SIDEIMAGE
 const stylePurpose = purpose?.sectionStyle ?? {} // STYLES
 
 /********************* PILLARS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL PILLARS SECTION */
-const pillars = data?.value?.data?.sections?.[2] ?? {}
-
 /* DATOS DEL PILLARS SECTION */
 const titlePillars = pillars?.title ?? '' // TITLE
 const descriptionPillars = pillars?.description ?? '' // DESCRIPTION
@@ -44,9 +46,6 @@ const pillarsCard = pillars?.pillars ?? {} // SIDEIMAGE
 const stylePillars = pillars?.sectionStyle ?? {} // STYLES
 
 /********************* REQUIREMENTS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL REQUIREMENTS SECTION */
-const requirements = data?.value?.data?.sections?.[3] ?? {}
-
 /* DATOS DEL PURPOSE SECTION */
 const titleRequirements = requirements?.title ?? '' // TITLE
 const descriptionRequirements = requirements?.description ?? '' // DESCRIPTION
@@ -57,9 +56,6 @@ const ctaRequirements = requirements?.cta ?? {} // REQUIREMENTS
 const styleRequirements = requirements?.sectionStyle ?? {} // STYLES
 
 /********************* RESULTS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL RESULTS SECTION */
-const results = data?.value?.data?.sections?.[4] ?? {}
-
 /* DATOS DEL PURPOSE SECTION */
 const titleResults = results?.title ?? '' // TITLE
 const descriptionResults = results?.description ?? '' // DESCRIPTION
@@ -69,9 +65,6 @@ const qualitative = results?.qualitativeResults ?? {} // QUALITATIVE
 const styleResults = results?.sectionStyle ?? {} // STYLES
 
 /********************* PARTICIPATE SECTION *********************/
-/* CONFIGURACION GLOBAL DEL PARTICIPATE SECTION */
-const participate = data?.value?.data?.sections?.[5] ?? {}
-
 /* DATOS DEL PURPOSE SECTION */
 const titleParticipate = participate?.title ?? '' // TITLE
 const descriptionParticipate = participate?.description ?? '' // DESCRIPTION
@@ -81,9 +74,6 @@ const collaborators = participate?.collaboratorsSection ?? {} // STEPS
 const styleParticipate = participate?.sectionStyle ?? {} // STYLES
 
 /********************* FAQS SECTION *********************/
-/* CONFIGURACION GLOBAL DEL FAQ SECTION */
-const faq = data?.value?.data?.sections?.[6] ?? {}
-
 /* DATOS DEL HERO SECTION */
 const titleFaq = faq.title ?? '' // TITLE
 const descriptionFaq = faq?.description ?? '' // DESCRIPTION
@@ -92,9 +82,6 @@ const questions = faq?.questions ?? [] // QUESTIONS
 const styleFaq = faq?.sectionStyle ?? {} // STYLES
 
 /********************* Contact SECTION *********************/
-/* CONFIGURACION GLOBAL DEL CONTACT SECTION */
-const contact = data?.value?.data?.sections?.[7] ?? {}
-
 /* DATOS DEL CONTACT SECTION */
 const titleContact = contact.title ?? '' // TITLE
 const descriptionContact = contact?.description ?? '' // DESCRIPTION
@@ -106,28 +93,38 @@ const styleContact = contact?.sectionStyle ?? {} // STYLES
 
 <template>
   <div>
-    <Hero :title="title" :description="description" :style="style" />
+    <!-- HERO siempre se asume que existe -->
+    <Hero v-if="hero" :title="title" :description="description" :style="style" />
 
-    <Purpose :title="titlePurpose" :description="descriptionPurpose" :pill="pillPurpose" :sideImage="sideImagePurpose"
-      :style="stylePurpose" />
+    <!-- PURPOSE -->
+    <Purpose v-if="purpose" :title="titlePurpose" :description="descriptionPurpose" :pill="pillPurpose"
+      :sideImage="sideImagePurpose" :style="stylePurpose" />
 
-    <Pillars :title="titlePillars" :description="descriptionPillars" :pill="pillPillars" :pillarsCard="pillarsCard"
-      :style="stylePillars" />
+    <!-- PILLARS -->
+    <Pillars v-if="pillars && Object.keys(pillars).length" :title="titlePillars" :description="descriptionPillars"
+      :pill="pillPillars" :pillarsCard="pillarsCard" :style="stylePillars" />
 
-    <Requirements :title="titleRequirements" :description="descriptionRequirements" :pill="pillRequirements"
-      :sideImage="sideImageRequirements" :requirements="requirementsComponent" :cta="ctaRequirements"
-      :style="styleRequirements" />
+    <!-- REQUIREMENTS -->
+    <Requirements v-if="requirements && Object.keys(requirements).length" :title="titleRequirements"
+      :description="descriptionRequirements" :pill="pillRequirements" :sideImage="sideImageRequirements"
+      :requirements="requirementsComponent" :cta="ctaRequirements" :style="styleRequirements" />
 
-    <Results :title="titleResults" :description="descriptionResults" :pill="pillResults" :quantitative="quantitative"
-      :qualitative="qualitative" :style="styleResults" />
+    <!-- RESULTS -->
+    <Results v-if="results && Object.keys(results).length" :title="titleResults" :description="descriptionResults"
+      :pill="pillResults" :quantitative="quantitative" :qualitative="qualitative" :style="styleResults" />
 
-    <Participate :title="titleParticipate" :description="descriptionParticipate" :pill="pillParticipate" :steps="steps"
-      :collaborators="collaborators" :style="styleParticipate" />
+    <!-- PARTICIPATE -->
+    <Participate v-if="participate && Object.keys(participate).length" :title="titleParticipate"
+      :description="descriptionParticipate" :pill="pillParticipate" :steps="steps" :collaborators="collaborators"
+      :style="styleParticipate" />
 
-    <Faq :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+    <!-- FAQ -->
+    <Faq v-if="faq && Object.keys(faq).length" :title="titleFaq" :description="descriptionFaq" :pill="pillFaq"
+      :questions="questions" :style="styleFaq" />
 
-    <Contact :title="titleContact" :description="descriptionContact" :pill="pillContact" :contactCard="contactCard"
-      :contactInformation="contactInformation" :style="styleContact" />
+    <!-- CONTACT -->
+    <Contact v-if="contact && Object.keys(contact).length" :title="titleContact" :description="descriptionContact"
+      :pill="pillContact" :contactCard="contactCard" :contactInformation="contactInformation" :style="styleContact" />
   </div>
 </template>
 
