@@ -55,6 +55,12 @@ function getTextFormated(initialText, whatsappNumber) {
       /<a>(.*?)<\/a>/gi,
       `<a class="whatsappNumber" href="${whatsappNumber}" target="_blank">$1</a>`
     )
+    // Primero reemplaza los dobles asteriscos
+    .replace(/\*\*(.*?)\*\*/g, '<span class="highlight">$1</span>')
+    // Luego reemplaza los simples asteriscos
+    .replace(/\*(?!\*)(.*?)\*(?!\*)/g, '<span class="bold">$1</span>')
+    // Reemplaza saltos de línea por <br>
+    .replace(/\n/g, '<br>');
 }
 
 /* STYLOS DEL SHOP */
