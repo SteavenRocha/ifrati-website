@@ -109,6 +109,7 @@ section {
 
 .centered__texts {
     width: 100%;
+    max-width: 700px;
 }
 
 .title {
@@ -121,7 +122,9 @@ section {
 
 .card__container {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    max-width: calc((250px + 20px) * 4);
+    margin: 0 auto; 
     gap: 20px;
     row-gap: 50px;
 }
@@ -132,26 +135,6 @@ section {
     align-items: center;
     border-radius: var(--border-radius-card);
     gap: 20px;
-}
-
-/* 4-card row */
-.card__container .card:nth-child(7n + 1),
-.card__container .card:nth-child(7n + 2),
-.card__container .card:nth-child(7n + 3),
-.card__container .card:nth-child(7n + 4) {
-    grid-column: span 3;
-}
-
-.card__container .card:nth-child(7n + 5) {
-    grid-column: 2 / span 3;
-}
-
-.card__container .card:nth-child(7n + 6) {
-    grid-column: 5 / span 3;
-}
-
-.card__container .card:nth-child(7n + 7) {
-    grid-column: 8 / span 3;
 }
 
 .card__details {
