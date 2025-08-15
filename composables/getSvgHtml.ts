@@ -17,7 +17,11 @@ export function getSvgHtml() {
 
       const text = await response.text()
 
-      const replaced = text.replace(/fill="(?!none|currentColor)[^"]*"/gi, 'fill="currentColor"')
+      const replaced = text
+        // Reemplaza atributos fill="..."
+        .replace(/fill="(?!none|currentColor)[^"]*"/gi, 'fill="currentColor"')
+        // Reemplaza fill dentro del style
+        .replace(/fill:\s*(?!none|currentColor)[^;"]*/gi, 'fill:currentColor')
 
       cache.set(url, replaced)
       svgHtml.value = replaced
