@@ -1342,7 +1342,7 @@ async function handleSubmit() {
                                     <label for="experience">Experiencia</label>
                                     <textarea id="experience" rows="5" maxlength="4000"
                                         v-model="volunteerForm_.experience"
-                                        placeholder="Cuentanos sobre tu experiencia relevante para el voluntariado"
+                                        placeholder="Cuéntanos sobre tu experiencia relevante para el voluntariado"
                                         required></textarea>
                                     <div class="char-counter">
                                         {{ volunteerForm_.experience.length }} / 4000 caracteres
