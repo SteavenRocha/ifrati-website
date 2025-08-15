@@ -1353,7 +1353,7 @@ async function handleSubmit() {
                                     <label for="motivation">Motivacion</label>
                                     <textarea id="motivation" rows="5" maxlength="4000"
                                         v-model="volunteerForm_.motivation"
-                                        placeholder="¿Por qué quieres ser voluntario/a en Ifrati" required></textarea>
+                                        placeholder="¿Por qué quieres ser voluntario/a en Ifrati?" required></textarea>
                                     <div class="char-counter">
                                         {{ volunteerForm_.motivation.length }} / 4000 caracteres
                                     </div>
