@@ -1256,7 +1256,7 @@ async function handleSubmit() {
                                 <div class="card__content__volunteer">
                                     <div class="card__header">
                                         <h3 class="card__title__volunteer">{{ item.title }}</h3>
-                                        <p class="card__description__volunteer">{{ item.description }}</p>
+                                        <p class="card__description__volunteer" v-html=getTextFormated(item.description)></p>
                                     </div>
                                     <div class="card__container__characteristic">
                                         <div class="card__characteristics" v-for="charct in item?.characteristics">
