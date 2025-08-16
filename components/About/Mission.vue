@@ -76,6 +76,7 @@ section {
 
 .content {
     display: flex;
+    align-items: center;
     margin: auto;
     max-width: var(--max-width);
     overflow: hidden;
