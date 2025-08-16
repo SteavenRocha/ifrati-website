@@ -780,60 +780,14 @@ async function pay() {
     };
 
     try {
+
+        await submitDonation()
+
         // Esta función ya redirige automáticamente si configuraste callbackurl
         await payform.createToken(
             [cardNumber, cardExpiry, cardCvv],
             data
         );
-
-        await submitDonation()
-
-        if (donationType.value === 'general') {
-            if (selectedDonation.value && !otherAmount.value) {
-                // ENVIA DATOS DEL IMPACTO POR EL LOCALSTORAGE
-                const sanitizedDetails = selectedDonation.value.detailsCard.map(item => ({
-                    title: item.title,
-                    description: item.description
-                }));
-
-                donationInfo.value = {
-                    donationType: 0,
-                    img: getResource(selectedDonation.value.impact.resource?.url).imageUrl,
-                    impact: selectedDonation.value.impact.title,
-                    description: selectedDonation.value.impact.description,
-                    sanitizedDetails: sanitizedDetails,
-                    aditionalImpactTitle: selectedDonation.value.aditionalImpact.title,
-                    aditionalImpactDescription: selectedDonation.value.aditionalImpact.description,
-                }
-            } else {
-                donationInfo.value = {
-                    donationType: 1,
-                    img: null,
-                    impact: null,
-                    description: null,
-                    sanitizedDetails: null,
-                    aditionalImpactTitle: null,
-                    aditionalImpactDescription: null,
-                }
-            }
-        } else {
-            donationInfo.value = {
-                donationType: 2,
-                img: null,
-                impact: null,
-                description: null,
-                sanitizedDetails: null,
-                aditionalImpactTitle: null,
-                aditionalImpactDescription: null,
-                customDonation: null,
-                metaTitle: selectedGoal.value.title,
-                metaDescription: selectedGoal.value.description,
-                metaImg: getResource(selectedGoal.value.image?.url).imageUrl,
-                metaProgress: getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal),
-                metaCollected: selectedGoal.value.totalCollected,
-                metaGoal: selectedGoal.value.goal,
-            }
-        }
 
         showModal.value = false;
         /* isLoading.value = true; */
@@ -854,40 +808,138 @@ async function pay() {
 
 async function submitDonation() {
     try {
-        const response = await $fetch('/api/sendForm?endpoint=donations', {
-            method: 'POST',
-            body: {
-                transactionStatus: null,
-                purchaseNumber: purchaseNumber,
-                productDescription: productDescription.value,
-                donationType: donationType.value.toUpperCase(),
-                frequency: 'UNICA',
-                type: 'Invitado',
-                documentType: form.documentType,
-                documentNumber: form.documentNumber,
-                name: form.name,
-                lastName: form.lastName,
-                email: form.email,
-                phone: form.phone,
-                goal: selectedGoal.value ? selectedGoal.value.documentId : null,
-                amount: selectedAmount.value,
-                currency: 'PEN',
-                country: dataMapform.country,
-                state: dataMapform.department,
-                city: dataMapform.city,
-                address: dataMapform.address,
-                postalCode: dataMapform.postal,
-                card: null,
-                brand: null,
-                transactionDate: null,
-                actionDescription: null
-            },
-        })
+        //¿ DONACION EXISTE ?
+        const existingDonation = await $fetch(`/api/getDonation?id=${purchaseNumber}`)
 
-        if (response === 'success' && !response.error) {
-            console.log("donacion registrada:")
+        if (existingDonation?.data?.length > 0) {
+            if (donationType.value === 'general') {
+                if (selectedDonation.value && !otherAmount.value) {
+                    // ENVIA DATOS DEL IMPACTO POR EL LOCALSTORAGE
+                    const sanitizedDetails = selectedDonation.value.detailsCard.map(item => ({
+                        title: item.title,
+                        description: item.description
+                    }));
+
+                    donationInfo.value = {
+                        donationType: 0,
+                        img: getResource(selectedDonation.value.impact.resource?.url).imageUrl,
+                        impact: selectedDonation.value.impact.title,
+                        description: selectedDonation.value.impact.description,
+                        sanitizedDetails: sanitizedDetails,
+                        aditionalImpactTitle: selectedDonation.value.aditionalImpact.title,
+                        aditionalImpactDescription: selectedDonation.value.aditionalImpact.description,
+                    }
+                } else {
+                    donationInfo.value = {
+                        donationType: 1,
+                        img: null,
+                        impact: null,
+                        description: null,
+                        sanitizedDetails: null,
+                        aditionalImpactTitle: null,
+                        aditionalImpactDescription: null,
+                    }
+                }
+            } else {
+                donationInfo.value = {
+                    donationType: 2,
+                    img: null,
+                    impact: null,
+                    description: null,
+                    sanitizedDetails: null,
+                    aditionalImpactTitle: null,
+                    aditionalImpactDescription: null,
+                    customDonation: null,
+                    metaTitle: selectedGoal.value.title,
+                    metaDescription: selectedGoal.value.description,
+                    metaImg: getResource(selectedGoal.value.image?.url).imageUrl,
+                    metaProgress: getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal),
+                    metaCollected: selectedGoal.value.totalCollected,
+                    metaGoal: selectedGoal.value.goal,
+                }
+            }
+        } else {
+            const response = await $fetch('/api/sendForm?endpoint=donations', {
+                method: 'POST',
+                body: {
+                    transactionStatus: null,
+                    purchaseNumber: purchaseNumber,
+                    productDescription: productDescription.value,
+                    donationType: donationType.value.toUpperCase(),
+                    frequency: 'UNICA',
+                    type: 'Invitado',
+                    documentType: form.documentType,
+                    documentNumber: form.documentNumber,
+                    name: form.name,
+                    lastName: form.lastName,
+                    email: form.email,
+                    phone: form.phone,
+                    goal: selectedGoal.value ? selectedGoal.value.documentId : null,
+                    amount: selectedAmount.value,
+                    currency: 'PEN',
+                    country: dataMapform.country,
+                    state: dataMapform.department,
+                    city: dataMapform.city,
+                    address: dataMapform.address,
+                    postalCode: dataMapform.postal,
+                    card: null,
+                    brand: null,
+                    transactionDate: null,
+                    actionDescription: null
+                },
+            })
+
+            if (response === 'success' && !response.error) {
+                console.log("donacion registrada")
+
+                if (donationType.value === 'general') {
+                    if (selectedDonation.value && !otherAmount.value) {
+                        // ENVIA DATOS DEL IMPACTO POR EL LOCALSTORAGE
+                        const sanitizedDetails = selectedDonation.value.detailsCard.map(item => ({
+                            title: item.title,
+                            description: item.description
+                        }));
+
+                        donationInfo.value = {
+                            donationType: 0,
+                            img: getResource(selectedDonation.value.impact.resource?.url).imageUrl,
+                            impact: selectedDonation.value.impact.title,
+                            description: selectedDonation.value.impact.description,
+                            sanitizedDetails: sanitizedDetails,
+                            aditionalImpactTitle: selectedDonation.value.aditionalImpact.title,
+                            aditionalImpactDescription: selectedDonation.value.aditionalImpact.description,
+                        }
+                    } else {
+                        donationInfo.value = {
+                            donationType: 1,
+                            img: null,
+                            impact: null,
+                            description: null,
+                            sanitizedDetails: null,
+                            aditionalImpactTitle: null,
+                            aditionalImpactDescription: null,
+                        }
+                    }
+                } else {
+                    donationInfo.value = {
+                        donationType: 2,
+                        img: null,
+                        impact: null,
+                        description: null,
+                        sanitizedDetails: null,
+                        aditionalImpactTitle: null,
+                        aditionalImpactDescription: null,
+                        customDonation: null,
+                        metaTitle: selectedGoal.value.title,
+                        metaDescription: selectedGoal.value.description,
+                        metaImg: getResource(selectedGoal.value.image?.url).imageUrl,
+                        metaProgress: getProgress(selectedGoal.value.totalCollected, selectedGoal.value.goal),
+                        metaCollected: selectedGoal.value.totalCollected,
+                        metaGoal: selectedGoal.value.goal,
+                    }
+                }
+            }
         }
-
         /* if (response === 'success' && selectedGoal.value) {
 
             const newTotalCollected = selectedAmount.value + selectedGoal.value.totalCollected
@@ -1256,7 +1308,8 @@ async function handleSubmit() {
                                 <div class="card__content__volunteer">
                                     <div class="card__header">
                                         <h3 class="card__title__volunteer">{{ item.title }}</h3>
-                                        <p class="card__description__volunteer" v-html=getTextFormated(item.description)></p>
+                                        <p class="card__description__volunteer"
+                                            v-html=getTextFormated(item.description)></p>
                                     </div>
                                     <div class="card__container__characteristic">
                                         <div class="card__characteristics" v-for="charct in item?.characteristics">

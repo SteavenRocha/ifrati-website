@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
                         </div>
                         <div class="data">
                             <h3 class="name">{{ item.name }}</h3>
-                            <p class="description">{{ item.description }}</p>
+                            <p class="description" v-html="getTextFormated(item.description)"></p>
                         </div>
                     </div>
                     <div class="card__content">
