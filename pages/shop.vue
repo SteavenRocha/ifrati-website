@@ -189,9 +189,10 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
                     <img :src="getResource(product.image?.url).imageUrl" alt="">
                     <p class="tag" :class="{
                       'tag--nuevo': product.tag === 'Nuevo',
-                      'tag--mas-vendido': product.tag === 'Mas vendido',
+                      'tag--mas-vendido': product.tag === 'Más vendido',
                       'tag--oferta': product.tag === 'Oferta',
-                      'tag--otro': product.tag !== 'Nuevo' && product.tag !== 'Mas vendido' && product.tag !== 'Oferta'
+                      'tag--otro': product.tag !== 'Nuevo' && product.tag !== 'Más vendido' && product.tag !== 'Oferta' && product.tag !== null,
+                      'tag--null': product.tag === null
                     }">
                       {{ product.tag }}
                     </p>
@@ -254,9 +255,11 @@ const styleCta = cta?.ctaStyle ?? {} // STYLES
       </div>
     </section>
 
-    <Faq v-if="faq && Object.keys(faq).length" :title="titleFaq" :description="descriptionFaq" :pill="pillFaq" :questions="questions" :style="styleFaq" />
+    <Faq v-if="faq && Object.keys(faq).length" :title="titleFaq" :description="descriptionFaq" :pill="pillFaq"
+      :questions="questions" :style="styleFaq" />
 
-    <Cta v-if="cta && Object.keys(cta).length" :title="titleCta" :description="descriptionCta" :button="buttonCta" :style="styleCta" />
+    <Cta v-if="cta && Object.keys(cta).length" :title="titleCta" :description="descriptionCta" :button="buttonCta"
+      :style="styleCta" />
   </div>
 </template>
 
@@ -437,21 +440,26 @@ button {
   border-radius: 50px;
   font-size: 0.7rem;
   font-weight: 700;
+  display: none;
 }
 
 .tag--nuevo {
+  display: block;
   background-color: #3B82F6;
 }
 
 .tag--mas-vendido {
+  display: block;
   background-color: green;
 }
 
 .tag--oferta {
+  display: block;
   background-color: #F43F5E;
 }
 
 .tag--otro {
+  display: block;
   background-color: var(--primary-color);
 }
 
